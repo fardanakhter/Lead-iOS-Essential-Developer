@@ -19,14 +19,14 @@ class RemoteFeedLoader {
     }
 }
 
-class HTTPClient {
-    func get(_ url: URL?) {}
+protocol HTTPClient {
+    func get(_ url: URL?)
 }
 
 class HTTPClientSkpy: HTTPClient {
     var requestedURL: URL?
     
-    override func get(_ url: URL?) {
+    func get(_ url: URL?) {
         requestedURL = url
     }
 }

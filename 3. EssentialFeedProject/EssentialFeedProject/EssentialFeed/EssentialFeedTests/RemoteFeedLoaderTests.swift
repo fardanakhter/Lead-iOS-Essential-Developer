@@ -51,13 +51,13 @@ class RemoteFeedLoaderTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(_ url: URL = URL(string: "https://a-url.com")!) -> (RemoteFeedLoader, HTTPClientSkpy){
-        let client = HTTPClientSkpy()
+    private func makeSUT(_ url: URL = URL(string: "https://a-url.com")!) -> (RemoteFeedLoader, HTTPClientSpy){
+        let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(url: url, httpClient: client)
         return (sut, client)
     }
     
-    class HTTPClientSkpy: HTTPClient {
+    class HTTPClientSpy: HTTPClient {
         var requestedURLs = [URL]()
         var completions = [(Error?) -> Void]()
         

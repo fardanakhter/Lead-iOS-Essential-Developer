@@ -26,7 +26,7 @@ public final class RemoteFeedLoader {
         self.httpClient = httpClient
     }
     
-    public func load(completion: @escaping (RemoteFeedLoader.Error) -> Void = {_ in}) {
+    public func load(completion: @escaping (RemoteFeedLoader.Error) -> Void) {
         self.httpClient.get(url) { result  in
             
             switch result {

@@ -39,15 +39,10 @@ class RemoteFeedLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
         
-        var capturedErrors = [RemoteFeedLoader.Error]()
-        sut.load() { error in
-            capturedErrors.append(error)
-        }
-        
-        let clientError = NSError(domain: "Test Error", code: 0)
-        client.complete(withError: clientError)
-        
-        XCTAssertEqual(capturedErrors, [.noConnection])
+        expect(sut, toCompleteWithError: .noConnection, when: {
+            let clientError = NSError(domain: "Test Error", code: 0)
+            client.complete(withError: clientError)
+        })
     }
     
     func test_load_deliversErrorOnNon200Response() {
@@ -56,14 +51,9 @@ class RemoteFeedLoaderTests: XCTestCase {
         let statusCodes = [199, 201, 400, 500, 600]
         statusCodes.enumerated().forEach { index, code in
             
-            var capturedErrors = [RemoteFeedLoader.Error]()
-            sut.load() { error in
-                capturedErrors.append(error)
-            }
-            
-            client.complete(withStatusCode: code, at: index)
-            
-            XCTAssertEqual(capturedErrors, [.invalidData])
+            expect(sut, toCompleteWithError: .invalidData, when: {
+                client.complete(withStatusCode: code, at: index)
+            })
         }
     }
     
@@ -73,6 +63,18 @@ class RemoteFeedLoaderTests: XCTestCase {
         let client = HTTPClientSpy()
         let sut = RemoteFeedLoader(url: url, httpClient: client)
         return (sut, client)
+    }
+    
+    private func expect(_ sut: RemoteFeedLoader, toCompleteWithError error: RemoteFeedLoader.Error, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        
+        var capturedErrors = [RemoteFeedLoader.Error]()
+        sut.load() { error in
+            capturedErrors.append(error)
+        }
+        
+        action()
+        
+        XCTAssertEqual(capturedErrors, [error], file: file, line: line)
     }
     
     class HTTPClientSpy: HTTPClient {

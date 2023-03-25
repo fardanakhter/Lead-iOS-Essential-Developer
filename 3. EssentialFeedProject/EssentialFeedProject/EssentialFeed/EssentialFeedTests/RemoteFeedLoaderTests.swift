@@ -110,7 +110,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let itemJSON = ["id": item.id.uuidString,
                         "description": item.description,
                         "location": item.location,
-                        "imageURL": item.imageURL.absoluteString]
+                        "image": item.imageURL.absoluteString]
         
             .reduce([String : Any]()) { acc, e in
                 var newDict = acc

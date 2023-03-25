@@ -10,13 +10,13 @@ import XCTest
 import EssentialFeed
 
 class RemoteFeedLoaderTests: XCTestCase {
-
+    
     func test_init_doesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
         
         XCTAssertTrue(client.requestedURLs.isEmpty)
     }
-
+    
     func test_load_requestsDataFromURL() {
         let url = URL(string: "https://a-given-url.com")!
         let (sut, client) = makeSUT(url)
@@ -52,7 +52,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         statusCodes.enumerated().forEach { index, code in
             
             expect(sut, toCompleteWith: .failure(.invalidData), when: {
-                client.complete(withStatusCode: code, at: index)
+                client.complete(withStatusCode: code, data: makeItemJSON([:]), at: index)
             })
         }
     }
@@ -70,7 +70,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
         
         expect(sut, toCompleteWith: .success([]), when: {
-            let emptyJsonList = "{\"items\":[]}".data(using: .utf8)!
+            let emptyJsonList = makeItemJSON(["items" : []])
             client.complete(withStatusCode: 200, data: emptyJsonList)
         })
     }
@@ -103,9 +103,9 @@ class RemoteFeedLoaderTests: XCTestCase {
     private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String : Any]) {
         
         let item = FeedItem(id: id,
-                              description: description,
-                              location: location,
-                              imageURL: imageURL)
+                            description: description,
+                            location: location,
+                            imageURL: imageURL)
         
         let itemJSON = ["id": item.id.uuidString,
                         "description": item.description,
@@ -121,7 +121,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         return (item, itemJSON)
     }
     
-    private func makeItemJSON(_ items: [String : Any?]) -> Data {
+    private func makeItemJSON(_ items: [String : Any]) -> Data {
         return try! JSONSerialization.data(withJSONObject: items)
     }
     
@@ -155,7 +155,7 @@ class RemoteFeedLoaderTests: XCTestCase {
             messages[index].completion(.failure(error))
         }
         
-        func complete(withStatusCode code: Int, data: Data = Data(), at index: Int = 0) {
+        func complete(withStatusCode code: Int, data: Data, at index: Int = 0) {
             let response = HTTPURLResponse(url: messages[index].url,
                                            statusCode: code,
                                            httpVersion: nil,
@@ -163,6 +163,5 @@ class RemoteFeedLoaderTests: XCTestCase {
             messages[index].completion(.success(data, response))
         }
     }
-    
     
 }

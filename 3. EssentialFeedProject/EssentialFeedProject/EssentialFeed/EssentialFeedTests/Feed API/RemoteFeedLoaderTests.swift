@@ -39,7 +39,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWith: .failure(.noConnection), when: {
+        expect(sut, toCompleteWith: failure(.noConnection), when: {
             let clientError = NSError(domain: "Test Error", code: 0)
             client.complete(withError: clientError)
         })
@@ -51,7 +51,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let statusCodes = [199, 201, 400, 500, 600]
         statusCodes.enumerated().forEach { index, code in
             
-            expect(sut, toCompleteWith: .failure(.invalidData), when: {
+            expect(sut, toCompleteWith: failure(.invalidData), when: {
                 client.complete(withStatusCode: code, data: makeItemJSON([:]), at: index)
             })
         }
@@ -60,7 +60,7 @@ class RemoteFeedLoaderTests: XCTestCase {
     func test_load_deliversErrorOn200ResponseWhenInvalidJSON() {
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWith: .failure(.invalidData), when: {
+        expect(sut, toCompleteWith: failure(.invalidData), when: {
             let invalidJsonData = "Invalid Json".data(using: .utf8)!
             client.complete(withStatusCode: 200, data: invalidJsonData)
         })
@@ -170,12 +170,16 @@ class RemoteFeedLoaderTests: XCTestCase {
         case (.success(let loadedItems), .success(let expectedItems)):
             XCTAssertEqual(loadedItems, expectedItems, file: file, line: line)
         
-        case (.failure(let loadedError), .failure(let expectedError)):
+        case (.failure(let loadedError as RemoteFeedLoader.Error), .failure(let expectedError as RemoteFeedLoader.Error)):
             XCTAssertEqual(loadedError, expectedError, file: file, line: line)
         
         default:
             XCTFail("Loaded Result: \(result) not as Expected: \(expectedResult)", file: file, line: line)
         }
+    }
+    
+    private func failure(_ error: RemoteFeedLoader.Error) -> RemoteFeedLoader.Result {
+        return .failure(error)
     }
     
     class HTTPClientSpy: HTTPClient {

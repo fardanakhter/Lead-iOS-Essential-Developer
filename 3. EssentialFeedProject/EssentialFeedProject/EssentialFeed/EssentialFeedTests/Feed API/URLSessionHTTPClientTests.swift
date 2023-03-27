@@ -21,7 +21,10 @@ class URLSessionHTTPClient: HTTPClient {
     
     func get(_ url: URL, completion: @escaping (HTTPClientResult) -> Void) {
         let dataTask = session.dataTask(with: url) { data, response, error in
-            if let error {
+            if let data, data.count > 0 , let response = response as? HTTPURLResponse {
+                completion(.success(data, response))
+            }
+            else if let error {
                 completion(.failure(error))
             }
             else {
@@ -62,7 +65,30 @@ final class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyNonHttpUrlResponse(), error: anyError()))
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyHttpUrlResponse(), error: anyError()))
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyNonHttpUrlResponse(), error: nil))
-        XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyHttpUrlResponse(), error: nil))
+    }
+    
+    func test_get_succeedsOnNonNilDataAndHTTPURLResponseValues() {
+        
+        let requestedData = anyData()
+        let requestedResponse = anyHttpUrlResponse()
+        
+        URLProtocolStub.stub(data: requestedData, response: requestedResponse, error: nil)
+        
+        let exp = expectation(description: "Waits for completion")
+        
+        makeSUT().get(anyURL()) { result in
+            switch result {
+            case let .success(receivedData, receivedResponse):
+                XCTAssertEqual(requestedData, receivedData)
+                XCTAssertEqual(requestedResponse.url, receivedResponse.url)
+                XCTAssertEqual(requestedResponse.statusCode, receivedResponse.statusCode)
+            default:
+                XCTFail("Unexpected result!")
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     func test_get_performsGETRequestWithURL() {
@@ -134,7 +160,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         private static var stub: Stub?
         private static var requestObserver: ((URLRequest) -> Void)?
         
-        struct Stub {
+        private struct Stub {
             let data: Data?
             let response: URLResponse?
             let error: Error?

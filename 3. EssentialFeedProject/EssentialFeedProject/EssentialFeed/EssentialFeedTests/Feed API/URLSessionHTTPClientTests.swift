@@ -67,50 +67,22 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     func test_get_succeedsWithEmptyDataOnHttpUrlResponseWithNilDataValue () {
-        
-        let requestedResponse = anyHttpUrlResponse()
-        URLProtocolStub.stub(data: nil, response: requestedResponse, error: nil)
-        
-        let exp = expectation(description: "Waits for completion")
-        
-        makeSUT().get(anyURL()) { result in
-            switch result {
-            case let .success(receivedData, receivedResponse):
-                let emptyData = Data()
-                XCTAssertEqual(receivedData, emptyData)
-                XCTAssertEqual(requestedResponse.url, receivedResponse.url)
-                XCTAssertEqual(requestedResponse.statusCode, receivedResponse.statusCode)
-            default:
-                XCTFail("Unexpected result!")
-            }
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        let response = anyHttpUrlResponse()
+        let receivedValues = resultSuccessFor(data: nil, response: response, error: nil)
+        let emptyData = Data()
+        XCTAssertEqual(receivedValues?.data, emptyData)
+        XCTAssertEqual(response.url, receivedValues?.response.url)
+        XCTAssertEqual(response.statusCode, receivedValues?.response.statusCode)
     }
     
     func test_get_succeedsOnNonNilDataAndHttpUrlResponseValues() {
+        let data = anyData()
+        let response = anyHttpUrlResponse()
         
-        let requestedData = anyData()
-        let requestedResponse = anyHttpUrlResponse()
-        
-        URLProtocolStub.stub(data: requestedData, response: requestedResponse, error: nil)
-        
-        let exp = expectation(description: "Waits for completion")
-        
-        makeSUT().get(anyURL()) { result in
-            switch result {
-            case let .success(receivedData, receivedResponse):
-                XCTAssertEqual(requestedData, receivedData)
-                XCTAssertEqual(requestedResponse.url, receivedResponse.url)
-                XCTAssertEqual(requestedResponse.statusCode, receivedResponse.statusCode)
-            default:
-                XCTFail("Unexpected result!")
-            }
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        let receivedValues = resultSuccessFor(data: data, response: response, error: nil)
+        XCTAssertEqual(data, receivedValues?.data)
+        XCTAssertEqual(response.url, receivedValues?.response.url)
+        XCTAssertEqual(response.statusCode, receivedValues?.response.statusCode)
     }
     
     func test_get_performsGETRequestWithURL() {
@@ -161,7 +133,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
         let exp = expectation(description: "Waits for completion")
         
         var receivedError: NSError?
-        
         makeSUT().get(anyURL()) { result in
             switch result {
             case .failure(let error as NSError):
@@ -175,6 +146,26 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         wait(for: [exp], timeout: 1.0)
         return receivedError
+    }
+    
+    private func resultSuccessFor(data: Data?, response: URLResponse?, error: NSError?, file: StaticString = #file, line: UInt = #line) -> (data: Data, response: HTTPURLResponse)? {
+        URLProtocolStub.stub(data: data, response: response, error: error)
+        
+        let exp = expectation(description: "Waits for completion")
+        
+        var receivedSuccess: (Data, HTTPURLResponse)?
+        makeSUT().get(anyURL()) { result in
+            switch result {
+            case let .success(receivedData, receivedResponse):
+                receivedSuccess = (receivedData, receivedResponse)
+            default:
+                XCTFail("expected success(), but found \(result) instead.", file: file, line: line)
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+        return receivedSuccess
     }
     
     class URLProtocolStub: URLProtocol {

@@ -51,8 +51,18 @@ final class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertEqual(receivedError!.domain, requestedError.domain, "Received error donot match Expected error.")
     }
     
-    func test_get_failsOnAllNilValues() {
+    func test_get_failsOnAllInvalidCases() {
         XCTAssertNotNil(resultErrorFor(data: nil, response: nil, error: nil))
+        XCTAssertNotNil(resultErrorFor(data: nil, response: anyNonHttpUrlResponse(), error: nil))
+        XCTAssertNotNil(resultErrorFor(data: nil, response: anyHttpUrlResponse(), error: nil))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: nil, error: nil))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: nil, error: anyError()))
+        XCTAssertNotNil(resultErrorFor(data: nil, response: anyNonHttpUrlResponse(), error: anyError()))
+        XCTAssertNotNil(resultErrorFor(data: nil, response: anyHttpUrlResponse(), error: anyError()))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyNonHttpUrlResponse(), error: anyError()))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyHttpUrlResponse(), error: anyError()))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyNonHttpUrlResponse(), error: nil))
+        XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyHttpUrlResponse(), error: nil))
     }
     
     func test_get_performsGETRequestWithURL() {
@@ -79,6 +89,18 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     private func anyError() -> NSError {
         NSError(domain: "Test", code: 0)
+    }
+    
+    private func anyNonHttpUrlResponse() -> URLResponse {
+        URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
+    }
+    
+    private func anyHttpUrlResponse() -> HTTPURLResponse {
+        HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)!
+    }
+    
+    private func anyData() -> Data {
+        Data("any data".utf8)
     }
     
     private func makeSUT() -> HTTPClient {

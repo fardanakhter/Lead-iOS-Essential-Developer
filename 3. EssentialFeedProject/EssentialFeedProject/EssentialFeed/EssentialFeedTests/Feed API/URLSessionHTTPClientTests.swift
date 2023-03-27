@@ -38,7 +38,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         URLProtocolStub.stopIntercepting()
     }
     
-    func test_get_deliversErrorOnFailureResult() {
+    func test_get_failsOnErrorValue() {
         let url = URL(string: "https://a-url.com")!
         let error = NSError(domain: "Test", code: 0)
         URLProtocolStub.stub(data: nil, response: nil, error: error)

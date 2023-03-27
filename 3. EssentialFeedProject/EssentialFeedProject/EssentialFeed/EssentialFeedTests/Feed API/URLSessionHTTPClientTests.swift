@@ -39,15 +39,12 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     func test_get_failsOnErrorValue() {
-        let url = URL(string: "https://a-url.com")!
-        let error = NSError(domain: "Test", code: 0)
+        let error = anyError()
         URLProtocolStub.stub(data: nil, response: nil, error: error)
-        
-        let sut = URLSessionHTTPClient()
         
         let exp = expectation(description: "Waits for completion")
         
-        sut.get(url) { result in
+        makeSUT().get(anyURL()) { result in
             switch result {
             case let .failure(receivedError as NSError):
                 XCTAssertEqual(receivedError.domain, error.domain, "received error: \(receivedError) is not equal to expected error: \(error)")
@@ -62,7 +59,8 @@ final class URLSessionHTTPClientTests: XCTestCase {
     }
     
     func test_get_performsGETRequestWithURL() {
-        let url = URL(string: "https://a-url.com")!
+        let url = anyURL()
+        
         let exp = expectation(description: "Waits for completion")
 
         URLProtocolStub.observeRequest { request in
@@ -71,13 +69,24 @@ final class URLSessionHTTPClientTests: XCTestCase {
             exp.fulfill()
         }
 
-        let sut = URLSessionHTTPClient()
-        sut.get(url) { _ in }
+        makeSUT().get(url) { _ in }
 
         wait(for: [exp], timeout: 1.0)
     }
     
     // Helpers
+    
+    private func anyURL() -> URL {
+        URL(string: "https://any-url.com")!
+    }
+    
+    private func anyError() -> NSError {
+        NSError(domain: "Test", code: 0)
+    }
+    
+    private func makeSUT() -> HTTPClient {
+        URLSessionHTTPClient()
+    }
     
     class URLProtocolStub: URLProtocol {
         

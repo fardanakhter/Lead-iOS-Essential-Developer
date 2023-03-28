@@ -10,26 +10,8 @@ import EssentialFeed
 
 final class EssentialFeedAPIEndToEndTests: XCTestCase {
 
-    func test_endToEndTestServerAPIGETFeedResults_matchesFixedData() {
-        
-        // setup
-        let url = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
-        let client = URLSessionHTTPClient()
-        let loader = RemoteFeedLoader(url: url, httpClient: client)
-        
-        // action
-        let exp = expectation(description: "Waits for completion!")
-        
-        var receivedResult: RemoteFeedLoader.Result?
-        loader.load { result in
-            receivedResult = result
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 8.0)
-        
-        // assert
-        switch receivedResult {
+    func test_endToEndTestServerAPIGETFeedResult_matchesFixedData() {
+        switch getFeedResult() {
         case let .success(feedItems):
             XCTAssertEqual(feedItems[0], expectedFeedItem(at: 0))
             XCTAssertEqual(feedItems[1], expectedFeedItem(at: 1))
@@ -46,10 +28,26 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         default:
             XCTFail("Expected success with feed items, found nil instead.")
         }
-        
     }
     
     // MARK: - Helpers
+    
+    private func getFeedResult() -> RemoteFeedLoader.Result? {
+        let url = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
+        let client = URLSessionHTTPClient()
+        let loader = RemoteFeedLoader(url: url, httpClient: client)
+        
+        let exp = expectation(description: "Waits for completion!")
+        
+        var receivedResult: RemoteFeedLoader.Result?
+        loader.load { result in
+            receivedResult = result
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 8.0)
+        return receivedResult
+    }
     
     private func expectedFeedItem(at index: Int) -> FeedItem {
         return FeedItem(id: id(at: index), description: description(at: index),

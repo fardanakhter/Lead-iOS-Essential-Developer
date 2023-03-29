@@ -189,10 +189,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
             client?.urlProtocolDidFinishLoading(self)
         }
         
-        override func stopLoading() {
-            URLProtocolStub.stub = nil
-            URLProtocolStub.requestObserver = nil
-        }
+        override func stopLoading() {}
         
         static func startIntercepting() {
             URLProtocol.registerClass(self)

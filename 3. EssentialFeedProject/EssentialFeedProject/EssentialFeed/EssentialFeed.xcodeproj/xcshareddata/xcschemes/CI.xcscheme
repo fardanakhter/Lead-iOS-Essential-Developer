@@ -41,7 +41,7 @@
       </CodeCoverageTargets>
       <Testables>
          <TestableReference
-            skipped = "YES"
+            skipped = "NO"
             parallelizable = "YES"
             testExecutionOrdering = "random">
             <BuildableReference
@@ -53,7 +53,9 @@
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "NO">
+            skipped = "NO"
+            parallelizable = "YES"
+            testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7703CF5A29C6C6ED00101DCA"

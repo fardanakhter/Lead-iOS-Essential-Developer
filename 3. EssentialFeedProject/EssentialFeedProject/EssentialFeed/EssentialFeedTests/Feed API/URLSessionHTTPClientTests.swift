@@ -140,7 +140,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
             return (receivedData, receivedResponse)
         }
         else {
-            XCTFail("Expected failure, got \(String(describing: result)) instead", file: file, line: line)
+            XCTFail("Expected success, got \(String(describing: result)) instead", file: file, line: line)
             return nil
         }
     }

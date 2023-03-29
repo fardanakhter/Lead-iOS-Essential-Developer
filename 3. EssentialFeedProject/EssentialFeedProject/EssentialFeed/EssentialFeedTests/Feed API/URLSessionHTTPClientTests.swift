@@ -11,10 +11,12 @@ import EssentialFeed
 final class URLSessionHTTPClientTests: XCTestCase {
     
     override class func setUp() {
+        super.setUp()
         URLProtocolStub.startIntercepting()
     }
     
     override class func tearDown() {
+        super.tearDown()
         URLProtocolStub.stopIntercepting()
     }
     

@@ -9,7 +9,7 @@ import Foundation
 import XCTest
 import EssentialFeed
 
-class RemoteFeedLoaderTests: XCTestCase {
+class LoadFeedRemoteUseCaseTests: XCTestCase {
     
     func test_init_doesNotRequestDataFromURL() {
         let (_, client) = makeSUT()
@@ -150,7 +150,7 @@ class RemoteFeedLoaderTests: XCTestCase {
         let expectation = expectation(description: "Waiting for load() to complete")
         
         sut.load() { result in
-            RemoteFeedLoaderTests.compare(result, with: expectedResult)
+            Self.compare(result, with: expectedResult)
             expectation.fulfill()
         }
         

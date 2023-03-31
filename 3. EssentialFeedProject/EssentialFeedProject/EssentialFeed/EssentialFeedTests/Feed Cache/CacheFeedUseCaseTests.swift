@@ -16,16 +16,28 @@ class LocalFeedLoader {
         self.store = store
     }
     
-    func save(_ items: [FeedItem]) {
-        store.deleteFeedCache()
+    func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void) {
+        store.deleteFeedCache { error in
+            completion(error)
+        }
     }
 }
 
 class FeedStore {
     private(set) var deleteFeedCacheCallCount: UInt = 0
+    private(set) var insertFeedItemsCallCount: UInt = 0
     
-    func deleteFeedCache() {
+    typealias DeleteCompletion = (Error?) -> Void
+    
+    private var completionsForDeletion = [DeleteCompletion]()
+    
+    func deleteFeedCache(completion: @escaping DeleteCompletion) {
         deleteFeedCacheCallCount += 1
+        completionsForDeletion.append(completion)
+    }
+    
+    func completeDeletion(withError error: NSError, at index: Int = 0) {
+        completionsForDeletion[index](error)
     }
 }
 
@@ -44,19 +56,45 @@ class CacheFeedUseCaseTests: XCTestCase {
         let loader = LocalFeedLoader(store: store)
         let feedItems = [uniqueItem(), uniqueItem()]
         
-        loader.save(feedItems)
+        loader.save(feedItems) { _ in }
         
         XCTAssertEqual(store.deleteFeedCacheCallCount, 1)
     }
     
+    func test_save_doesNotRequestsInsertionOnCacheDeletionError() {
+        let store = FeedStore()
+        let loader = LocalFeedLoader(store: store)
+        let feedItems = [uniqueItem(), uniqueItem()]
+        let deleteError = anyError()
+        let exp = expectation(description: "Waits for completion!")
+        
+        var receivedError: Error?
+        loader.save(feedItems) { error in
+            receivedError = error
+            exp.fulfill()
+        }
+        
+        store.completeDeletion(withError: deleteError)
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertEqual(receivedError as? NSError, deleteError)
+        XCTAssertEqual(store.insertFeedItemsCallCount, 0)
+    }
+    
+    
+    
     //MARK: - Helpers
     
-    func uniqueItem() -> FeedItem {
+    private func uniqueItem() -> FeedItem {
         return FeedItem(id: UUID(), description: nil, location: nil, imageURL: anyURL())
     }
     
-    func anyURL() -> URL {
+    private func anyURL() -> URL {
         return URL(string: "https://any-url.com")!
+    }
+    
+    private func anyError() -> NSError {
+        NSError(domain: "Test", code: 0)
     }
 
 }

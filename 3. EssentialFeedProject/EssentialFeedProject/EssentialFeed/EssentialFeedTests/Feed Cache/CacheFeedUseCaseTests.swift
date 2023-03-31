@@ -118,44 +118,26 @@ class CacheFeedUseCaseTests: XCTestCase {
     
     func test_save_failsToDeleteCacheFeed() {
         let (sut, store) = makeSUT()
-        let feedItems = [uniqueItem(), uniqueItem()]
         let deleteError = anyError()
-        let exp = expectation(description: "Waits for save completion!")
         
-        var receivedErrors = [NSError?]()
-        sut.save(feedItems) { error in
-            receivedErrors.append(error as NSError?)
-            exp.fulfill()
-        }
-        
-        store.completeDeletion(withError: deleteError)
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertEqual(receivedErrors, [deleteError])
+        expect(sut, toCompleteWith: deleteError, when: {
+            store.completeDeletion(withError: deleteError)
+        })
     }
     
     func test_save_failsToInsertNewCacheFeed() {
         let (sut, store) = makeSUT()
-        let feedItems = [uniqueItem(), uniqueItem()]
         let insertError = anyError()
-        let exp = expectation(description: "Waits for save completion!")
         
-        var receivedErrors = [NSError?]()
-        sut.save(feedItems) { error in
-            receivedErrors.append(error as NSError?)
-            exp.fulfill()
-        }
-        
-        store.completeDeletionWithSuccess()
-        store.completeInsertion(withError: insertError)
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertEqual(receivedErrors, [insertError])
+        expect(sut, toCompleteWith: insertError, when: {
+            store.completeDeletionWithSuccess()
+            store.completeInsertion(withError: insertError)
+        })
     }
     
     //MARK: - Helpers
     
-    private func makeSUT(timeStamp: () -> Date = { Date() }, file: StaticString = #file, line: UInt = #line) -> (LocalFeedLoader, FeedStore) {
+    private func makeSUT(timeStamp: () -> Date = { Date() }, file: StaticString = #file, line: UInt = #line) -> (loader: LocalFeedLoader, store: FeedStore) {
         let store = FeedStore()
         let loader = LocalFeedLoader(store: store, timestamp: timeStamp)
         trackMemoryLeak(store, file: file, line: line)
@@ -175,4 +157,21 @@ class CacheFeedUseCaseTests: XCTestCase {
         NSError(domain: "Test", code: 0)
     }
 
+    private func expect(_ sut: LocalFeedLoader, toCompleteWith error: NSError, when action: @escaping () -> Void) {
+        let feedItems = [uniqueItem(), uniqueItem()]
+        let exp = expectation(description: "Waits for save completion!")
+        
+        var receivedErrors = [NSError?]()
+        sut.save(feedItems) { error in
+            receivedErrors.append(error as NSError?)
+            exp.fulfill()
+        }
+        
+        action()
+        
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertEqual(receivedErrors, [error])
+    }
+    
 }

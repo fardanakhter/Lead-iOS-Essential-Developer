@@ -119,6 +119,7 @@
 		7703CF5F29C6C6ED00101DCA /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
+				77D3556529D244BA0085EBF2 /* Helper */,
 				77D86A3429D614CA00A234AD /* Feed Cache */,
 				77D3555E29CF2CD90085EBF2 /* Feed API */,
 			);
@@ -158,7 +159,6 @@
 			children = (
 				775C48BE29CA10A700921C91 /* LoadFeedRemoteUseCaseTests.swift */,
 				77D3555F29D061320085EBF2 /* URLSessionHTTPClientTests.swift */,
-				77D3556529D244BA0085EBF2 /* Helper */,
 			);
 			path = "Feed API";
 			sourceTree = "<group>";

@@ -45,31 +45,28 @@ class FeedStore {
 class CacheFeedUseCaseTests: XCTestCase {
 
     func test_init_doesNotPerformDeletionOnCreation() {
-        let store = FeedStore()
-        _ = LocalFeedLoader(store: store)
+        let (_, store) = makeSUT()
         
         XCTAssertEqual(store.deleteFeedCacheCallCount, 0)
     }
     
     func test_save_requestsCacheDeletion() {
-        let store = FeedStore()
-        let loader = LocalFeedLoader(store: store)
+        let (sut, store) = makeSUT()
         let feedItems = [uniqueItem(), uniqueItem()]
         
-        loader.save(feedItems) { _ in }
+        sut.save(feedItems) { _ in }
         
         XCTAssertEqual(store.deleteFeedCacheCallCount, 1)
     }
     
     func test_save_doesNotRequestsInsertionOnCacheDeletionError() {
-        let store = FeedStore()
-        let loader = LocalFeedLoader(store: store)
+        let (sut, store) = makeSUT()
         let feedItems = [uniqueItem(), uniqueItem()]
         let deleteError = anyError()
         let exp = expectation(description: "Waits for completion!")
         
         var receivedError: Error?
-        loader.save(feedItems) { error in
+        sut.save(feedItems) { error in
             receivedError = error
             exp.fulfill()
         }
@@ -81,9 +78,32 @@ class CacheFeedUseCaseTests: XCTestCase {
         XCTAssertEqual(store.insertFeedItemsCallCount, 0)
     }
     
-    
+//    func test_save_requestsNewCacheInsertionOnSuccessfulCacheDeletion() {
+//        let (sut, store) = makeSUT()
+//        let feedItems = [uniqueItem(), uniqueItem()]
+//        let deleteError = anyError()
+//        let exp = expectation(description: "Waits for completion!")
+//        
+//        var receivedError: Error?
+//        sut.save(feedItems) { error in
+//            receivedError = error
+//            exp.fulfill()
+//        }
+//        
+//        store.completeDeletion(withError: deleteError)
+//        wait(for: [exp], timeout: 1.0)
+//        
+//        XCTAssertEqual(receivedError as? NSError, deleteError)
+//        XCTAssertEqual(store.insertFeedItemsCallCount, 0)
+//    }
     
     //MARK: - Helpers
+    
+    private func makeSUT() -> (LocalFeedLoader, FeedStore) {
+        let store = FeedStore()
+        let loader = LocalFeedLoader(store: store)
+        return (loader, store)
+    }
     
     private func uniqueItem() -> FeedItem {
         return FeedItem(id: UUID(), description: nil, location: nil, imageURL: anyURL())

@@ -32,7 +32,6 @@ class LocalFeedLoader {
 
 class FeedStore {
     private(set) var deleteFeedCacheCallCount: UInt = 0
-    private(set) var insertFeedItemsCallCount: UInt = 0
     private(set) var insertFeedItemsValues = [(items: [FeedItem], timestamp: Date)]()
     
     typealias DeleteCompletion = (Error?) -> Void
@@ -53,7 +52,6 @@ class FeedStore {
     }
     
     func insertFeedCache(with items: [FeedItem], and timestamp: Date) {
-        insertFeedItemsCallCount += 1
         insertFeedItemsValues.append((items, timestamp))
     }
     
@@ -80,20 +78,11 @@ class CacheFeedUseCaseTests: XCTestCase {
     func test_save_doesNotRequestsInsertionOnCacheDeletionError() {
         let (sut, store) = makeSUT()
         let feedItems = [uniqueItem(), uniqueItem()]
-        let deleteError = anyError()
-        let exp = expectation(description: "Waits for completion!")
         
-        var receivedError: Error?
-        sut.save(feedItems) { error in
-            receivedError = error
-            exp.fulfill()
-        }
+        sut.save(feedItems) { _ in }
+        store.completeDeletion(withError: anyError())
         
-        store.completeDeletion(withError: deleteError)
-        wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertEqual(receivedError as? NSError, deleteError)
-        XCTAssertEqual(store.insertFeedItemsCallCount, 0)
+        XCTAssertEqual(store.insertFeedItemsValues.count, 0)
     }
     
     func test_save_requestsNewCacheInsertionOnSuccessfulCacheDeletion() {
@@ -101,10 +90,9 @@ class CacheFeedUseCaseTests: XCTestCase {
         let feedItems = [uniqueItem(), uniqueItem()]
 
         sut.save(feedItems) { _ in }
-
         store.completeDeletionWithSuccess()
 
-        XCTAssertEqual(store.insertFeedItemsCallCount, 1)
+        XCTAssertEqual(store.insertFeedItemsValues.count, 1)
     }
     
     func test_save_requestsNewCacheInsertionWithTimeStampOnSuccessfulCacheDeletion() {
@@ -119,6 +107,25 @@ class CacheFeedUseCaseTests: XCTestCase {
         XCTAssertEqual(store.insertFeedItemsValues.count, 1)
         XCTAssertEqual(store.insertFeedItemsValues.first?.items, feedItems)
         XCTAssertEqual(store.insertFeedItemsValues.first?.timestamp, timestamp)
+    }
+    
+    func test_save_failsToDeleteCacheFeed() {
+        let (sut, store) = makeSUT()
+        let feedItems = [uniqueItem(), uniqueItem()]
+        let deleteError = anyError()
+        let exp = expectation(description: "Waits for save completion!")
+        
+        var receivedErrors = [NSError?]()
+        sut.save(feedItems) { error in
+            receivedErrors.append(error as NSError?)
+            exp.fulfill()
+        }
+        
+        store.completeDeletion(withError: deleteError)
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertEqual(receivedErrors.count, 1)
+        XCTAssertEqual(receivedErrors, [deleteError])
     }
     
     //MARK: - Helpers

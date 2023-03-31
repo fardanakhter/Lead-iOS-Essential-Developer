@@ -17,8 +17,13 @@ class LocalFeedLoader {
     }
     
     func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void) {
-        store.deleteFeedCache { error in
-            completion(error)
+        store.deleteFeedCache { [unowned self] error in
+            if error == nil {
+                self.store.insertFeedCache(with: items)
+            }
+            else {
+                completion(error)
+            }
         }
     }
 }
@@ -39,6 +44,15 @@ class FeedStore {
     func completeDeletion(withError error: NSError, at index: Int = 0) {
         completionsForDeletion[index](error)
     }
+    
+    func completeDeletionWithSuccess(at index: Int = 0) {
+        completionsForDeletion[index](nil)
+    }
+    
+    func insertFeedCache(with: [FeedItem]) {
+        insertFeedItemsCallCount += 1
+    }
+    
 }
 
 // Test Code
@@ -78,24 +92,16 @@ class CacheFeedUseCaseTests: XCTestCase {
         XCTAssertEqual(store.insertFeedItemsCallCount, 0)
     }
     
-//    func test_save_requestsNewCacheInsertionOnSuccessfulCacheDeletion() {
-//        let (sut, store) = makeSUT()
-//        let feedItems = [uniqueItem(), uniqueItem()]
-//        let deleteError = anyError()
-//        let exp = expectation(description: "Waits for completion!")
-//        
-//        var receivedError: Error?
-//        sut.save(feedItems) { error in
-//            receivedError = error
-//            exp.fulfill()
-//        }
-//        
-//        store.completeDeletion(withError: deleteError)
-//        wait(for: [exp], timeout: 1.0)
-//        
-//        XCTAssertEqual(receivedError as? NSError, deleteError)
-//        XCTAssertEqual(store.insertFeedItemsCallCount, 0)
-//    }
+    func test_save_requestsNewCacheInsertionOnSuccessfulCacheDeletion() {
+        let (sut, store) = makeSUT()
+        let feedItems = [uniqueItem(), uniqueItem()]
+
+        sut.save(feedItems) { _ in }
+
+        store.completeDeletionWithSuccess()
+
+        XCTAssertEqual(store.insertFeedItemsCallCount, 1)
+    }
     
     //MARK: - Helpers
     

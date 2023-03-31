@@ -124,7 +124,6 @@ class CacheFeedUseCaseTests: XCTestCase {
         store.completeDeletion(withError: deleteError)
         wait(for: [exp], timeout: 1.0)
         
-        XCTAssertEqual(receivedErrors.count, 1)
         XCTAssertEqual(receivedErrors, [deleteError])
     }
     

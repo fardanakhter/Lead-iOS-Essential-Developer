@@ -86,7 +86,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         })
     }
     
-    func test_save_doesNotDeliverErrorOnSutDeallocation() {
+    func test_save_doesNotDeliverDeletionErrorAfterSutInstanceIsDeallocated() {
         let timeStamp = Date()
         let store = FeedStoreSpy()
         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, timestamp: { timeStamp })
@@ -101,6 +101,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         
         XCTAssertTrue(receivedResult.isEmpty)
     }
+    
     
     //MARK: - Helpers
     

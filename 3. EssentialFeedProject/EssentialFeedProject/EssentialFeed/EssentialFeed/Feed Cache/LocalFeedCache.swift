@@ -17,12 +17,15 @@ public class LocalFeedLoader {
     }
     
     public func save(_ items: [FeedItem], completion: @escaping (Error?) -> Void) {
-        store.deleteFeedCache { [unowned self] error in
-            guard error == nil else {
+        store.deleteFeedCache { [weak self] error in
+            guard let self else { return }
+            
+            if error == nil {
                 completion(error)
-                return
             }
-            self.store.insertFeedCache(with: items, and: timestamp, completion: completion)
+            else {
+                self.store.insertFeedCache(with: items, and: timestamp, completion: completion)
+            }
         }
     }
 }

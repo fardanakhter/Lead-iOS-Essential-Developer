@@ -86,6 +86,22 @@ class CacheFeedUseCaseTests: XCTestCase {
         })
     }
     
+    func test_save_doesNotDeliverErrorOnSutDeallocation() {
+        let timeStamp = Date()
+        let store = FeedStoreSpy()
+        var sut: LocalFeedLoader? = LocalFeedLoader(store: store, timestamp: { timeStamp })
+        
+        var receivedResult = [Error?]()
+        sut?.save([uniqueItem()]) { error in
+            receivedResult.append(error)
+        }
+        
+        sut = nil
+        store.completeDeletion(withError: anyError())
+        
+        XCTAssertTrue(receivedResult.isEmpty)
+    }
+    
     //MARK: - Helpers
     
     private func makeSUT(_ timeStamp: () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (loader: LocalFeedLoader, store: FeedStoreSpy) {

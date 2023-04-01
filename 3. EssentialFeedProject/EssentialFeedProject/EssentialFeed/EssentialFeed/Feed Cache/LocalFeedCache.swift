@@ -11,6 +11,8 @@ public class LocalFeedLoader {
     private let store: FeedStore
     private let timestamp: Date
     
+    public typealias SaveResult = Error?
+    
     public init(store: FeedStore, timestamp: () -> Date) {
         self.store = store
         self.timestamp = timestamp()
@@ -21,7 +23,7 @@ public class LocalFeedLoader {
             guard let self else { return }
             
             if let deletionError = error {
-                completion(error)
+                completion(deletionError)
             }
             else {
                 self.cache(items, with: timestamp, OnCompletion: completion)

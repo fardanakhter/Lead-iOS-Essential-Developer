@@ -91,7 +91,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         let store = FeedStoreSpy()
         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, timestamp: { timeStamp })
         
-        var receivedResult = [Error?]()
+        var receivedResult = [LocalFeedLoader.SaveResult]()
         sut?.save([uniqueItem()]) { error in
             receivedResult.append(error)
         }
@@ -107,7 +107,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         let store = FeedStoreSpy()
         var sut: LocalFeedLoader? = LocalFeedLoader(store: store, timestamp: { timeStamp })
         
-        var receivedResult = [Error?]()
+        var receivedResult = [LocalFeedLoader.SaveResult]()
         sut?.save([uniqueItem()]) { error in
             receivedResult.append(error)
         }
@@ -115,6 +115,23 @@ class CacheFeedUseCaseTests: XCTestCase {
         store.completeDeletionWithSuccess()
         sut = nil
         store.completeInsertion(withError: anyError())
+        
+        XCTAssertTrue(receivedResult.isEmpty)
+    }
+    
+    func test_save_doesNotInvokeCompletionOnSuccessfulInsertionAfterSutInstanceIsDeallocated() {
+        let timeStamp = Date()
+        let store = FeedStoreSpy()
+        var sut: LocalFeedLoader? = LocalFeedLoader(store: store, timestamp: { timeStamp })
+        
+        var receivedResult = [LocalFeedLoader.SaveResult]()
+        sut?.save([uniqueItem()]) { error in
+            receivedResult.append(error)
+        }
+        
+        store.completeDeletionWithSuccess()
+        sut = nil
+        store.completeInsertionWithSuccess()
         
         XCTAssertTrue(receivedResult.isEmpty)
     }

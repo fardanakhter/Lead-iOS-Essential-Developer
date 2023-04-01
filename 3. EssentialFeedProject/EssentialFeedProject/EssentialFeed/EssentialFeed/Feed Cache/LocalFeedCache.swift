@@ -20,11 +20,14 @@ public class LocalFeedLoader {
         store.deleteFeedCache { [weak self] error in
             guard let self else { return }
             
-            if error == nil {
+            if error != nil {
                 completion(error)
             }
             else {
-                self.store.insertFeedCache(with: items, and: timestamp, completion: completion)
+                self.store.insertFeedCache(with: items, and: timestamp) { [weak self] error in
+                    guard self != nil else { return }
+                    completion(error)
+                }
             }
         }
     }

@@ -52,6 +52,17 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         })
     }
     
+    func test_load_deliversNoFeedImageWhenTimestampIsMoreThanSevenDaysOld() {
+        let currentDate = Date()
+        let (sut, store) = makeSUT({ currentDate })
+        let imageFeeds = uniqueImageFeeds()
+        
+        expect(sut, toCompleteWith: .success([]), when: {
+            let lessThanSevenDaysOld = Date().addingDay(-7).addingSeconds(-1)
+            store.completeLoad(with: imageFeeds.local, timestamp: lessThanSevenDaysOld)
+        })
+    }
+    
     //MARK: - Helpers
     
     private func makeSUT(_ timeStamp: () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (loader: LocalFeedLoader, store: FeedStoreSpy) {

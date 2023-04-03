@@ -54,11 +54,15 @@ class FeedStoreSpy: FeedStore {
     }
     
     func completeLoad(withError error: NSError, at index: Int = 0) {
-        completionsForLoad[index](error)
+        completionsForLoad[index](.failure(error))
     }
     
     func completeLoadWithEmptyCache(at index: Int = 0) {
-        completionsForLoad[index](nil)
+        completionsForLoad[index](.empty)
+    }
+    
+    func completeLoad(with feed: [LocalFeedImage], timestamp: Date, at index: Int = 0) {
+        completionsForLoad[index](.found(feed: feed, timestamp: timestamp))
     }
     
 }

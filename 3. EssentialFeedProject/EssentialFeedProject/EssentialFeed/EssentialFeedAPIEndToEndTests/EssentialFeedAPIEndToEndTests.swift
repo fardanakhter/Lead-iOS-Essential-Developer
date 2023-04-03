@@ -12,15 +12,15 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
 
     func test_endToEndTestServerAPIGETFeedResult_matchesFixedData() {
         switch getFeedResult() {
-        case let .success(feedItems):
-            XCTAssertEqual(feedItems[0], expectedFeedItem(at: 0))
-            XCTAssertEqual(feedItems[1], expectedFeedItem(at: 1))
-            XCTAssertEqual(feedItems[2], expectedFeedItem(at: 2))
-            XCTAssertEqual(feedItems[3], expectedFeedItem(at: 3))
-            XCTAssertEqual(feedItems[4], expectedFeedItem(at: 4))
-            XCTAssertEqual(feedItems[5], expectedFeedItem(at: 5))
-            XCTAssertEqual(feedItems[6], expectedFeedItem(at: 6))
-            XCTAssertEqual(feedItems[7], expectedFeedItem(at: 7))
+        case let .success(images):
+            XCTAssertEqual(images[0], expectedImage(at: 0))
+            XCTAssertEqual(images[1], expectedImage(at: 1))
+            XCTAssertEqual(images[2], expectedImage(at: 2))
+            XCTAssertEqual(images[3], expectedImage(at: 3))
+            XCTAssertEqual(images[4], expectedImage(at: 4))
+            XCTAssertEqual(images[5], expectedImage(at: 5))
+            XCTAssertEqual(images[6], expectedImage(at: 6))
+            XCTAssertEqual(images[7], expectedImage(at: 7))
             
         case let .failure(error):
             XCTFail("Expected success with feed items, found \(error) instead.")
@@ -52,9 +52,9 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
         return receivedResult
     }
     
-    private func expectedFeedItem(at index: Int) -> FeedItem {
-        return FeedItem(id: id(at: index), description: description(at: index),
-                        location: location(at: index), imageURL: imageURL(at: index))
+    private func expectedImage(at index: Int) -> FeedImage {
+        return FeedImage(id: id(at: index), description: description(at: index),
+                        location: location(at: index), url: imageURL(at: index))
     }
     
     private func id(at index: Int) -> UUID {

@@ -37,6 +37,10 @@ public class LocalFeedLoader {
             completion(error)
         }
     }
+    
+    public func load(completion: @escaping ([FeedImage]) -> Void) {
+        self.store.loadFeedCache()
+    }
 }
 
 extension Array where Element == FeedImage {

@@ -24,6 +24,23 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.loadImageFeed])
     }
     
+    func test_load_deliversErrorOnLoadImageFeedFailure() {
+        let (sut, store) = makeSUT()
+        let loadFeedError = anyError()
+        let exp = expectation(description: "Waits for load completion")
+        
+        var receivedResult = [Error?]()
+        sut.load() { error in
+            receivedResult.append(error)
+            exp.fulfill()
+        }
+        
+        store.completeLoad(withError: loadFeedError)
+        wait(for: [exp], timeout: 1.0)
+        
+        XCTAssertEqual(receivedResult as [NSError?], [loadFeedError])
+    }
+    
     //MARK: - Helpers
     
     private func makeSUT(_ timeStamp: () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (loader: LocalFeedLoader, store: FeedStoreSpy) {
@@ -32,5 +49,9 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         trackMemoryLeak(store, file: file, line: line)
         trackMemoryLeak(loader, file: file, line: line)
         return (loader, store)
+    }
+    
+    private func anyError() -> NSError {
+        NSError(domain: "Test", code: 0)
     }
 }

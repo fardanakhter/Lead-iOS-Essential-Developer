@@ -18,6 +18,7 @@ class FeedStoreSpy: FeedStore {
     
     private var completionsForDeletion = [DeleteCompletion]()
     private var completionsForInsertion = [InsertCompletion]()
+    private var completionsForLoad = [LoadCompletion]()
     
     private(set) var receivedMessages = [ReceivedMessages]()
     
@@ -47,8 +48,13 @@ class FeedStoreSpy: FeedStore {
         completionsForInsertion[index](nil)
     }
     
-    func loadFeedCache() {
+    func loadFeedCache(completion: @escaping LoadCompletion) {
         receivedMessages.append(.loadImageFeed)
+        completionsForLoad.append(completion)
+    }
+    
+    func completeLoad(withError error: NSError, at index: Int = 0) {
+        completionsForLoad[index](error)
     }
     
 }

@@ -198,9 +198,9 @@
 		77D86A3429D614CA00A234AD /* Feed Cache */ = {
 			isa = PBXGroup;
 			children = (
+				7707918129DAF93900C4BDF5 /* FeedStoreSpy.swift */,
 				77D86A3529D6156B00A234AD /* CacheFeedUseCaseTests.swift */,
 				7707917F29DAF58A00C4BDF5 /* LoadFeedFromCacheUseCaseTests.swift */,
-				7707918129DAF93900C4BDF5 /* FeedStoreSpy.swift */,
 			);
 			path = "Feed Cache";
 			sourceTree = "<group>";

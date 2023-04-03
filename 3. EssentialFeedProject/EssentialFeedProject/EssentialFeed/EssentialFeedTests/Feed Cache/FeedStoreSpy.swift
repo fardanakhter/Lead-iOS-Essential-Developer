@@ -57,4 +57,8 @@ class FeedStoreSpy: FeedStore {
         completionsForLoad[index](error)
     }
     
+    func completeLoadWithEmptyCache(at index: Int = 0) {
+        completionsForLoad[index](nil)
+    }
+    
 }

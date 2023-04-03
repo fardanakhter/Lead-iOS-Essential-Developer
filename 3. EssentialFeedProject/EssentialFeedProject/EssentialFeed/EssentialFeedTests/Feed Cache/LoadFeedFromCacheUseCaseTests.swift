@@ -47,7 +47,7 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let imageFeeds = uniqueImageFeeds()
         
         expect(sut, toCompleteWith: .success(imageFeeds.models), when: {
-            let lessThanSevenDaysOld = Date().addingDay(-7).addingSeconds(1)
+            let lessThanSevenDaysOld = currentDate.addingDay(-7).addingSeconds(1)
             store.completeLoad(with: imageFeeds.local, timestamp: lessThanSevenDaysOld)
         })
     }
@@ -58,8 +58,19 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let imageFeeds = uniqueImageFeeds()
         
         expect(sut, toCompleteWith: .success([]), when: {
-            let lessThanSevenDaysOld = Date().addingDay(-7).addingSeconds(-1)
+            let lessThanSevenDaysOld = currentDate.addingDay(-7).addingSeconds(-1)
             store.completeLoad(with: imageFeeds.local, timestamp: lessThanSevenDaysOld)
+        })
+    }
+    
+    func test_load_deliversNoFeedImageWhenTimestampIsSevenDaysOld() {
+        let currentDate = Date()
+        let (sut, store) = makeSUT({ currentDate })
+        let imageFeeds = uniqueImageFeeds()
+        
+        expect(sut, toCompleteWith: .success([]), when: {
+            let sevenDaysAgo = currentDate.addingDay(-7)
+            store.completeLoad(with: imageFeeds.local, timestamp: sevenDaysAgo)
         })
     }
     

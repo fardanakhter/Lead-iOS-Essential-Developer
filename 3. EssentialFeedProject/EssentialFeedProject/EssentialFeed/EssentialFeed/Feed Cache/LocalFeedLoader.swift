@@ -9,7 +9,7 @@ import Foundation
 
 public class LocalFeedLoader {
     private let store: FeedStore
-    private let timestamp: Date
+    private let currentDate: Date
     private let calender = Calendar(identifier: .gregorian)
     
     public typealias SaveResult = Error?
@@ -17,7 +17,7 @@ public class LocalFeedLoader {
     
     public init(store: FeedStore, timestamp: () -> Date) {
         self.store = store
-        self.timestamp = timestamp()
+        self.currentDate = timestamp()
     }
     
     public func save(_ feed: [FeedImage], completion: @escaping (Error?) -> Void) {
@@ -28,7 +28,7 @@ public class LocalFeedLoader {
                 completion(deletionError)
             }
             else {
-                self.cache(feed, with: timestamp, OnCompletion: completion)
+                self.cache(feed, with: currentDate, OnCompletion: completion)
             }
         }
     }
@@ -63,7 +63,7 @@ public class LocalFeedLoader {
     private func validate(_ date: Date) -> Bool {
         guard let maxCacheAge = calender.date(byAdding: .day, value: maxCacheAgeInDays, to: date)
         else { return false }
-        return timestamp < maxCacheAge
+        return currentDate < maxCacheAge
     }
 }
 

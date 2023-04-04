@@ -58,8 +58,8 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         let imageFeeds = uniqueImageFeeds()
         
         expect(sut, toCompleteWith: .success([]), when: {
-            let lessThanSevenDaysOld = currentDate.addingDay(-7).addingSeconds(-1)
-            store.completeLoad(with: imageFeeds.local, timestamp: lessThanSevenDaysOld)
+            let moreThanSevenDaysOld = currentDate.addingDay(-7).addingSeconds(-1)
+            store.completeLoad(with: imageFeeds.local, timestamp: moreThanSevenDaysOld)
         })
     }
     

@@ -120,6 +120,16 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.loadImageFeed, .deleteCacheFeed])
     }
     
+    func test_load_doesNotRequestsDeletionWhenRetrievedCacheIsEmpty() {
+        let (sut, store) = makeSUT()
+        
+        sut.load { _ in }
+        
+        store.completeLoadWithEmptyCache()
+        
+        XCTAssertEqual(store.receivedMessages, [.loadImageFeed])
+    }
+    
     //MARK: - Helpers
     
     private func makeSUT(_ timeStamp: () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (loader: LocalFeedLoader, store: FeedStoreSpy) {

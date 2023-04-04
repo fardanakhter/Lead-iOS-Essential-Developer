@@ -110,6 +110,16 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.loadImageFeed, .deleteCacheFeed])
     }
     
+    func test_load_requestsDeletionOfCacheWhenLoadingCacheRequestFails() {
+        let (sut, store) = makeSUT()
+        
+        sut.load { _ in }
+        
+        store.completeLoad(withError: anyError())
+        
+        XCTAssertEqual(store.receivedMessages, [.loadImageFeed, .deleteCacheFeed])
+    }
+    
     //MARK: - Helpers
     
     private func makeSUT(_ timeStamp: () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (loader: LocalFeedLoader, store: FeedStoreSpy) {

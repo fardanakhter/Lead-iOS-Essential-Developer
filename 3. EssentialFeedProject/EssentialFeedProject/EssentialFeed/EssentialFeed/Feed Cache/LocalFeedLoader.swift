@@ -41,7 +41,9 @@ public class LocalFeedLoader {
     }
     
     public func load(completion: @escaping (LoadResult) -> Void) {
-        self.store.loadFeedCache { [unowned self] result in
+        self.store.loadFeedCache { [weak self] result in
+            
+            guard let self else { return }
             
             switch result {
             case let .failure(error):

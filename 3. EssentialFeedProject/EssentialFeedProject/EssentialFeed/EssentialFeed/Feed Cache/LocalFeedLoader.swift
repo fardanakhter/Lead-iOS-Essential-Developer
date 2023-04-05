@@ -20,6 +20,18 @@ public class LocalFeedLoader {
         self.currentDate = timestamp()
     }
     
+    private var maxCacheAgeInDays: Int {
+        return 7
+    }
+    
+    private func validate(_ date: Date) -> Bool {
+        guard let maxCacheAge = calender.date(byAdding: .day, value: maxCacheAgeInDays, to: date)
+        else { return false }
+        return currentDate < maxCacheAge
+    }
+}
+
+extension LocalFeedLoader {
     public func save(_ feed: [FeedImage], completion: @escaping (Error?) -> Void) {
         store.deleteFeedCache { [weak self] error in
             guard let self else { return }
@@ -39,7 +51,9 @@ public class LocalFeedLoader {
             completion(error)
         }
     }
-    
+}
+
+extension LocalFeedLoader {
     public func load(completion: @escaping (LoadResult) -> Void) {
         self.store.loadFeedCache { [weak self] result in
             
@@ -57,7 +71,9 @@ public class LocalFeedLoader {
             }
         }
     }
-    
+}
+   
+extension LocalFeedLoader {
     public func validateCache() {
         self.store.loadFeedCache { [weak self] result in
             
@@ -74,16 +90,6 @@ public class LocalFeedLoader {
                 break
             }
         }
-    }
-    
-    private var maxCacheAgeInDays: Int {
-        return 7
-    }
-    
-    private func validate(_ date: Date) -> Bool {
-        guard let maxCacheAge = calender.date(byAdding: .day, value: maxCacheAgeInDays, to: date)
-        else { return false }
-        return currentDate < maxCacheAge
     }
 }
 

@@ -120,7 +120,7 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.loadImageFeed])
     }
     
-    func test_load_doesNotRequestsDeletionWhenRetrievedCacheIsEmpty() {
+    func test_load_hasNoSideEffectWhenRetrievedCacheIsEmpty() {
         let (sut, store) = makeSUT()
         
         sut.load { _ in }

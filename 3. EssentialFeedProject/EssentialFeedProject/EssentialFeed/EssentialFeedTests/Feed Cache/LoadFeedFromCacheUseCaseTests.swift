@@ -86,7 +86,7 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.loadImageFeed])
     }
     
-    func test_load_requestsDeletionOfCacheWhenTimestampIsMoreThanSevenDaysOld() {
+    func test_load_hasNoSideEffectWhenTimestampIsMoreThanSevenDaysOld() {
         let currentDate = Date()
         let (sut, store) = makeSUT({ currentDate })
         let moreThanSevenDaysOld = currentDate.addingDay(-7).addingSeconds(-1)
@@ -95,10 +95,10 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         
         store.completeLoad(with: uniqueImageFeeds().local, timestamp: moreThanSevenDaysOld)
         
-        XCTAssertEqual(store.receivedMessages, [.loadImageFeed, .deleteCacheFeed])
+        XCTAssertEqual(store.receivedMessages, [.loadImageFeed])
     }
     
-    func test_load_requestsDeletionOfCacheWhenTimestampIsSevenDaysOld() {
+    func test_load_hasNoSideEffectWhenTimestampIsSevenDaysOld() {
         let currentDate = Date()
         let (sut, store) = makeSUT({ currentDate })
         let sevenDaysOld = currentDate.addingDay(-7).addingSeconds(-1)
@@ -107,7 +107,7 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         
         store.completeLoad(with: uniqueImageFeeds().local, timestamp: sevenDaysOld)
         
-        XCTAssertEqual(store.receivedMessages, [.loadImageFeed, .deleteCacheFeed])
+        XCTAssertEqual(store.receivedMessages, [.loadImageFeed])
     }
     
     func test_load_hasNoSideEffectWhenLoadingCacheRequestFails() {

@@ -74,7 +74,7 @@ class LoadFeedFromCacheUseCaseTests: XCTestCase {
         })
     }
     
-    func test_load_doesNotRequestsDeletionOfCacheWhenTimestampIsLessThanSevenDaysOld() {
+    func test_load_hasNoSideEffectWhenTimestampIsLessThanSevenDaysOld() {
         let currentDate = Date()
         let (sut, store) = makeSUT({ currentDate })
         let lessThanSevenDaysOld = currentDate.addingDay(-7).addingSeconds(1)

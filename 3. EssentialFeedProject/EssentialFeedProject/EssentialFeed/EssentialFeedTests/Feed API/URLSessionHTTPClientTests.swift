@@ -77,14 +77,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
     
     // Helpers
     
-    private func anyURL() -> URL {
-        URL(string: "https://any-url.com")!
-    }
-    
-    private func anyError() -> NSError {
-        NSError(domain: "Test", code: 0)
-    }
-    
     private func anyNonHttpUrlResponse() -> URLResponse {
         URLResponse(url: anyURL(), mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
     }

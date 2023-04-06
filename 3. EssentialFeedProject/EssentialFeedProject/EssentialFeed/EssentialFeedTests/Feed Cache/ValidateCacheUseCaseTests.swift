@@ -26,38 +26,38 @@ class ValidateCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.loadImageFeed, .deleteCacheFeed])
     }
     
-    func test_validateCache_requestsDeletionOfCacheWhenTimestampIsMoreThanSevenDaysOld() {
+    func test_validateCache_requestsDeletionOfCacheOnExpiredCache() {
         let currentDate = Date()
         let (sut, store) = makeSUT({ currentDate })
-        let moreThanSevenDaysOld = currentDate.addingDay(-7).addingSeconds(-1)
+        let expiredTimestamp = currentDate.minusFeedCacheMaxAge().addingSeconds(-1)
         
         sut.validateCache()
         
-        store.completeLoad(with: uniqueImageFeeds().local, timestamp: moreThanSevenDaysOld)
+        store.completeLoad(with: uniqueImageFeeds().local, timestamp: expiredTimestamp)
         
         XCTAssertEqual(store.receivedMessages, [.loadImageFeed, .deleteCacheFeed])
     }
     
-    func test_validateCache_requestsDeletionOfCacheWhenTimestampIsSevenDaysOld() {
+    func test_validateCache_requestsDeletionOfCacheOnCacheExpiration() {
         let currentDate = Date()
         let (sut, store) = makeSUT({ currentDate })
-        let sevenDaysOld = currentDate.addingDay(-7).addingSeconds(-1)
+        let expiringTimestamp = currentDate.minusFeedCacheMaxAge().addingSeconds(-1)
         
         sut.validateCache()
         
-        store.completeLoad(with: uniqueImageFeeds().local, timestamp: sevenDaysOld)
+        store.completeLoad(with: uniqueImageFeeds().local, timestamp: expiringTimestamp)
         
         XCTAssertEqual(store.receivedMessages, [.loadImageFeed, .deleteCacheFeed])
     }
     
-    func test_validateCache_doesNotRequestsDeletionOfCacheWhenTimestampIsLessThanSevenDaysOld() {
+    func test_validateCache_doesNotRequestsDeletionOfCacheOnNonExpiredCache() {
         let currentDate = Date()
         let (sut, store) = makeSUT({ currentDate })
-        let lessThanSevenDaysOld = currentDate.addingDay(-7).addingSeconds(1)
+        let nonExpiredTimestamp = currentDate.minusFeedCacheMaxAge().addingSeconds(1)
         
         sut.validateCache()
         
-        store.completeLoad(with: uniqueImageFeeds().local, timestamp: lessThanSevenDaysOld)
+        store.completeLoad(with: uniqueImageFeeds().local, timestamp: nonExpiredTimestamp)
         
         XCTAssertEqual(store.receivedMessages, [.loadImageFeed])
     }

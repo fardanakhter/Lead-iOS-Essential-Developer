@@ -140,6 +140,7 @@ final class CodableFeedStoreTests: XCTestCase {
     
     private func makeSUT() -> CodableFeedStore {
         let sut = CodableFeedStore()
+        trackMemoryLeak(sut)
         return sut
     }
 }

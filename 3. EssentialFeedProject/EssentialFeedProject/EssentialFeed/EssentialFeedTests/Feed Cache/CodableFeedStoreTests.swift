@@ -75,7 +75,7 @@ final class CodableFeedStoreTests: XCTestCase {
         undoStoreSideEffects()
     }
     
-    func test_loadFeedCache_returnsEmptyResultOnEmptyCache() {
+    func test_loadFeedCache_returnsEmptyResultOnRetrievingEmptyCache() {
         let sut = makeSUT()
         let exp = expectation(description: "Waits for loadFeedCache completion")
         
@@ -93,7 +93,7 @@ final class CodableFeedStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func test_loadFeedCache_returnsEmptyResultsOnRetrivingEmptyCacheTwice() {
+    func test_loadFeedCache_hasNoSideEffectWhenRetrivingEmptyCacheTwice() {
         let sut = makeSUT()
         let exp = expectation(description: "Waits for loadFeedCache completion")
         
@@ -113,7 +113,7 @@ final class CodableFeedStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    func test_retrieveAfterInserting_deliversInsertedCache() {
+    func test_loadFeedCache_deliversLastInsertedCache() {
         let sut = makeSUT()
         let localFeedImages = uniqueImageFeeds().local
         let timestamp = Date.init()

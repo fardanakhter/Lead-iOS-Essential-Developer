@@ -138,6 +138,34 @@ final class CodableFeedStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_loadFeedCache_hasNoSideEffectWhenRetrievingNonEmptyCacheTwice() {
+        let sut = makeSUT()
+        let localFeedImages = uniqueImageFeeds().local
+        let timestamp = Date.init()
+        let exp = expectation(description: "Waits for loadFeedCache completion")
+        
+        sut.insertFeedCache(with: localFeedImages, and: timestamp) { error in
+            XCTAssertNil(error, "Failed to insert feed cache")
+            
+            sut.loadFeedCache { firstResult in
+            
+                sut.loadFeedCache { secondResult in
+                    switch (firstResult, secondResult) {
+                    case let (.found(firstCache), .found(secondCache)):
+                        XCTAssertEqual(firstCache.feed, secondCache.feed)
+                        XCTAssertEqual(firstCache.timestamp, secondCache.timestamp)
+                        
+                    default:
+                        XCTFail("Expected found results with no-side effects, got \(firstResult) and \(secondResult) instead")
+                    }
+                    exp.fulfill()
+                }
+            }
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT() -> CodableFeedStore {

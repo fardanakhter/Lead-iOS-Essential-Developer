@@ -191,6 +191,29 @@ final class CodableFeedStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_loadFeedCache_hasNoSideEffectWhenRetrievingCacheFailsTwice() {
+        let sut = makeSUT()
+        
+        try! "invalid data".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
+        
+        let exp = expectation(description: "Waits for loadFeedCache completion")
+        sut.loadFeedCache { firstResult in
+            
+            sut.loadFeedCache { secondResult in
+                switch (firstResult, secondResult) {
+                case (.failure(_), .failure(_)):
+                    break
+                    
+                default:
+                    XCTFail("Expected results with failure, got \(firstResult) and \(secondResult) instead")
+                }
+                exp.fulfill()
+            }
+        }
+
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT() -> CodableFeedStore {

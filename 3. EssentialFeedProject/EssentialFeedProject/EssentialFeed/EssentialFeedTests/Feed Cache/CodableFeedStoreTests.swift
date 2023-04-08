@@ -57,9 +57,14 @@ private final class CodableFeedStore {
             return
         }
 
-        let decoder = JSONDecoder()
-        let cahedFeed = try! decoder.decode(Cache.self, from: cachedData)
-        completion(.found(feed: cahedFeed.localFeed, timestamp: cahedFeed.timestamp))
+        do {
+            let decoder = JSONDecoder()
+            let cahedFeed = try decoder.decode(Cache.self, from: cachedData)
+            completion(.found(feed: cahedFeed.localFeed, timestamp: cahedFeed.timestamp))
+        }
+        catch(let error) {
+            completion(.failure(error))
+        }
     }
 }
 
@@ -163,6 +168,26 @@ final class CodableFeedStoreTests: XCTestCase {
             }
         }
         
+        wait(for: [exp], timeout: 1.0)
+    }
+    
+    func test_loadFeedCache_deliversErrorWhenRetrievingCacheFails() {
+        let sut = makeSUT()
+        
+        try! "invalid data".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
+        
+        let exp = expectation(description: "Waits for loadFeedCache completion")
+        sut.loadFeedCache { result in
+            switch result {
+            case .failure(_):
+                break
+                
+            default:
+                XCTFail("Expected result with failure, got \(result) instead")
+            }
+            exp.fulfill()
+        }
+
         wait(for: [exp], timeout: 1.0)
     }
     

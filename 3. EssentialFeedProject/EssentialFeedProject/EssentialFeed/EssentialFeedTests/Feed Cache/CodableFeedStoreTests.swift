@@ -37,7 +37,11 @@ private final class CodableFeedStore {
         }
     }
     
-    let storeURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathExtension("image-feed-cache.store")
+    let storeURL: URL
+    
+    init(_ storeURL: URL) {
+        self.storeURL = storeURL
+    }
     
     func insertFeedCache(with feed: [LocalFeedImage], and timestamp: Date, completion: @escaping FeedStore.InsertCompletion) {
         let encoder = JSONEncoder()
@@ -139,7 +143,8 @@ final class CodableFeedStoreTests: XCTestCase {
     // MARK: - Helpers
     
     private func makeSUT() -> CodableFeedStore {
-        let sut = CodableFeedStore()
+        let storeURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathExtension("image-feed-cache.store")
+        let sut = CodableFeedStore(storeURL)
         trackMemoryLeak(sut)
         return sut
     }

@@ -97,14 +97,10 @@ final class CodableFeedStoreTests: XCTestCase {
     
     func test_deleteFeedCache_doesNotDeleteEmptyCacheAndResultsInNoError() {
         let sut = makeSUT()
+
+        let deletionError = deleteCache(sut)
+        XCTAssertNil(deletionError, "Expected to delete with no error")
         
-        expect(sut, toCompleteRetrievalWith: .empty)
-        let exp = expectation(description: "Waits for delete completion")
-        sut.deleteFeedCache { error in
-            XCTAssertNil(error, "Expected to delete with no error")
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
         expect(sut, toCompleteRetrievalWith: .empty)
     }
     
@@ -112,13 +108,8 @@ final class CodableFeedStoreTests: XCTestCase {
         let sut = makeSUT()
         
         expect(sut, toInsert: (uniqueImageFeeds().local, Date()))
-        
-        let exp = expectation(description: "Waits for delete completion")
-        sut.deleteFeedCache { error in
-            XCTAssertNil(error, "Expected to delete with no error")
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
+        let deletionError = deleteCache(sut)
+        XCTAssertNil(deletionError, "Expected to delete cache successfully")
         
         expect(sut, toCompleteRetrievalWith: .empty)
     }
@@ -127,13 +118,7 @@ final class CodableFeedStoreTests: XCTestCase {
         let nonPermissableDirectory = noDeleteAccessDirectory()
         let sut = makeSUT(nonPermissableDirectory)
         
-        let exp = expectation(description: "Waits for delete completion")
-        var deletionError: Error?
-        sut.deleteFeedCache { error in
-            deletionError = error
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1.0)
+        let deletionError = deleteCache(sut)
 
         XCTAssertNotNil(deletionError, "Expected to delete with error")
     }
@@ -178,6 +163,17 @@ final class CodableFeedStoreTests: XCTestCase {
         
         wait(for: [exp], timeout: 1.0)
         return receivedError
+    }
+    
+    private func deleteCache(_ sut: FeedStore) -> Error? {
+        let exp = expectation(description: "Waits for delete completion")
+        var deletionError: Error?
+        sut.deleteFeedCache { error in
+            deletionError = error
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1.0)
+        return deletionError
     }
     
     private func testSpecificStoreURL() -> URL {

@@ -98,7 +98,8 @@ final class CodableFeedStoreTests: XCTestCase {
         let feed = uniqueImageFeeds().local
         let timestamp = Date.init()
         
-        expect(sut, toInsert: (feed, timestamp))
+        let insertionError = expect(sut, toInsert: (feed, timestamp))
+        XCTAssertNil(insertionError, "Expected to insert cache successfully")
         expect(sut, toCompleteRetrievalWith: .found(feed: feed, timestamp: timestamp))
     }
     
@@ -107,7 +108,8 @@ final class CodableFeedStoreTests: XCTestCase {
         let feed = uniqueImageFeeds().local
         let timestamp = Date.init()
         
-        expect(sut, toInsert: (feed, timestamp))
+        let insertionError = expect(sut, toInsert: (feed, timestamp))
+        XCTAssertNil(insertionError, "Expected to insert cache successfully")
         expect(sut, toCompleteRetrievalWith: .found(feed: feed, timestamp: timestamp))
         expect(sut, toCompleteRetrievalWith: .found(feed: feed, timestamp: timestamp))
     }

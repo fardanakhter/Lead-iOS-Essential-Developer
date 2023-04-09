@@ -129,6 +129,20 @@ final class CodableFeedStoreTests: XCTestCase {
         expect(sut, toCompleteRetrievalWith: .failure(anyError()))
     }
     
+    func test_insertFeedCache_overridesLastCacheWithLatestCache() {
+        let sut = makeSUT()
+        
+        let firstCache = (feed: uniqueImageFeeds().local, timestamp: Date())
+        let firstInsertionError = expect(sut, toInsert: firstCache)
+        XCTAssertNil(firstInsertionError, "Expected to insert cache successfully")
+        
+        let secondCache = (feed: uniqueImageFeeds().local, timestamp: Date())
+        let secondInsertionError = expect(sut, toInsert: secondCache)
+        XCTAssertNil(secondInsertionError, "Expected to override cache successfully")
+        
+        expect(sut, toCompleteRetrievalWith: .found(feed: secondCache.feed, timestamp: secondCache.timestamp))
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT() -> CodableFeedStore {

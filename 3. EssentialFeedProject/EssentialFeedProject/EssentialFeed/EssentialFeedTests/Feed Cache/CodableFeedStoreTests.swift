@@ -8,7 +8,7 @@
 import XCTest
 import EssentialFeed
 
-private final class CodableFeedStore {
+private final class CodableFeedStore: FeedStore {
     
     private struct Cache: Codable {
         let feed: [CodableFeedImage]
@@ -43,7 +43,7 @@ private final class CodableFeedStore {
         self.storeURL = storeURL
     }
     
-    func deleteFeedCache(completion: @escaping FeedStore.DeleteCompletion) {
+    func deleteFeedCache(completion: @escaping DeleteCompletion) {
         guard FileManager.default.fileExists(atPath: storeURL.path) else {
             return completion(nil)
         }
@@ -57,7 +57,7 @@ private final class CodableFeedStore {
         }
     }
     
-    func insertFeedCache(with feed: [LocalFeedImage], and timestamp: Date, completion: @escaping FeedStore.InsertCompletion) {
+    func insertFeedCache(with feed: [LocalFeedImage], and timestamp: Date, completion: @escaping InsertCompletion) {
         do {
             let encoder = JSONEncoder()
             let data = try encoder.encode(Cache(feed: feed.map(CodableFeedImage.init), timestamp: timestamp))
@@ -69,7 +69,7 @@ private final class CodableFeedStore {
         }
     }
     
-    func loadFeedCache(completion: @escaping FeedStore.LoadCompletion) {
+    func loadFeedCache(completion: @escaping LoadCompletion) {
         guard let cachedData = try? Data(contentsOf: storeURL) else {
             completion(.empty)
             return

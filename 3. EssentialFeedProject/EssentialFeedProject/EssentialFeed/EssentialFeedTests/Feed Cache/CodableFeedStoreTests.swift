@@ -133,9 +133,10 @@ final class CodableFeedStoreTests: XCTestCase {
     }
     
     func test_loadFeedCache_deliversErrorWhenRetrievingCacheFails() {
-        let sut = makeSUT()
+        let storeURL = testSpecificStoreURL()
+        let sut = makeSUT(storeURL)
         
-        try! "invalid data".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
+        try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
         
         expect(sut, toCompleteRetrievalWith: .failure(anyError()))
     }

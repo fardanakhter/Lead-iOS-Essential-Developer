@@ -165,7 +165,7 @@ final class CodableFeedStoreTests: XCTestCase {
     }
     
     func test_insertFeedCache_deliversErrorWhenCacheInsertionFails() {
-        let invalidStoreURL = URL(string: "//:invlaid-directory.store")!
+        let invalidStoreURL = anyInvalidURL()
         let sut = makeSUT(invalidStoreURL)
         
         let insertionError: Error?
@@ -262,6 +262,14 @@ final class CodableFeedStoreTests: XCTestCase {
         FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathExtension("\(type(of: self)).store")
     }
     
+    private func noDeleteAccessDirectory() -> URL {
+        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+    }
+    
+    private func anyInvalidURL() -> URL {
+        URL(string: "invalid://store-url")!
+    }
+    
     private func setupEmptyStoreState() {
         deleteStoreArtifacts()
     }
@@ -274,7 +282,5 @@ final class CodableFeedStoreTests: XCTestCase {
         try? FileManager.default.removeItem(at: testSpecificStoreURL())
     }
     
-    private func noDeleteAccessDirectory() -> URL {
-        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-    }
+    
 }

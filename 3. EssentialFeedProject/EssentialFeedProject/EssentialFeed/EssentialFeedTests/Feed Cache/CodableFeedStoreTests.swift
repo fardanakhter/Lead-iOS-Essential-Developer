@@ -83,14 +83,14 @@ final class CodableFeedStoreTests: XCTestCase {
     func test_loadFeedCache_returnsEmptyResultOnRetrievingEmptyCache() {
         let sut = makeSUT()
         
-        expect(sut, toCompleteCacheLoadWith: .empty)
+        expect(sut, toCompleteRetrievalWith: .empty)
     }
     
     func test_loadFeedCache_hasNoSideEffectWhenRetrivingEmptyCacheTwice() {
         let sut = makeSUT()
         
-        expect(sut, toCompleteCacheLoadWith: .empty)
-        expect(sut, toCompleteCacheLoadWith: .empty)
+        expect(sut, toCompleteRetrievalWith: .empty)
+        expect(sut, toCompleteRetrievalWith: .empty)
     }
     
     func test_loadFeedCache_deliversLastInsertedCache() {
@@ -99,7 +99,7 @@ final class CodableFeedStoreTests: XCTestCase {
         let timestamp = Date.init()
         
         expect(sut, toInsert: (feed, timestamp))
-        expect(sut, toCompleteCacheLoadWith: .found(feed: feed, timestamp: timestamp))
+        expect(sut, toCompleteRetrievalWith: .found(feed: feed, timestamp: timestamp))
     }
     
     func test_loadFeedCache_hasNoSideEffectWhenRetrievingNonEmptyCacheTwice() {
@@ -108,8 +108,8 @@ final class CodableFeedStoreTests: XCTestCase {
         let timestamp = Date.init()
         
         expect(sut, toInsert: (feed, timestamp))
-        expect(sut, toCompleteCacheLoadWith: .found(feed: feed, timestamp: timestamp))
-        expect(sut, toCompleteCacheLoadWith: .found(feed: feed, timestamp: timestamp))
+        expect(sut, toCompleteRetrievalWith: .found(feed: feed, timestamp: timestamp))
+        expect(sut, toCompleteRetrievalWith: .found(feed: feed, timestamp: timestamp))
     }
     
     func test_loadFeedCache_deliversErrorWhenRetrievingCacheFails() {
@@ -117,7 +117,7 @@ final class CodableFeedStoreTests: XCTestCase {
         
         try! "invalid data".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
         
-        expect(sut, toCompleteCacheLoadWith: .failure(anyError()))
+        expect(sut, toCompleteRetrievalWith: .failure(anyError()))
     }
     
     func test_loadFeedCache_hasNoSideEffectWhenRetrievingCacheFailsTwice() {
@@ -125,8 +125,8 @@ final class CodableFeedStoreTests: XCTestCase {
         
         try! "invalid data".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
         
-        expect(sut, toCompleteCacheLoadWith: .failure(anyError()))
-        expect(sut, toCompleteCacheLoadWith: .failure(anyError()))
+        expect(sut, toCompleteRetrievalWith: .failure(anyError()))
+        expect(sut, toCompleteRetrievalWith: .failure(anyError()))
     }
     
     // MARK: - Helpers
@@ -138,7 +138,7 @@ final class CodableFeedStoreTests: XCTestCase {
         return sut
     }
     
-    private func expect(_ sut: CodableFeedStore, toCompleteCacheLoadWith expectedResult: LoadFeedCacheResult, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: CodableFeedStore, toCompleteRetrievalWith expectedResult: LoadFeedCacheResult, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Waits for loadFeedCache completion")
 
         sut.loadFeedCache { result in

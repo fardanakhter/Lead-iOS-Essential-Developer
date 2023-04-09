@@ -44,11 +44,15 @@ private final class CodableFeedStore {
     }
     
     func insertFeedCache(with feed: [LocalFeedImage], and timestamp: Date, completion: @escaping FeedStore.InsertCompletion) {
-        let encoder = JSONEncoder()
-        let data = try! encoder.encode(Cache(feed: feed.map(CodableFeedImage.init), timestamp: timestamp))
-        
-        try! data.write(to: storeURL)
-        completion(nil)
+        do {
+            let encoder = JSONEncoder()
+            let data = try encoder.encode(Cache(feed: feed.map(CodableFeedImage.init), timestamp: timestamp))
+            try data.write(to: storeURL)
+            completion(nil)
+        }
+        catch(let error) {
+            completion(error)
+        }
     }
     
     func loadFeedCache(completion: @escaping FeedStore.LoadCompletion) {
@@ -145,11 +149,19 @@ final class CodableFeedStoreTests: XCTestCase {
         expect(sut, toCompleteRetrievalWith: .found(feed: secondCache.feed, timestamp: secondCache.timestamp))
     }
     
+    func test_insertFeedCache_deliversErrorWhenCacheInsertionFails() {
+        let invalidStoreURL = URL(string: "//:invlaid-directory.store")!
+        let sut = makeSUT(invalidStoreURL)
+        
+        let insertionError: Error?
+        insertionError = expect(sut, toInsert: (uniqueImageFeeds().local, Date()))
+        XCTAssertNotNil(insertionError, "Expected error in inserting cache")
+    }
+    
     // MARK: - Helpers
     
-    private func makeSUT() -> CodableFeedStore {
-        let storeURL = testSpecificStoreURL()
-        let sut = CodableFeedStore(storeURL)
+    private func makeSUT(_ storeURL: URL? = nil) -> CodableFeedStore {
+        let sut = CodableFeedStore(storeURL ?? testSpecificStoreURL())
         trackMemoryLeak(sut)
         return sut
     }
@@ -180,7 +192,6 @@ final class CodableFeedStoreTests: XCTestCase {
         
         var receivedError: Error?
         sut.insertFeedCache(with: cache.feed, and: cache.timestamp) { error in
-            XCTAssertNil(error, "Failed to insert feed cache", file: file, line: line)
             receivedError = error
             exp.fulfill()
         }

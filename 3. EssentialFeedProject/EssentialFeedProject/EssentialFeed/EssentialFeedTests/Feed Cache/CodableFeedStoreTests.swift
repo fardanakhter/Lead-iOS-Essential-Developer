@@ -117,7 +117,7 @@ final class CodableFeedStoreTests: XCTestCase {
     func test_deleteFeedCache_deliversErrorWhenCacheDeletionFails() {
         let nonPermissableDirectory = noDeleteAccessDirectory()
         let sut = makeSUT(nonPermissableDirectory)
-        
+
         let deletionError = deleteCache(sut)
 
         XCTAssertNotNil(deletionError, "Expected to delete with error")
@@ -127,26 +127,26 @@ final class CodableFeedStoreTests: XCTestCase {
         let sut = makeSUT()
         
         var completedOperationsInOrder = [XCTestExpectation]()
-        let operation1 = expectation(description: "Waits for operation 1 to complete")
+        let operation1 = expectation(description: "Operation 1")
         sut.insertFeedCache(with: uniqueImageFeeds().local, and: Date()) { _ in
             completedOperationsInOrder.append(operation1)
             operation1.fulfill()
         }
         
-        let operation2 = expectation(description: "Waits for operation 2 to complete")
+        let operation2 = expectation(description: "Operation 2")
         sut.deleteFeedCache { _ in
             completedOperationsInOrder.append(operation2)
             operation2.fulfill()
         }
         
-        let operation3 = expectation(description: "Waits for operation 3 to complete")
+        let operation3 = expectation(description: "Operation 3")
         sut.insertFeedCache(with: uniqueImageFeeds().local, and: Date()) { _ in
             completedOperationsInOrder.append(operation3)
             operation3.fulfill()
         }
         
         wait(for: [operation1, operation2, operation3], timeout: 1.0)
-        XCTAssertEqual(completedOperationsInOrder, [operation1, operation2, operation3])
+        XCTAssertEqual(completedOperationsInOrder, [operation1, operation2, operation3], "Expected side-effectst to run serially but operations completed in wrong order")
     }
     
     // MARK: - Helpers
@@ -198,7 +198,7 @@ final class CodableFeedStoreTests: XCTestCase {
             deletionError = error
             exp.fulfill()
         }
-        wait(for: [exp], timeout: 1.0)
+        wait(for: [exp], timeout: 3.0)
         return deletionError
     }
     

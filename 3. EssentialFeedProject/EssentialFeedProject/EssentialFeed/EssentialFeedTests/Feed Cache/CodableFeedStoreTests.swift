@@ -28,9 +28,8 @@ final class CodableFeedStoreTests: XCTestCase {
     
     func test_loadFeedCache_hasNoSideEffectWhenRetrivingEmptyCacheTwice() {
         let sut = makeSUT()
-        
-        expect(sut, toCompleteRetrievalWith: .empty)
-        expect(sut, toCompleteRetrievalWith: .empty)
+
+        expect(sut, toCompleteRetrievalTwiceWith: .empty)
     }
     
     func test_loadFeedCache_deliversLastInsertedCache() {
@@ -50,8 +49,7 @@ final class CodableFeedStoreTests: XCTestCase {
         
         let insertionError = expect(sut, toInsert: (feed, timestamp))
         XCTAssertNil(insertionError, "Expected to insert cache successfully")
-        expect(sut, toCompleteRetrievalWith: .found(feed: feed, timestamp: timestamp))
-        expect(sut, toCompleteRetrievalWith: .found(feed: feed, timestamp: timestamp))
+        expect(sut, toCompleteRetrievalTwiceWith: .found(feed: feed, timestamp: timestamp))
     }
     
     func test_loadFeedCache_deliversErrorWhenRetrievingCacheFails() {
@@ -68,7 +66,6 @@ final class CodableFeedStoreTests: XCTestCase {
         
         try! "invalid data".write(to: testSpecificStoreURL(), atomically: false, encoding: .utf8)
         
-        expect(sut, toCompleteRetrievalWith: .failure(anyError()))
         expect(sut, toCompleteRetrievalWith: .failure(anyError()))
     }
     
@@ -155,6 +152,11 @@ final class CodableFeedStoreTests: XCTestCase {
         let sut = CodableFeedStore(storeURL ?? testSpecificStoreURL())
         trackMemoryLeak(sut)
         return sut
+    }
+    
+    private func expect(_ sut: FeedStore, toCompleteRetrievalTwiceWith expectedResult: LoadFeedCacheResult, file: StaticString = #file, line: UInt = #line) {
+        expect(sut, toCompleteRetrievalWith: expectedResult)
+        expect(sut, toCompleteRetrievalWith: expectedResult)
     }
     
     private func expect(_ sut: FeedStore, toCompleteRetrievalWith expectedResult: LoadFeedCacheResult, file: StaticString = #file, line: UInt = #line) {

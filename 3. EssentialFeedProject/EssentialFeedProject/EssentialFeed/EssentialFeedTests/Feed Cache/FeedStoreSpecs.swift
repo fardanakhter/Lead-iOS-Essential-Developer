@@ -8,9 +8,9 @@
 import Foundation
 
 protocol FeedStoreSpecs {
-     func test_loadFeedCache_returnsEmptyResultOnRetrievingEmptyCache()
+     func test_loadFeedCache_deliversEmptyOnRetrievingEmptyCache()
      func test_loadFeedCache_hasNoSideEffectWhenRetrivingEmptyCacheTwice()
-     func test_loadFeedCache_deliversLastInsertedCache()
+     func test_loadFeedCache_deliversLastInsertedNonEmptyCache()
      func test_loadFeedCache_hasNoSideEffectWhenRetrievingNonEmptyCacheTwice()
     
      func test_insertFeedCache_doesNotDeliverErrorOnEmptyCache()

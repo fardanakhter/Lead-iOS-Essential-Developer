@@ -49,3 +49,17 @@ public final class CoreDataFeedStore {
         }
     }
 }
+
+extension CoreDataFeedStore: FeedStore {
+    public func loadFeedCache(completion: @escaping LoadCompletion) {
+        perform { _ in }
+    }
+   
+    public func insertFeedCache(with feed: [LocalFeedImage], and timestamp: Date, completion: @escaping InsertCompletion) {
+        perform { _ in }
+    }
+    
+    public func deleteFeedCache(completion: @escaping DeleteCompletion) {
+        perform { _ in }
+    }
+}

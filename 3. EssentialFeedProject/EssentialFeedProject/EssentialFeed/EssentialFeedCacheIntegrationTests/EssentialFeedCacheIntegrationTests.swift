@@ -23,18 +23,7 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
     func test_load_deliversNoItemsOnEmptyCache() {
         let sut = makeSUT().loader
         
-        let exp = expectation(description: "Waits for load to complete")
-        sut.load { result in
-            switch result {
-            case let .success(images):
-                XCTAssertEqual(images, [])
-            default:
-                XCTFail("Expected success with empty images, found \(result) instead")
-            }
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toCompleteWith: .success([]))
     }
     
     func test_load_deliversItemsWhenSavedOnAnotherInstance() {
@@ -49,21 +38,7 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         }
         wait(for: [saveExp], timeout: 1.0)
         
-        let loadExp = expectation(description: "Waits for load to complete")
-        var recievedCache = [FeedImage]()
-        sutToPerformLoad.load { result in
-            switch result {
-            case let .success(cachedFeed):
-                recievedCache = cachedFeed
-            default:
-                XCTFail("Expected to load with items, found \(result) instead")
-            }
-            loadExp.fulfill()
-        }
-        
-        wait(for: [loadExp], timeout: 1.0)
-        
-        XCTAssertEqual(recievedCache, feed)
+        expect(sutToPerformLoad, toCompleteWith: .success(feed))
     }
     
     //MARK: - Helpers
@@ -76,6 +51,27 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         trackMemoryLeak(store, file: file, line: line)
         trackMemoryLeak(sut, file: file, line: line)
         return (sut, store)
+    }
+    
+    private func expect(_ sut: LocalFeedLoader, toCompleteWith expectedResult: LocalFeedLoader.LoadResult, file: StaticString = #file, line: UInt = #line) {
+        let exp = expectation(description: "Waits for load completion")
+
+        sut.load { receivedResult in
+            
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedImages), .success(expectedImages)):
+                XCTAssertEqual(receivedImages, expectedImages)
+                
+            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+                XCTAssertEqual(receivedError, expectedError)
+            
+            default:
+                XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     private func setupEmptyStoreState() {

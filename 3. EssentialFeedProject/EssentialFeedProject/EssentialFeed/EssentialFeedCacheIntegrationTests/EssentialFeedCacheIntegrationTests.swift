@@ -91,7 +91,7 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
     }
     
     private func testSpecificStoreURL() -> URL {
-        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathExtension("FeedStore.store")
+        FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathExtension("\(type(of:self)).store")
     }
 
 }

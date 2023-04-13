@@ -10,7 +10,7 @@ import EssentialFeed
 
 final class EssentialFeedCacheIntegrationTests: XCTestCase {
 
-    func test_load_deliversEmptyOnEmptyCache() {
+    func test_load_deliversNoItemsOnEmptyCache() {
         let sut = makeSUT().loader
         
         let exp = expectation(description: "Waits for load to complete")

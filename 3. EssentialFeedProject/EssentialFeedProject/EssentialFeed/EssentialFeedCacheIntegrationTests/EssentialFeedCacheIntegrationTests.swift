@@ -23,7 +23,7 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
     func test_load_deliversNoItemsOnEmptyCache() {
         let sut = makeSUT().loader
         
-        expect(sut, toCompleteWith: .success([]))
+        expect(sut, toLoad: .success([]))
     }
     
     func test_load_deliversItemsWhenSavedOnAnotherInstance() {
@@ -38,7 +38,7 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         }
         wait(for: [saveExp], timeout: 1.0)
         
-        expect(sutToPerformLoad, toCompleteWith: .success(feed))
+        expect(sutToPerformLoad, toLoad: .success(feed))
     }
     
     //MARK: - Helpers
@@ -53,7 +53,7 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         return (sut, store)
     }
     
-    private func expect(_ sut: LocalFeedLoader, toCompleteWith expectedResult: LocalFeedLoader.LoadResult, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: LocalFeedLoader, toLoad expectedResult: LocalFeedLoader.LoadResult, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Waits for load completion")
 
         sut.load { receivedResult in

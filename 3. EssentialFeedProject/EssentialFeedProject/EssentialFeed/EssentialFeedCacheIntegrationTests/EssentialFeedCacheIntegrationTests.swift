@@ -21,14 +21,14 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
     }
     
     func test_load_deliversNoItemsOnEmptyCache() {
-        let sut = makeSUT().loader
+        let sut = makeSUT()
         
         expect(sut, toLoad: .success([]))
     }
     
     func test_load_deliversItemsWhenSavedOnAnotherInstance() {
-        let sutToPerformSave = makeSUT().loader
-        let sutToPerformLoad = makeSUT().loader
+        let sutToPerformSave = makeSUT()
+        let sutToPerformLoad = makeSUT()
         let feed = uniqueImageFeeds().models
         
         let saveExp = expectation(description: "Waits for save to complete")
@@ -41,16 +41,23 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         expect(sutToPerformLoad, toLoad: .success(feed))
     }
     
+//    func test_save_overidesItemsSavedByAnotherInstance() {
+//        let firstSutInstance = makeSUT().loader
+//        let secondSutInstace = makeSUT().load
+//
+//        firstSutInstance.
+//    }
+    
     //MARK: - Helpers
     
-    private func makeSUT(_ timeStamp: () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> (loader: LocalFeedLoader, store: FeedStore) {
+    private func makeSUT(_ timeStamp: () -> Date = Date.init, file: StaticString = #file, line: UInt = #line) -> LocalFeedLoader {
         let storeBundle = Bundle(for: CoreDataFeedStore.self)
         let storeURL = testSpecificStoreURL()
         let store = try! CoreDataFeedStore(storeURL: storeURL, bundle: storeBundle)
         let sut = LocalFeedLoader(store: store, timestamp: timeStamp)
         trackMemoryLeak(store, file: file, line: line)
         trackMemoryLeak(sut, file: file, line: line)
-        return (sut, store)
+        return sut
     }
     
     private func expect(_ sut: LocalFeedLoader, toLoad expectedResult: LocalFeedLoader.LoadResult, file: StaticString = #file, line: UInt = #line) {

@@ -7,12 +7,8 @@
 
 import Foundation
 
-public typealias LoadFeedCacheResult = Result<LocalFeedCacheSuccessResult, Error>
-
-public enum LocalFeedCacheSuccessResult {
-    case found(feed: [LocalFeedImage], timestamp: Date)
-    case empty
-}
+public typealias LoadFeedCacheResult = Result<CachedFeed?, Error>
+public typealias CachedFeed = (feed: [LocalFeedImage], timestamp: Date)
 
 public protocol FeedStore {
     typealias DeleteCompletion = (Error?) -> Void

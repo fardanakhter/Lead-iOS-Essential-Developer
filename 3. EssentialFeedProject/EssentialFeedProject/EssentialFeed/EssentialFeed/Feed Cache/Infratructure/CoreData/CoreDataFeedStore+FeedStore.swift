@@ -12,9 +12,9 @@ extension CoreDataFeedStore: FeedStore {
         perform { context in
             do {
                 guard let cache = try ManagedFeedCache.find(in: context) else {
-                    return completion(.empty)
+                    return completion(.success(.empty))
                 }
-                completion(.found(feed: cache.localFeed, timestamp: cache.timestamp))
+                completion(.success(.found(feed: cache.localFeed, timestamp: cache.timestamp)))
             }
             catch(let error) {
                 completion(.failure(error))

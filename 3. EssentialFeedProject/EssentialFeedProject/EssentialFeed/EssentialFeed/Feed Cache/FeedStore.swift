@@ -7,8 +7,9 @@
 
 import Foundation
 
-public enum LoadFeedCacheResult {
-    case failure(Error)
+public typealias LoadFeedCacheResult = Result<LocalFeedCacheSuccessResult, Error>
+
+public enum LocalFeedCacheSuccessResult {
     case found(feed: [LocalFeedImage], timestamp: Date)
     case empty
 }

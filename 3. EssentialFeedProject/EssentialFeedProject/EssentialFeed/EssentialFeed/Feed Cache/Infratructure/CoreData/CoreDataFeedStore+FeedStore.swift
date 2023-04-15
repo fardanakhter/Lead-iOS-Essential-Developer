@@ -29,10 +29,10 @@ extension CoreDataFeedStore: FeedStore {
                 newInstance.timestamp = timestamp
                 newInstance.feed = ManagedFeedImage.images(from: feed, in: context)
                 try context.save()
-                completion(nil)
+                completion(.success(()))
             }
             catch(let error) {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }
@@ -41,10 +41,10 @@ extension CoreDataFeedStore: FeedStore {
         perform { context in
             do {
                 try ManagedFeedCache.find(in: context).map(context.delete).map(context.save)
-                completion (nil)
+                completion (.success(()))
             }
             catch(let error) {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }

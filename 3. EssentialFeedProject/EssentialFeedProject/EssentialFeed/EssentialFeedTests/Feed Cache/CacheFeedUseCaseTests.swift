@@ -62,7 +62,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         let deleteError = anyError()
         
-        expect(sut, toCompleteWithError: deleteError, when: {
+        expect(sut, toCompleteSaveWith: .failure(deleteError), when: {
             store.completeDeletion(withError: deleteError)
         })
     }
@@ -71,7 +71,7 @@ class CacheFeedUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         let insertError = anyError()
         
-        expect(sut, toCompleteWithError: insertError, when: {
+        expect(sut, toCompleteSaveWith: .failure(insertError), when: {
             store.completeDeletionWithSuccess()
             store.completeInsertion(withError: insertError)
         })
@@ -80,7 +80,7 @@ class CacheFeedUseCaseTests: XCTestCase {
     func test_save_succeedsToInsertNewCacheFeed() {
         let (sut, store) = makeSUT()
         
-        expect(sut, toCompleteWithError: nil, when: {
+        expect(sut, toCompleteSaveWith: .success(()), when: {
             store.completeDeletionWithSuccess()
             store.completeInsertionWithSuccess()
         })
@@ -146,21 +146,27 @@ class CacheFeedUseCaseTests: XCTestCase {
         return (loader, store)
     }
 
-    private func expect(_ sut: LocalFeedLoader, toCompleteWithError error: NSError?, when action: @escaping () -> Void) {
+    private func expect(_ sut: LocalFeedLoader, toCompleteSaveWith expectedResult: LocalFeedLoader.SaveResult, when action: @escaping () -> Void) {
         let feeds = [uniqueImage(), uniqueImage()]
         let exp = expectation(description: "Waits for save completion!")
         
-        var receivedErrors = [Error?]()
-        sut.save(feeds) { error in
-            receivedErrors.append(error)
+        sut.save(feeds) { saveResult in
+            
+            switch (saveResult, expectedResult) {
+                
+            case (.success(()), .success(())):
+                break
+            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+                XCTAssertEqual(receivedError, expectedError)
+            default:
+                XCTFail("Expected to recived \(expectedResult), found \(saveResult) instead")
+            }
             exp.fulfill()
         }
         
         action()
         
         wait(for: [exp], timeout: 1.0)
-        
-        XCTAssertEqual(receivedErrors as [NSError?], [error])
     }
     
 }

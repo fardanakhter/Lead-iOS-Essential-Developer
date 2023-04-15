@@ -128,7 +128,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         
         let result = resultFor(data: data, response: response, error: error)
         
-        if case let .success(receivedData, receivedResponse) = result {
+        if case let .success((receivedData, receivedResponse)) = result {
             return (receivedData, receivedResponse)
         }
         else {

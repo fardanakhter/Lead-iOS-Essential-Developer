@@ -135,12 +135,12 @@ extension FeedStoreSpecs where Self: XCTestCase {
     
     // MARK: - Expectations
     
-    func expect(_ sut: FeedStore, toCompleteRetrievalTwiceWith expectedResult: LoadFeedCacheResult, file: StaticString = #file, line: UInt = #line) {
+    func expect(_ sut: FeedStore, toCompleteRetrievalTwiceWith expectedResult: FeedStore.LoadResult, file: StaticString = #file, line: UInt = #line) {
         expect(sut, toCompleteRetrievalWith: expectedResult, file: file, line: line)
         expect(sut, toCompleteRetrievalWith: expectedResult, file: file, line: line)
     }
     
-    func expect(_ sut: FeedStore, toCompleteRetrievalWith expectedResult: LoadFeedCacheResult, file: StaticString = #file, line: UInt = #line) {
+    func expect(_ sut: FeedStore, toCompleteRetrievalWith expectedResult: FeedStore.LoadResult, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Waits for loadFeedCache completion")
 
         sut.loadFeedCache { result in

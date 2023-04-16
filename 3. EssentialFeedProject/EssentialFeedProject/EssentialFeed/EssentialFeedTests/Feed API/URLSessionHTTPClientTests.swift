@@ -10,12 +10,12 @@ import EssentialFeed
 
 final class URLSessionHTTPClientTests: XCTestCase {
     
-    override class func setUp() {
+    override func setUp() {
         super.setUp()
         URLProtocolStub.startIntercepting()
     }
     
-    override class func tearDown() {
+    override func tearDown() {
         super.tearDown()
         URLProtocolStub.stopIntercepting()
     }
@@ -168,7 +168,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
             if let observer = URLProtocolStub.requestObserver {
                 client?.urlProtocolDidFinishLoading(self)
                 observer(request)
-                URLProtocolStub.requestObserver = nil
                 return
             }
             

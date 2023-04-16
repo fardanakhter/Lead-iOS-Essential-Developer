@@ -17,17 +17,20 @@ public class URLSessionHTTPClient: HTTPClient {
     
     private struct UnexpectedError: Error {}
     
-    public func get(_ url: URL, completion: @escaping (HTTPClientResult) -> Void) {
+    public func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+        
         let dataTask = session.dataTask(with: url) { data, response, error in
-            if let data, let response = response as? HTTPURLResponse {
-                completion(.success(data, response))
-            }
-            else if let error {
-                completion(.failure(error))
-            }
-            else {
-                completion(.failure(UnexpectedError()))
-            }
+            completion(Result(catching: {
+                if let data, let response = response as? HTTPURLResponse {
+                    return (data, response)
+                }
+                else if let error {
+                    throw error
+                }
+                else {
+                    throw UnexpectedError()
+                }
+            }))
         }
         dataTask.resume()
     }

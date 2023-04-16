@@ -70,7 +70,8 @@ class LoadFeedRemoteUseCaseTests: XCTestCase {
         let (sut, client) = makeSUT()
         
         expect(sut, toCompleteWith: .success([]), when: {
-            let emptyJsonList = makeItemJSON(["items" : []])
+            let emptyItemList: [[String: Any]] = [] 
+            let emptyJsonList = makeItemJSON(["items" : emptyItemList])
             client.complete(withStatusCode: 200, data: emptyJsonList)
         })
     }
@@ -120,23 +121,18 @@ class LoadFeedRemoteUseCaseTests: XCTestCase {
         return (sut, client)
     }
     
-    private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedItem, json: [String : Any]) {
+    private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedImage, json: [String : Any]) {
         
-        let item = FeedItem(id: id,
+        let item = FeedImage(id: id,
                             description: description,
                             location: location,
-                            imageURL: imageURL)
+                            url: imageURL)
         
         let itemJSON = ["id": item.id.uuidString,
                         "description": item.description,
                         "location": item.location,
-                        "image": item.imageURL.absoluteString]
-        
-            .reduce([String : Any]()) { acc, e in
-                var newDict = acc
-                if let value = e.value { newDict[e.key] = value }
-                return newDict
-            }
+                        "image": item.url.absoluteString
+        ].compactMapValues{ $0 }
         
         return (item, itemJSON)
     }
@@ -178,13 +174,13 @@ class LoadFeedRemoteUseCaseTests: XCTestCase {
     
     class HTTPClientSpy: HTTPClient {
         
-        var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
+        var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
         
         var requestedURLs: [URL] {
             messages.map{ $0.url }
         }
         
-        func get(_ url: URL, completion: @escaping (HTTPClientResult) -> Void) {
+        func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
             messages.append((url, completion))
         }
         
@@ -199,7 +195,7 @@ class LoadFeedRemoteUseCaseTests: XCTestCase {
                                            statusCode: code,
                                            httpVersion: nil,
                                            headerFields: nil)!
-            messages[index].completion(.success(data, response))
+            messages[index].completion(.success((data, response)))
         }
     }
     

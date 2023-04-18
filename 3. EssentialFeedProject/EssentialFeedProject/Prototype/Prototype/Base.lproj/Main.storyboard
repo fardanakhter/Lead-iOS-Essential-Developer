@@ -47,7 +47,7 @@
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="FeedCell" rowHeight="500" id="Ous-8n-uat">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="FeedImageCell" rowHeight="500" id="Ous-8n-uat" customClass="FeedImageCell" customModule="Prototype" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="66" width="393" height="500"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ous-8n-uat" id="KnR-vb-Ecv">
@@ -89,7 +89,7 @@
                                                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Fy-Ng-sMi" userLabel="ImageView Container">
                                                     <rect key="frame" x="0.0" y="62.666666666666686" width="361" height="361"/>
                                                     <subviews>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="H6W-MR-bdn" userLabel="Image View">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="H6W-MR-bdn" userLabel="Image View">
                                                             <rect key="frame" x="0.0" y="0.0" width="361" height="361"/>
                                                         </imageView>
                                                     </subviews>
@@ -127,6 +127,13 @@
                                         <constraint firstItem="dAV-m9-uDy" firstAttribute="top" secondItem="KnR-vb-Ecv" secondAttribute="top" constant="8" id="vsQ-5c-8my"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="descriptionLabel" destination="S7e-c7-kCi" id="kUv-2Z-jNx"/>
+                                    <outlet property="feedImageView" destination="H6W-MR-bdn" id="qRr-UT-A2w"/>
+                                    <outlet property="imageViewContainer" destination="0Fy-Ng-sMi" id="FQt-ZZ-Yqh"/>
+                                    <outlet property="locationContainer" destination="inq-1k-ROu" id="4uP-x8-947"/>
+                                    <outlet property="locationLabel" destination="kHo-qg-UzI" id="Vg1-Tv-Ra8"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>

@@ -13,6 +13,8 @@
 		77953DF929EC89F30093B6A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 77953DF829EC89F30093B6A3 /* Assets.xcassets */; };
 		77953DFC29EC89F30093B6A3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 77953DFA29EC89F30093B6A3 /* LaunchScreen.storyboard */; };
 		77953E0429EC90180093B6A3 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77953E0329EC90180093B6A3 /* FeedViewController.swift */; };
+		77953E0629EE3E370093B6A3 /* FeedImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77953E0529EE3E370093B6A3 /* FeedImageViewModel.swift */; };
+		77953E0829EE3E6C0093B6A3 /* FeedImageViewModel+PrototypeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77953E0729EE3E6C0093B6A3 /* FeedImageViewModel+PrototypeData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		77953DFB29EC89F30093B6A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		77953DFD29EC89F30093B6A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		77953E0329EC90180093B6A3 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		77953E0529EE3E370093B6A3 /* FeedImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageViewModel.swift; sourceTree = "<group>"; };
+		77953E0729EE3E6C0093B6A3 /* FeedImageViewModel+PrototypeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedImageViewModel+PrototypeData.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,8 @@
 				77953DFA29EC89F30093B6A3 /* LaunchScreen.storyboard */,
 				77953DFD29EC89F30093B6A3 /* Info.plist */,
 				77953E0329EC90180093B6A3 /* FeedViewController.swift */,
+				77953E0529EE3E370093B6A3 /* FeedImageViewModel.swift */,
+				77953E0729EE3E6C0093B6A3 /* FeedImageViewModel+PrototypeData.swift */,
 			);
 			path = Prototype;
 			sourceTree = "<group>";
@@ -138,8 +144,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77953E0829EE3E6C0093B6A3 /* FeedImageViewModel+PrototypeData.swift in Sources */,
 				77953DF029EC89F20093B6A3 /* AppDelegate.swift in Sources */,
 				77953E0429EC90180093B6A3 /* FeedViewController.swift in Sources */,
+				77953E0629EE3E370093B6A3 /* FeedImageViewModel.swift in Sources */,
 				77953DF229EC89F20093B6A3 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

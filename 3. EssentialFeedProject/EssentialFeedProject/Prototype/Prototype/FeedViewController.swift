@@ -28,6 +28,6 @@ extension FeedImageCell {
         self.locationContainer.isHidden = viewModel.location == nil
         self.locationLabel.text = viewModel.location
         self.descriptionLabel.text = viewModel.description
-        self.feedImageView.image = UIImage(named: viewModel.image)
+        fadeIn(UIImage(named: viewModel.image))
     }
 }

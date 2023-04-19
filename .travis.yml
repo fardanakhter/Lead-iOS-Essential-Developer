@@ -4,5 +4,5 @@ osx_image: xcode14.2
 language: swift
 PATH: /3. EssentialFeedProject/EssentialFeedProject/EssentialFeed
 script: 
-- xcodebuild clean build test -project "${PATH}/EssentialFeed.xcodeproj" -scheme "CI_macOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk macos -destination "platform=macOS" ONLY ACTIVE ARCH=YES
-- xcodebuild clean build test -project "${PATH}/EssentialFeed.xcodeproj" -scheme "CI_iOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk iphonesimulator -destination "platform=iOS Simulator" ONLY ACTIVE ARCH=YES
+- xcodebuild clean build test -project "${PATH}/EssentialFeed.xcodeproj" -scheme "CI_macOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk macos -destination "platform=macOS" ONLY_ACTIVE_ARCH=YES
+- xcodebuild clean build test -project "${PATH}/EssentialFeed.xcodeproj" -scheme "CI_iOS" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk iphonesimulator -destination "platform=iOS Simulator" ONLY_ACTIVE_ARCH=YES

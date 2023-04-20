@@ -46,14 +46,6 @@ final class FeedViewControllerTest: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 1)
     }
     
-    class LoaderSpy: FeedLoader {
-        private(set) var loadCallCount: Int = 0
-        
-        func load(completion: @escaping (FeedLoader.Result) -> Void) {
-            loadCallCount += 1
-        }
-    }
-    
     func test_pullToRefresh_loadsFeed() {
         let (sut, loader) = makeSUT()
         
@@ -66,9 +58,17 @@ final class FeedViewControllerTest: XCTestCase {
         
         XCTAssertEqual(loader.loadCallCount, 2)
     }
+
+    class LoaderSpy: FeedLoader {
+        private(set) var loadCallCount: Int = 0
+        
+        func load(completion: @escaping (FeedLoader.Result) -> Void) {
+            loadCallCount += 1
+        }
+    }
     
     // MARK: - Helper
-    
+
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {
         let loader = LoaderSpy()
         let sut = FeedViewController(loader: loader)

@@ -9,7 +9,24 @@ import Foundation
 import UIKit
 
 class FeedViewController: UITableViewController {
-    let feed = FeedImageViewModel.prototypeFeed
+    private(set) var feed = [FeedImageViewModel]()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        loadFeed()
+    }
+    
+    @IBAction func loadFeed() {
+        refreshControl?.beginRefreshing()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+            if self.feed.isEmpty {
+                self.feed = FeedImageViewModel.prototypeFeed
+                self.tableView.reloadData()
+            }
+            self.refreshControl?.endRefreshing()
+        })
+    }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return feed.count

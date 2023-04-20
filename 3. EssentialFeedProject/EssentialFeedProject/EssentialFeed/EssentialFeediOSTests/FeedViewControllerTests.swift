@@ -20,6 +20,12 @@ final class FeedViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(loadFeed), for: .valueChanged)
+        loadFeed()
+    }
+    
+    @objc private func loadFeed() {
         loader?.load{ _ in }
     }
 }
@@ -46,6 +52,19 @@ final class FeedViewControllerTest: XCTestCase {
         func load(completion: @escaping (FeedLoader.Result) -> Void) {
             loadCallCount += 1
         }
+    }
+    
+    func test_pullToRefresh_loadsFeed() {
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        sut.refreshControl?.allTargets.forEach({ target in
+            sut.refreshControl?.actions(forTarget: target, forControlEvent: .valueChanged)?.forEach({
+                (target as NSObject).perform(Selector($0))
+            })
+        })
+        
+        XCTAssertEqual(loader.loadCallCount, 2)
     }
     
     // MARK: - Helper

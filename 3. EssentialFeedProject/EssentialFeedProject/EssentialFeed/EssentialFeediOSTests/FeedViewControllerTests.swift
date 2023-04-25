@@ -42,6 +42,40 @@ final class FeedViewControllerTest: XCTestCase {
         XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected to hide loading indicator when load feed initiated by user is completed")
     }
     
+    func test_loadCompletion_rendersSuccessfullyLoadedFeeds() {
+        let (sut, loader) = makeSUT()
+        let image0 = makeImage(description: "some description", location: "some location")
+        let image1 = makeImage(description: "some desctiotion", location: nil)
+        let image2 = makeImage(description: nil, location: "some location")
+        let image3 = makeImage(description: nil, location: nil)
+        
+        sut.loadViewIfNeeded()
+        XCTAssertEqual(sut.numberOfFeedImageViews, 0)
+        
+        loader.completeFeedLoading(with: [image0, image1, image2, image3])
+        XCTAssertEqual(sut.numberOfFeedImageViews, 4)
+        
+        let view0 = sut.feedImageView(at: 0)
+        XCTAssertEqual(view0.imageDescription, image0.description)
+        XCTAssertEqual(view0.isShowingLocation, true)
+        XCTAssertEqual(view0.location, image0.location)
+        
+        let view1 = sut.feedImageView(at: 1)
+        XCTAssertEqual(view1.imageDescription, image1.description)
+        XCTAssertEqual(view1.isShowingLocation, false)
+        XCTAssertEqual(view1.location, image1.location)
+        
+        let view2 = sut.feedImageView(at: 2)
+        XCTAssertEqual(view2.imageDescription, image2.description)
+        XCTAssertEqual(view2.isShowingLocation, true)
+        XCTAssertEqual(view2.location, image2.location)
+        
+        let view3 = sut.feedImageView(at: 3)
+        XCTAssertEqual(view3.imageDescription, image3.description)
+        XCTAssertEqual(view3.isShowingLocation, false)
+        XCTAssertEqual(view3.location, image3.location)
+    }
+    
     class LoaderSpy: FeedLoader {
         private var completions = [(FeedLoader.Result) -> Void]()
         
@@ -53,8 +87,8 @@ final class FeedViewControllerTest: XCTestCase {
             completions.append(completion)
         }
         
-        func completeFeedLoading() {
-            completions[0](.success([]))
+        func completeFeedLoading(with images: [FeedImage] = [], at index: Int = 0) {
+            completions[index](.success(images))
         }
     }
     
@@ -67,6 +101,10 @@ final class FeedViewControllerTest: XCTestCase {
         trackMemoryLeak(sut, file: file, line: line)
         return (sut, loader)
     }
+    
+    private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-image-url.com")!) -> FeedImage {
+        return FeedImage(id: UUID(), description: description, location: location, url: url)
+    }
 }
 
 private extension FeedViewController {
@@ -76,6 +114,26 @@ private extension FeedViewController {
     
     var isShowingLoadingIndicator: Bool {
         return refreshControl?.isRefreshing == true
+    }
+    
+    var numberOfFeedImageViews: Int {
+        return tableView.numberOfRows(inSection: feedImageViewsSection)
+    }
+    
+    private var feedImageViewsSection: Int {
+        return 0
+    }
+    
+    func feedImageView(at index: Int) -> FeedImageCell {
+        let indexpath = IndexPath(row: index, section: feedImageViewsSection)
+        let ds = tableView.dataSource!
+        return ds.tableView(tableView, cellForRowAt: indexpath) as! FeedImageCell
+    }
+}
+
+private extension FeedImageCell {
+    var isShowingLocation: Bool {
+        !locationContainer.isHidden
     }
 }
 

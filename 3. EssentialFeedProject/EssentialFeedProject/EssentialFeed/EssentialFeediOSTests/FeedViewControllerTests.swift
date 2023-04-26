@@ -86,7 +86,7 @@ final class FeedViewControllerTest: XCTestCase {
         sut.simulateImageViewVisible(at: 0)
         XCTAssertEqual(loader.loadedImageURLs, [imageURL], "Expected to load image when view is visible")
         
-        sut.simulateImageViewInvisible(at: 0)
+        sut.simulateImageViewNotvisible(at: 0)
         XCTAssertEqual(loader.cancelledImageLoadURLs, [imageURL], "Expected to cancel image load when view is invisible")
     }
     

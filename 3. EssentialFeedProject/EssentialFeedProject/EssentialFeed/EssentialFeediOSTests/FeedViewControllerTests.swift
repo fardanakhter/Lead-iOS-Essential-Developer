@@ -60,6 +60,22 @@ final class FeedViewControllerTest: XCTestCase {
         expect(sut, toRender: [image0, image1, image2, image3])
     }
     
+    func test_loadCompletion_doesNotChangeLoadedFeedsWhenCompletesWithError() {
+        let (sut, loader) = makeSUT()
+        let image0 = makeImage(description: "some description", location: "some location")
+        let image1 = makeImage(description: nil, location: nil)
+
+        sut.loadViewIfNeeded()
+        expect(sut, toRender: [])
+
+        loader.completeFeedLoadingSuccessfully(with: [image0, image1], at: 0)
+        expect(sut, toRender: [image0, image1])
+
+        sut.simulateUserInitiatedFeedReload()
+        loader.completeFeedLoadingFailing(with: anyError())
+        expect(sut, toRender: [image0, image1])
+    }
+    
     func test_feedImageView_loadsImageURLWhenViewIsVisible() {
         let (sut, loader) = makeSUT()
         let imageURL = URL(string: "https:/any-image-url.com")!
@@ -104,6 +120,10 @@ final class FeedViewControllerTest: XCTestCase {
         
         func completeFeedLoadingSuccessfully(with images: [FeedImage] = [], at index: Int = 0) {
             completions[index](.success(images))
+        }
+        
+        func completeFeedLoadingFailing(with error: Error, at index: Int = 0) {
+            completions[index](.failure(error))
         }
         
         // MARK: - FeedImageDataLoader

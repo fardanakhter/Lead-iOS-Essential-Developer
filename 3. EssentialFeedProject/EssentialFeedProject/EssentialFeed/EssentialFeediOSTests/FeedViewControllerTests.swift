@@ -60,9 +60,25 @@ final class FeedViewControllerTest: XCTestCase {
         expect(sut, toRender: [image0, image1, image2, image3])
     }
     
-    class LoaderSpy: FeedLoader {
+    func test_feedImageLoad_loadsFeedImageWhenImageViewIsVisible() {
+        let (sut, loader) = makeSUT()
+        let imageURL = URL(string: "https:/any-image-url.com")!
+        let image = makeImage(url: imageURL)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoading(with: [image])
+        
+        XCTAssertEqual(loader.loadedImageURLs, [], "Expected to not load image when view is not visible")
+        
+        sut.simulateImageViewVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [imageURL], "Expected to load image when view is visible")
+    }
+    
+    class LoaderSpy: FeedLoader, FeedImageDataLoader {
         private var completions = [(FeedLoader.Result) -> Void]()
         
+        var loadedImageURLs = [URL]()
+
         var loadCallCount: Int {
             completions.count
         }
@@ -74,13 +90,17 @@ final class FeedViewControllerTest: XCTestCase {
         func completeFeedLoading(with images: [FeedImage] = [], at index: Int = 0) {
             completions[index](.success(images))
         }
+        
+        func load(_ url: URL) {
+            loadedImageURLs.append(url)
+        }
     }
     
     // MARK: - Helper
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {
         let loader = LoaderSpy()
-        let sut = FeedViewController(loader: loader)
+        let sut = FeedViewController(feedLoader: loader, imageLoader: loader)
         trackMemoryLeak(loader, file: file, line: line)
         trackMemoryLeak(sut, file: file, line: line)
         return (sut, loader)
@@ -108,6 +128,10 @@ final class FeedViewControllerTest: XCTestCase {
 private extension FeedViewController {
     func simulateUserInitiatedFeedReload() {
         refreshControl?.simulatePullToRefresh()
+    }
+    
+    func simulateImageViewVisible(at index: Int) {
+        let _ = feedImageView(at: index)
     }
     
     var isShowingLoadingIndicator: Bool {

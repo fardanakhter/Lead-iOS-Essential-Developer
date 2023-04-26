@@ -32,13 +32,13 @@ final class FeedViewControllerTest: XCTestCase {
         sut.loadViewIfNeeded()
         XCTAssertEqual(sut.isShowingLoadingIndicator, true, "Expected to show loading indicator when view is loaded")
         
-        loader.completeFeedLoadingSuccessfully()
+        loader.completeFeedLoadingSuccessfully(at: 0)
         XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected to hide loading indicator when load feed is completed")
         
         sut.simulateUserInitiatedFeedReload()
         XCTAssertEqual(sut.isShowingLoadingIndicator, true, "Expected to show loading indicator when user reloads")
         
-        loader.completeFeedLoadingSuccessfully()
+        loader.completeFeedLoadingFailing(at: 1)
         XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected to hide loading indicator when load feed initiated by user is completed")
     }
     
@@ -108,22 +108,22 @@ final class FeedViewControllerTest: XCTestCase {
     
     class LoaderSpy: FeedLoader, FeedImageDataLoader {
         //MARK: - FeedLoader
-        private var completions = [(FeedLoader.Result) -> Void]()
+        private var requestCompletions = [(FeedLoader.Result) -> Void]()
         
         var loadCallCount: Int {
-            completions.count
+            requestCompletions.count
         }
         
         func load(completion: @escaping (FeedLoader.Result) -> Void) {
-            completions.append(completion)
+            requestCompletions.append(completion)
         }
         
         func completeFeedLoadingSuccessfully(with images: [FeedImage] = [], at index: Int = 0) {
-            completions[index](.success(images))
+            requestCompletions[index](.success(images))
         }
         
-        func completeFeedLoadingFailing(with error: Error, at index: Int = 0) {
-            completions[index](.failure(error))
+        func completeFeedLoadingFailing(with error: Error = anyError(), at index: Int = 0) {
+            requestCompletions[index](.failure(error))
         }
         
         // MARK: - FeedImageDataLoader

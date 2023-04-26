@@ -39,8 +39,8 @@ public final class FeedViewController: UITableViewController {
             if case let .success(images) = result {
                 self?.tableModels = images
                 self?.tableView.reloadData()
-                self?.refreshControl?.endRefreshing()
             }
+            self?.refreshControl?.endRefreshing()
         }
     }
     

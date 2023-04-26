@@ -106,6 +106,21 @@ final class FeedViewControllerTest: XCTestCase {
         XCTAssertEqual(loader.cancelledImageLoadURLs, [imageURL], "Expected to cancel image load when view is invisible")
     }
     
+    func test_retryImageOption_isShowingWhenLoadingImageURLFails() {
+        let (sut, loader) = makeSUT()
+        let imageURL = URL(string: "https:/any-image-url.com")!
+        let image = makeImage(url: imageURL)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoadingSuccessfully(with: [image], at: 0)
+        
+        let view = sut.feedImageView(at: 0)
+        XCTAssertEqual(view.isShowingRetryOptionView, false)
+        
+        loader.completeImageLoadingFailing(on: imageURL)
+        XCTAssertEqual(view.isShowingRetryOptionView, true)
+    }
+    
     class LoaderSpy: FeedLoader, FeedImageDataLoader {
         //MARK: - FeedLoader
         private var requestCompletions = [(FeedLoader.Result) -> Void]()
@@ -135,15 +150,21 @@ final class FeedViewControllerTest: XCTestCase {
         }
         
         // MARK: - FeedImageDataLoader
-        var loadedImageURLs = [URL]()
-        
+        private var imageLoadCompletion = [URL : (Swift.Result<Data, Error>) -> Void]()
+        var loadedImageURLs: [URL] {
+            imageLoadCompletion.map{ $0.key }
+        }
         var cancelledImageLoadURLs = [URL]()
         
-        func load(_ url: URL) -> FeedImageDataLoaderTask {
-            loadedImageURLs.append(url)
+        func load(_ url: URL, completion: @escaping (Swift.Result<Data, Error>) -> Void) -> FeedImageDataLoaderTask {
+            imageLoadCompletion[url] = completion
             return TaskSpy { [weak self] in
                 self?.cancelledImageLoadURLs.append(url)
             }
+        }
+        
+        func completeImageLoadingFailing(with error: Error = anyError(), on url: URL) {
+            imageLoadCompletion[url]?(.failure(error))
         }
     }
     
@@ -214,6 +235,10 @@ private extension FeedViewController {
 private extension FeedImageCell {
     var isShowingLocation: Bool {
         !locationContainer.isHidden
+    }
+    
+    var isShowingRetryOptionView: Bool {
+        !retryImageLoad.isHidden
     }
 }
 

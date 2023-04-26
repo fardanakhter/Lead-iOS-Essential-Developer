@@ -14,7 +14,7 @@ public protocol FeedImageDataLoaderTask{
 }
 
 public protocol FeedImageDataLoader {
-    func load(_ url: URL) -> FeedImageDataLoaderTask
+    func load(_ url: URL, completion: @escaping (Swift.Result<Data,Error>) -> Void) -> FeedImageDataLoaderTask
 }
 
 public final class FeedViewController: UITableViewController {
@@ -59,7 +59,16 @@ public final class FeedViewController: UITableViewController {
         cell.imageDescription = model.description
         cell.location = model.location
         cell.locationContainer.isHidden = model.location == nil
-        imageLoaderTasks[indexPath.row] = imageLoader?.load(model.url)
+        cell.retryImageLoad.isHidden = true
+        imageLoaderTasks[indexPath.row] = imageLoader?.load(model.url) { [weak cell] result in
+            switch result {
+            case .failure:
+                cell?.retryImageLoad.isHidden = false
+
+            default:
+                break
+            }
+        }
         return cell
     }
     

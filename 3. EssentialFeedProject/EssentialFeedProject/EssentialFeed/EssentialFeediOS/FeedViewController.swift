@@ -11,6 +11,7 @@ import EssentialFeed
 
 public protocol FeedImageDataLoader {
     func load(_ url: URL)
+    func cancelLoading(_ url: URL)
 }
 
 public final class FeedViewController: UITableViewController {
@@ -54,5 +55,10 @@ public final class FeedViewController: UITableViewController {
         cell.locationContainer.isHidden = model.location == nil
         imageLoader?.load(model.url)
         return cell
+    }
+    
+    public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let model = tableModels[indexPath.row]
+        imageLoader?.cancelLoading(model.url)
     }
 }

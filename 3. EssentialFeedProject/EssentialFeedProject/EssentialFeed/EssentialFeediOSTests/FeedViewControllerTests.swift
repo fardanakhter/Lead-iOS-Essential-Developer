@@ -45,18 +45,18 @@ final class FeedViewControllerTest: XCTestCase {
     func test_loadCompletion_rendersSuccessfullyLoadedFeeds() {
         let (sut, loader) = makeSUT()
         let image0 = makeImage(description: "some description", location: "some location")
-        let image1 = makeImage(description: "some desctiotion", location: nil)
+        let image1 = makeImage(description: "some description", location: nil)
         let image2 = makeImage(description: nil, location: "some location")
         let image3 = makeImage(description: nil, location: nil)
         
         sut.loadViewIfNeeded()
         expect(sut, toRender: [])
         
-        loader.completeFeedLoading(with: [image0, image1])
+        loader.completeFeedLoading(with: [image0, image1], at: 0)
         expect(sut, toRender: [image0, image1])
         
         sut.simulateUserInitiatedFeedReload()
-        loader.completeFeedLoading(with: [image0, image1, image2, image3])
+        loader.completeFeedLoading(with: [image0, image1, image2, image3], at: 1)
         expect(sut, toRender: [image0, image1, image2, image3])
     }
     
@@ -66,7 +66,7 @@ final class FeedViewControllerTest: XCTestCase {
         let image = makeImage(url: imageURL)
         
         sut.loadViewIfNeeded()
-        loader.completeFeedLoading(with: [image])
+        loader.completeFeedLoading(with: [image], at: 0)
         
         XCTAssertEqual(loader.loadedImageURLs, [], "Expected to not load image when view is not visible")
         
@@ -80,7 +80,7 @@ final class FeedViewControllerTest: XCTestCase {
         let image = makeImage(url: imageURL)
         
         sut.loadViewIfNeeded()
-        loader.completeFeedLoading(with: [image])
+        loader.completeFeedLoading(with: [image], at: 0)
         XCTAssertEqual(loader.loadedImageURLs, [], "Expected to not load image when view is not visible")
         
         sut.simulateImageViewVisible(at: 0)

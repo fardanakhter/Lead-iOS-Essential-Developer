@@ -50,30 +50,14 @@ final class FeedViewControllerTest: XCTestCase {
         let image3 = makeImage(description: nil, location: nil)
         
         sut.loadViewIfNeeded()
-        XCTAssertEqual(sut.numberOfFeedImageViews, 0)
+        expect(sut, toRender: [])
         
+        loader.completeFeedLoading(with: [image0, image1])
+        expect(sut, toRender: [image0, image1])
+        
+        sut.simulateUserInitiatedFeedReload()
         loader.completeFeedLoading(with: [image0, image1, image2, image3])
-        XCTAssertEqual(sut.numberOfFeedImageViews, 4)
-        
-        let view0 = sut.feedImageView(at: 0)
-        XCTAssertEqual(view0.imageDescription, image0.description)
-        XCTAssertEqual(view0.isShowingLocation, true)
-        XCTAssertEqual(view0.location, image0.location)
-        
-        let view1 = sut.feedImageView(at: 1)
-        XCTAssertEqual(view1.imageDescription, image1.description)
-        XCTAssertEqual(view1.isShowingLocation, false)
-        XCTAssertEqual(view1.location, image1.location)
-        
-        let view2 = sut.feedImageView(at: 2)
-        XCTAssertEqual(view2.imageDescription, image2.description)
-        XCTAssertEqual(view2.isShowingLocation, true)
-        XCTAssertEqual(view2.location, image2.location)
-        
-        let view3 = sut.feedImageView(at: 3)
-        XCTAssertEqual(view3.imageDescription, image3.description)
-        XCTAssertEqual(view3.isShowingLocation, false)
-        XCTAssertEqual(view3.location, image3.location)
+        expect(sut, toRender: [image0, image1, image2, image3])
     }
     
     class LoaderSpy: FeedLoader {
@@ -104,6 +88,20 @@ final class FeedViewControllerTest: XCTestCase {
     
     private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-image-url.com")!) -> FeedImage {
         return FeedImage(id: UUID(), description: description, location: location, url: url)
+    }
+    
+    private func expect(_ sut: FeedViewController, toRender images: [FeedImage], file: StaticString = #file, line: UInt = #line) {
+        XCTAssertEqual(sut.numberOfFeedImageViews, images.count, file: file, line: line)
+        images.enumerated().forEach{ (index, image) in
+            assert(that: sut, render: image, at: index, file: file, line: line)
+        }
+    }
+    
+    private func assert(that sut: FeedViewController, render image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
+        let view = sut.feedImageView(at: index)
+        XCTAssertEqual(view.imageDescription, image.description, file: file, line: line)
+        XCTAssertEqual(view.isShowingLocation, image.location != nil, file: file, line: line)
+        XCTAssertEqual(view.location, image.location, file: file, line: line)
     }
 }
 

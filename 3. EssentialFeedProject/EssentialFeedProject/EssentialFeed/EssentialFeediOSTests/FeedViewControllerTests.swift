@@ -32,13 +32,13 @@ final class FeedViewControllerTest: XCTestCase {
         sut.loadViewIfNeeded()
         XCTAssertEqual(sut.isShowingLoadingIndicator, true, "Expected to show loading indicator when view is loaded")
         
-        loader.completeFeedLoading()
+        loader.completeFeedLoadingSuccessfully()
         XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected to hide loading indicator when load feed is completed")
         
         sut.simulateUserInitiatedFeedReload()
         XCTAssertEqual(sut.isShowingLoadingIndicator, true, "Expected to show loading indicator when user reloads")
         
-        loader.completeFeedLoading()
+        loader.completeFeedLoadingSuccessfully()
         XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected to hide loading indicator when load feed initiated by user is completed")
     }
     
@@ -52,11 +52,11 @@ final class FeedViewControllerTest: XCTestCase {
         sut.loadViewIfNeeded()
         expect(sut, toRender: [])
         
-        loader.completeFeedLoading(with: [image0, image1], at: 0)
+        loader.completeFeedLoadingSuccessfully(with: [image0, image1], at: 0)
         expect(sut, toRender: [image0, image1])
         
         sut.simulateUserInitiatedFeedReload()
-        loader.completeFeedLoading(with: [image0, image1, image2, image3], at: 1)
+        loader.completeFeedLoadingSuccessfully(with: [image0, image1, image2, image3], at: 1)
         expect(sut, toRender: [image0, image1, image2, image3])
     }
     
@@ -66,7 +66,7 @@ final class FeedViewControllerTest: XCTestCase {
         let image = makeImage(url: imageURL)
         
         sut.loadViewIfNeeded()
-        loader.completeFeedLoading(with: [image], at: 0)
+        loader.completeFeedLoadingSuccessfully(with: [image], at: 0)
         
         XCTAssertEqual(loader.loadedImageURLs, [], "Expected to not load image when view is not visible")
         
@@ -80,7 +80,7 @@ final class FeedViewControllerTest: XCTestCase {
         let image = makeImage(url: imageURL)
         
         sut.loadViewIfNeeded()
-        loader.completeFeedLoading(with: [image], at: 0)
+        loader.completeFeedLoadingSuccessfully(with: [image], at: 0)
         XCTAssertEqual(loader.loadedImageURLs, [], "Expected to not load image when view is not visible")
         
         sut.simulateImageViewVisible(at: 0)
@@ -102,7 +102,7 @@ final class FeedViewControllerTest: XCTestCase {
             completions.append(completion)
         }
         
-        func completeFeedLoading(with images: [FeedImage] = [], at index: Int = 0) {
+        func completeFeedLoadingSuccessfully(with images: [FeedImage] = [], at index: Int = 0) {
             completions[index](.success(images))
         }
         

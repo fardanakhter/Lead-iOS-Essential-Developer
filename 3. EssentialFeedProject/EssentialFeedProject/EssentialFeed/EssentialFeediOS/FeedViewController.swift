@@ -20,7 +20,7 @@ public protocol FeedImageDataLoader {
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
     private(set) var feedLoader: FeedLoader?
     private(set) var imageLoader: FeedImageDataLoader?
-    private(set) var imageLoaderTasks = [Int: FeedImageDataLoaderTask?]()
+    private(set) var imageLoaderTask = [Int: FeedImageDataLoaderTask?]()
     
     private(set) var tableModels = [FeedImage]()
     
@@ -32,10 +32,9 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.prefetchDataSource = self
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: #selector(loadFeed), for: .valueChanged)
+        tableView.prefetchDataSource = self
         loadFeed()
     }
     
@@ -77,8 +76,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
                     cell?.retryImageLoad.isHidden = false
                 }
             }
-            
-            imageLoaderTasks[indexPath.row] = imageLoadTask
+            imageLoaderTask[indexPath.row] = imageLoadTask
         }
         
         cell.retryImageAction = imageLoad
@@ -88,14 +86,22 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
     
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        imageLoaderTasks[indexPath.row]??.cancel()
-        imageLoaderTasks[indexPath.row] = nil
+        cancelTask(at: indexPath)
     }
     
     public func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         indexPaths.forEach{ indexPath in
             let model = tableModels[indexPath.row]
-            let imageLoadTask = self.imageLoader?.load(model.url) { _ in }
+            imageLoaderTask[indexPath.row] = self.imageLoader?.load(model.url) { _ in }
         }
+    }
+    
+    public func tableView(_ tableView: UITableView, cancelPrefetchingForRowsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach(cancelTask(at:))
+    }
+    
+    private func cancelTask(at indexPath: IndexPath) {
+        imageLoaderTask[indexPath.row]??.cancel()
+        imageLoaderTask[indexPath.row] = nil
     }
 }

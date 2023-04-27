@@ -220,13 +220,13 @@ final class FeedViewControllerTest: XCTestCase {
         }
         
         // MARK: - FeedImageDataLoader
-        private var imageLoadCompletion = [(url: URL, completion: (Swift.Result<Data, Error>) -> Void)]()
+        private var imageLoadCompletion = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
         var loadedImageURLs: [URL] {
             imageLoadCompletion.map{ $0.url }
         }
         var cancelledImageLoadURLs = [URL]()
         
-        func load(_ url: URL, completion: @escaping (Swift.Result<Data, Error>) -> Void) -> FeedImageDataLoaderTask {
+        func load(_ url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> FeedImageDataLoaderTask {
             imageLoadCompletion.append((url, completion))
             return TaskSpy { [weak self] in
                 self?.cancelledImageLoadURLs.append(url)

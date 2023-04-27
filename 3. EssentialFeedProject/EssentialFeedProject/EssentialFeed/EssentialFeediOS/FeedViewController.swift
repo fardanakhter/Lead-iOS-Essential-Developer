@@ -9,14 +9,6 @@ import Foundation
 import UIKit
 import EssentialFeed
 
-public protocol FeedImageDataLoaderTask{
-    func cancel()
-}
-
-public protocol FeedImageDataLoader {
-    func load(_ url: URL, completion: @escaping (Swift.Result<Data,Error>) -> Void) -> FeedImageDataLoaderTask
-}
-
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
     private(set) var feedLoader: FeedLoader?
     private(set) var imageLoader: FeedImageDataLoader?

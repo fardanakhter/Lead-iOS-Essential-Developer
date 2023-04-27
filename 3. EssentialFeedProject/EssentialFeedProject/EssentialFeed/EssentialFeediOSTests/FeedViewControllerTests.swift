@@ -121,6 +121,29 @@ final class FeedViewControllerTest: XCTestCase {
         XCTAssertEqual(view.isShowingRetryOptionView, true)
     }
     
+    func test_retryImageOption_loadsImageURL() {
+        let (sut, loader) = makeSUT()
+        let imageData = UIImage.make(withColor: .red).pngData()!
+        let imageURL = URL(string: "https:/any-image-url.com")!
+        let image = makeImage(url: imageURL)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoadingSuccessfully(with: [image], at: 0)
+        
+        let view = sut.simulateImageViewVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [imageURL], "Expected to load image url")
+        XCTAssertEqual(view.isShowingRetryOptionView, false, "Expected to not show retry option until load completes")
+        
+        loader.completeImageLoadingFailing(at: 0)
+        XCTAssertEqual(view.isShowingRetryOptionView, true, "Expected to show retry option when load completes with failure")
+        
+        view.simulateRetryImageLoad()
+        XCTAssertEqual(loader.loadedImageURLs, [imageURL, imageURL], "Expected to reload image url")
+        
+        loader.completeImageLoadingSuccessfully(with: imageData)
+        XCTAssertEqual(view.isShowingRetryOptionView, false, "Expected to hide retry option when load completes with success")
+    }
+    
     class LoaderSpy: FeedLoader, FeedImageDataLoader {
         //MARK: - FeedLoader
         private var requestCompletions = [(FeedLoader.Result) -> Void]()

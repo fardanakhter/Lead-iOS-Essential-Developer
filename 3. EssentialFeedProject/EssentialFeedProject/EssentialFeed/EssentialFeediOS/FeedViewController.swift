@@ -66,17 +66,12 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
             
             guard let self else {return}
             
-            let imageLoadTask = self.imageLoader?.load(model.url) { [weak cell] result in
-                switch result {
-                case let .success(imageData):
-                    cell?.feedImageView.image = UIImage(data: imageData)
-                    cell?.retryImageLoad.isHidden = true
-                    
-                case .failure:
-                    cell?.retryImageLoad.isHidden = false
-                }
+            imageLoaderTask[indexPath.row] = self.imageLoader?.load(model.url) { [weak cell] result in
+                let data = (try? result.get()) ?? nil
+                let image = data.map{UIImage(data: $0)} ?? nil
+                cell?.feedImageView.image = image
+                cell?.retryImageLoad.isHidden = image != nil
             }
-            imageLoaderTask[indexPath.row] = imageLoadTask
         }
         
         cell.retryImageAction = imageLoad

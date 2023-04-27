@@ -60,6 +60,21 @@ final class FeedViewControllerTest: XCTestCase {
         expect(sut, toRender: [image0, image1, image2, image3])
     }
     
+    func test_feedImageView_rendersImageSuccessfully() {
+        let (sut, loader) = makeSUT()
+        let imageURL = URL(string: "https//:any-image-url.com")!
+        let image = makeImage(url: imageURL)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoadingSuccessfully(with: [image], at: 0)
+        
+        let view = sut.simulateImageViewVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [imageURL])
+        
+        loader.completeImageLoadingSuccessfully(with: UIImage.make(withColor: .red).pngData()!, at: 0)
+        XCTAssertNotNil(view.renderedImage)
+    }
+    
     func test_loadCompletion_doesNotChangeLoadedFeedsWhenCompletesWithError() {
         let (sut, loader) = makeSUT()
         let image0 = makeImage(description: "some description", location: "some location")
@@ -122,7 +137,6 @@ final class FeedViewControllerTest: XCTestCase {
     
     func test_retryImageOption_loadsImageURL() {
         let (sut, loader) = makeSUT()
-        let imageData = UIImage.make(withColor: .red).pngData()!
         let imageURL = URL(string: "https:/any-image-url.com")!
         let image = makeImage(url: imageURL)
         

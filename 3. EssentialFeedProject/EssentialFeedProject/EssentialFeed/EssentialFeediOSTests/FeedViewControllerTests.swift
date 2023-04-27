@@ -144,6 +144,25 @@ final class FeedViewControllerTest: XCTestCase {
         XCTAssertEqual(view.isShowingRetryOptionView, false, "Expected to hide retry option when load completes with success")
     }
     
+    func test_feedImageView_preloadWhenIsNearVisible() {
+        let (sut, loader) = makeSUT()
+        let image1URL = URL(string: "http/:any-image-url.com")!
+        let image1 = makeImage(url: image1URL)
+        let image2URL = URL(string: "http/:another-any-image-url.com")!
+        let image2 = makeImage(url: image2URL)
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoadingSuccessfully(with: [image1, image2], at: 0)
+        
+        XCTAssertEqual(loader.loadedImageURLs, [], "Expected no image requests when view is not visible")
+        
+        sut.simulateImageViewNearVisible(at: 0)
+        XCTAssertEqual(loader.loadedImageURLs, [image1URL], "Expected single image request when a view is near visible")
+        
+        sut.simulateImageViewNearVisible(at: 1)
+        XCTAssertEqual(loader.loadedImageURLs, [image1URL, image2URL], "Expected double image requests when two views are near visible")
+    }
+    
     class LoaderSpy: FeedLoader, FeedImageDataLoader {
         //MARK: - FeedLoader
         private var requestCompletions = [(FeedLoader.Result) -> Void]()
@@ -239,6 +258,12 @@ private extension FeedViewController {
         let indexpath = IndexPath(row: index, section: feedImageViewsSection)
         let delegate = tableView.delegate!
         delegate.tableView?(tableView, didEndDisplaying: view, forRowAt: indexpath)
+    }
+    
+    func simulateImageViewNearVisible(at index: Int) {
+        let ds = tableView.prefetchDataSource
+        let indexpath = IndexPath(row: index, section: feedImageViewsSection)
+        ds?.tableView(tableView, prefetchRowsAt: [indexpath])
     }
     
     var isShowingLoadingIndicator: Bool {

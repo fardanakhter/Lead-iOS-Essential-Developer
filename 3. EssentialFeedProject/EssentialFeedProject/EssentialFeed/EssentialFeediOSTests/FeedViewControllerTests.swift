@@ -83,7 +83,6 @@ final class FeedViewControllerTest: XCTestCase {
         
         sut.loadViewIfNeeded()
         loader.completeFeedLoadingSuccessfully(with: [image], at: 0)
-        
         XCTAssertEqual(loader.loadedImageURLs, [], "Expected to not load image when view is not visible")
         
         sut.simulateImageViewVisible(at: 0)
@@ -97,13 +96,10 @@ final class FeedViewControllerTest: XCTestCase {
         
         sut.loadViewIfNeeded()
         loader.completeFeedLoadingSuccessfully(with: [image], at: 0)
-        XCTAssertEqual(loader.loadedImageURLs, [], "Expected to not load image when view is not visible")
+        XCTAssertEqual(loader.cancelledImageLoadURLs, [], "Expected no canceled image requests when no view is not visible yet")
         
-        sut.simulateImageViewVisible(at: 0)
-        XCTAssertEqual(loader.loadedImageURLs, [imageURL], "Expected to load image when view is visible")
-        
-        sut.simulateImageViewNotvisible(at: 0)
-        XCTAssertEqual(loader.cancelledImageLoadURLs, [imageURL], "Expected to cancel image load when view is invisible")
+        sut.simulateImageViewNotVisible(at: 0)
+        XCTAssertEqual(loader.cancelledImageLoadURLs, [imageURL], "Expected to cancel image request when view is not visible anymore")
     }
     
     func test_retryImageOption_isShowingWhenLoadingImageURLFails() {
@@ -119,6 +115,9 @@ final class FeedViewControllerTest: XCTestCase {
         
         loader.completeImageLoadingFailing(at: 0)
         XCTAssertEqual(view.isShowingRetryOptionView, true)
+        
+        loader.completeImageLoadingSuccessfully(with: UIImage.make(withColor: .red).pngData()!, at: 0)
+        XCTAssertEqual(view.isShowingRetryOptionView, false)
     }
     
     func test_retryImageOption_loadsImageURL() {
@@ -139,9 +138,6 @@ final class FeedViewControllerTest: XCTestCase {
         
         view.simulateRetryImageLoad()
         XCTAssertEqual(loader.loadedImageURLs, [imageURL, imageURL], "Expected to reload image url")
-        
-        loader.completeImageLoadingSuccessfully(with: imageData)
-        XCTAssertEqual(view.isShowingRetryOptionView, false, "Expected to hide retry option when load completes with success")
     }
     
     func test_feedImageView_preloadWhenIsNearVisible() {
@@ -271,7 +267,7 @@ private extension FeedViewController {
         return feedImageView(at: index)
     }
     
-    func simulateImageViewNotvisible(at index: Int) {
+    func simulateImageViewNotVisible(at index: Int) {
         let view = feedImageView(at: index)
         let indexpath = IndexPath(row: index, section: feedImageViewsSection)
         let delegate = tableView.delegate!

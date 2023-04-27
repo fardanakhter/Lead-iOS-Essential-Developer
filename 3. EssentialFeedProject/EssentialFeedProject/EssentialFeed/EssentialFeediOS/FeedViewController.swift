@@ -60,15 +60,29 @@ public final class FeedViewController: UITableViewController {
         cell.location = model.location
         cell.locationContainer.isHidden = model.location == nil
         cell.retryImageLoad.isHidden = true
-        imageLoaderTasks[indexPath.row] = imageLoader?.load(model.url) { [weak cell] result in
-            switch result {
-            case .failure:
-                cell?.retryImageLoad.isHidden = false
-
-            default:
-                break
+        cell.feedImageView.image = nil
+        
+        let imageLoad = { [weak self, weak cell] in
+            
+            guard let self else {return}
+            
+            let imageLoadTask = self.imageLoader?.load(model.url) { [weak cell] result in
+                switch result {
+                case let .success(imageData):
+                    cell?.feedImageView.image = UIImage(data: imageData)
+                    cell?.retryImageLoad.isHidden = true
+                    
+                case .failure:
+                    cell?.retryImageLoad.isHidden = false
+                }
             }
+            
+            imageLoaderTasks[indexPath.row] = imageLoadTask
         }
+        
+        cell.retryImageAction = imageLoad
+        imageLoad()
+        
         return cell
     }
     

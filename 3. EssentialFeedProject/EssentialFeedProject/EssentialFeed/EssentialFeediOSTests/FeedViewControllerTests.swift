@@ -114,10 +114,10 @@ final class FeedViewControllerTest: XCTestCase {
         sut.loadViewIfNeeded()
         loader.completeFeedLoadingSuccessfully(with: [image], at: 0)
         
-        let view = sut.feedImageView(at: 0)
+        let view = sut.simulateImageViewVisible(at: 0)
         XCTAssertEqual(view.isShowingRetryOptionView, false)
         
-        loader.completeImageLoadingFailing(on: imageURL)
+        loader.completeImageLoadingFailing(at: 0)
         XCTAssertEqual(view.isShowingRetryOptionView, true)
     }
     
@@ -150,21 +150,25 @@ final class FeedViewControllerTest: XCTestCase {
         }
         
         // MARK: - FeedImageDataLoader
-        private var imageLoadCompletion = [URL : (Swift.Result<Data, Error>) -> Void]()
+        private var imageLoadCompletion = [(url: URL, completion: (Swift.Result<Data, Error>) -> Void)]()
         var loadedImageURLs: [URL] {
-            imageLoadCompletion.map{ $0.key }
+            imageLoadCompletion.map{ $0.url }
         }
         var cancelledImageLoadURLs = [URL]()
         
         func load(_ url: URL, completion: @escaping (Swift.Result<Data, Error>) -> Void) -> FeedImageDataLoaderTask {
-            imageLoadCompletion[url] = completion
+            imageLoadCompletion.append((url, completion))
             return TaskSpy { [weak self] in
                 self?.cancelledImageLoadURLs.append(url)
             }
         }
         
-        func completeImageLoadingFailing(with error: Error = anyError(), on url: URL) {
-            imageLoadCompletion[url]?(.failure(error))
+        func completeImageLoadingFailing(with error: Error = anyError(), at index: Int = 0) {
+            imageLoadCompletion[index].completion(.failure(error))
+        }
+        
+        func completeImageLoadingSuccessfully(with imageData: Data, at index: Int = 0) {
+            imageLoadCompletion[index].completion(.success(imageData))
         }
     }
     
@@ -190,7 +194,7 @@ final class FeedViewControllerTest: XCTestCase {
     }
     
     private func assert(that sut: FeedViewController, render image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
-        let view = sut.feedImageView(at: index)
+        let view = sut.simulateImageViewVisible(at: index)
         XCTAssertEqual(view.imageDescription, image.description, file: file, line: line)
         XCTAssertEqual(view.isShowingLocation, image.location != nil, file: file, line: line)
         XCTAssertEqual(view.location, image.location, file: file, line: line)
@@ -202,8 +206,9 @@ private extension FeedViewController {
         refreshControl?.simulatePullToRefresh()
     }
     
-    func simulateImageViewVisible(at index: Int) {
-        let _ = feedImageView(at: index)
+    @discardableResult
+    func simulateImageViewVisible(at index: Int) -> FeedImageCell{
+        return feedImageView(at: index)
     }
     
     func simulateImageViewNotvisible(at index: Int) {
@@ -225,7 +230,7 @@ private extension FeedViewController {
         return 0
     }
     
-    func feedImageView(at index: Int) -> FeedImageCell {
+    private func feedImageView(at index: Int) -> FeedImageCell {
         let indexpath = IndexPath(row: index, section: feedImageViewsSection)
         let ds = tableView.dataSource!
         return ds.tableView(tableView, cellForRowAt: indexpath) as! FeedImageCell
@@ -240,6 +245,24 @@ private extension FeedImageCell {
     var isShowingRetryOptionView: Bool {
         !retryImageLoad.isHidden
     }
+    
+    var renderedImage: Data? {
+        feedImageView.image?.pngData()
+    }
+    
+    func simulateRetryImageLoad() {
+        retryImageLoad.simulateRetryImageLoad()
+    }
+}
+
+private extension UIButton {
+    func simulateRetryImageLoad() {
+        allTargets.forEach({ target in
+            actions(forTarget: target, forControlEvent: .touchUpInside)?.forEach({
+                (target as NSObject).perform(Selector($0))
+            })
+        })
+    }
 }
 
 private extension UIRefreshControl {
@@ -251,4 +274,17 @@ private extension UIRefreshControl {
         })
     }
     
+}
+
+private extension UIImage {
+    static func make(withColor color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        UIGraphicsBeginImageContext (rect.size)
+        let context = UIGraphicsGetCurrentContext()!
+        context.setFillColor(color.cgColor)
+        context.fill (rect)
+        let img = UIGraphicsGetImageFromCurrentImageContext ()
+        UIGraphicsEndImageContext()
+        return img!
+    }
 }

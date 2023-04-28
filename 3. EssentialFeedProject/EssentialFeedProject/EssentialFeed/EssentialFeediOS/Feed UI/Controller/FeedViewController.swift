@@ -13,7 +13,12 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     private(set) var imageLoader: FeedImageDataLoader?
     private(set) var feedRefreshController: FeedRefreshViewController?
     private(set) var imageCellControllers = [IndexPath : FeedImageCellController]()
-    private(set) var tableModels = [FeedImage]()
+    
+    private var tableModels = [FeedImage]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     public convenience init(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) {
         self.init()
@@ -31,7 +36,6 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     @objc private func loadFeed() {
         feedRefreshController?.onRefresh = { [weak self] images in
             self?.tableModels = images
-            self?.tableView.reloadData()
         }
         feedRefreshController?.refresh()
     }

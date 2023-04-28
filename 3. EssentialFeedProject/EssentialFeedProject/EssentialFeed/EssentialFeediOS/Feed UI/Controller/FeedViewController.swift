@@ -10,7 +10,6 @@ import UIKit
 import EssentialFeed
 
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    private(set) var feedLoader: FeedLoader?
     private(set) var imageLoader: FeedImageDataLoader?
     private(set) var imageLoaderTask = [Int: FeedImageDataLoaderTask?]()
     
@@ -20,7 +19,6 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     
     public convenience init(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) {
         self.init()
-        self.feedLoader = feedLoader
         self.feedRefreshController = FeedRefreshViewController(feedLoader: feedLoader)
         self.imageLoader = imageLoader
     }

@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import EssentialFeed
 
-public final class FeedRefreshViewController: NSObject {
+final class FeedRefreshViewController: NSObject {
     private(set) var feedLoader: FeedLoader?
     private(set) lazy var view: UIRefreshControl = {
         let view = UIRefreshControl()

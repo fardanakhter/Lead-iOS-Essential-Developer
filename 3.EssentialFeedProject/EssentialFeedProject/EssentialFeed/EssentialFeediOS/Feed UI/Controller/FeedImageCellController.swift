@@ -6,49 +6,44 @@
 //
 
 import Foundation
-import EssentialFeed
 import UIKit
 
 final class FeedImageCellController {
-    private let model: FeedImage
-    private let imageLoader: FeedImageDataLoader
-    private var task: FeedImageDataLoaderTask?
+    private let viewModel: FeedImageCellViewModel<UIImage>
     
-    init(model: FeedImage, imageLoader: FeedImageDataLoader){
-        self.model = model
-        self.imageLoader = imageLoader
+    init(viewModel: FeedImageCellViewModel<UIImage>){
+        self.viewModel = viewModel
     }
     
     func view() -> UITableViewCell {
-        let view = FeedImageCell()
-        view.imageDescription = model.description
-        view.location = model.location
-        view.locationContainer.isHidden = model.location == nil
-        view.retryImageLoad.isHidden = true
-        view.feedImageView.image = nil
+        let view = binded(FeedImageCell())
+        viewModel.loadImage()
+        return view
+    }
+    
+    private func binded(_ view: FeedImageCell) -> UITableViewCell {
+        view.imageDescription = viewModel.description
+        view.location = viewModel.location
+        view.locationContainer.isHidden = !viewModel.hasLocation
         
-        let imageLoad = { [weak self, weak view] in
-            guard let self else {return}
-            
-            self.task = self.imageLoader.load(model.url) { [weak view] result in
-                let data = (try? result.get()) ?? nil
-                let image = data.map{UIImage(data: $0)} ?? nil
-                view?.feedImageView.image = image
-                view?.retryImageLoad.isHidden = image != nil
-            }
+        viewModel.onImageLoad = { [weak view] image in
+            view?.feedImageView.image = image
         }
         
-        view.retryImageAction = imageLoad
-        imageLoad()
+        viewModel.onShouldRetryLoadingStateChange = { [weak view] shouldRetry in
+            view?.retryImageLoad.isHidden = !shouldRetry
+        }
+        
+        view.retryImageAction = viewModel.loadImage
         
         return view
     }
     
     func preload() {
-        task = imageLoader.load(model.url) { _ in }
+        viewModel.loadImageData()
     }
     
     func cancelTask() {
-        task?.cancel()
+        viewModel.cancelImageData()
     }
 }

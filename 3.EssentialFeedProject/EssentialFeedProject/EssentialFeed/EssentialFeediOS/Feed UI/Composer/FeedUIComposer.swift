@@ -29,8 +29,8 @@ final class WeakRefProxyInstance<T: AnyObject>: FeedLoadingView where T: FeedLoa
         self.instance = instance
     }
     
-    func display(isLoading: Bool) {
-        instance?.display(isLoading: isLoading)
+    func display(_ viewModel: FeedLoadingViewModel) {
+        instance?.display(viewModel)
     }
 }
 
@@ -43,8 +43,8 @@ final class FeedViewAdapter: FeedView {
         self.imageDataLoader = imageDataLoader
     }
     
-    func display(loadFeed: [FeedImage]) {
-        controller?.tableModels = loadFeed.map {
+    func display(_ viewModel: FeedViewModel) {
+        controller?.tableModels = viewModel.feed.map {
             let feedCellViewModel = FeedImageCellViewModel(model: $0, imageLoader: imageDataLoader, imageTransformer: { UIImage(data: $0) })
             return FeedImageCellController(viewModel: feedCellViewModel)
         }

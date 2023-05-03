@@ -13,19 +13,28 @@ public class FeedUIComposer {
     private init() {}
     
     public static func feedUIComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
-        let feedViewModel = FeedViewModel(feedLoader: feedLoader)
-        let refreshController = FeedRefreshViewController(viewModel: feedViewModel)
+        let feedPresenter = FeedViewPresenter(feedLoader: feedLoader)
+        let refreshController = FeedRefreshViewController(presenter: feedPresenter)
         let feedViewController = FeedViewController(refreshControl: refreshController)
-        feedViewModel.onFeedLoad = adaptFeedToCellControllers(forwardingTo: feedViewController, loader: imageLoader)
+        feedPresenter.feedLoadingView = refreshController
+        feedPresenter.feedView = FeedViewAdapter(controller: feedViewController, imageDataLoader: imageLoader)
         return feedViewController
     }
+}
+
+final class FeedViewAdapter: FeedView {
+    private weak var controller: FeedViewController?
+    private let imageDataLoader: FeedImageDataLoader
     
-    private static func adaptFeedToCellControllers(forwardingTo controller: FeedViewController, loader: FeedImageDataLoader) -> (([FeedImage]) -> Void)? {
-        return { [weak controller] images in
-            controller?.tableModels = images.map {
-                let feedCellViewModel = FeedImageCellViewModel(model: $0, imageLoader: loader, imageTransformer: { UIImage(data: $0) })
-                return FeedImageCellController(viewModel: feedCellViewModel)
-            }
+    init(controller: FeedViewController, imageDataLoader: FeedImageDataLoader) {
+        self.controller = controller
+        self.imageDataLoader = imageDataLoader
+    }
+    
+    func display(loadFeed: [FeedImage]) {
+        controller?.tableModels = loadFeed.map {
+            let feedCellViewModel = FeedImageCellViewModel(model: $0, imageLoader: imageDataLoader, imageTransformer: { UIImage(data: $0) })
+            return FeedImageCellController(viewModel: feedCellViewModel)
         }
     }
 }

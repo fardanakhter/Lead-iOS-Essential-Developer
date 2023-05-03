@@ -18,7 +18,7 @@ final class FeedRefreshViewController: NSObject, FeedLoadingView {
     }
     
     @objc func refresh() {
-        presenter.refreshFeed()
+        presenter.loadFeed()
     }
     
     func display(isLoading: Bool) {

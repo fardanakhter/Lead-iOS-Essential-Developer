@@ -26,7 +26,7 @@ final class FeedViewPresenter {
         self.feedLoader = feedLoader
     }
     
-    @objc func loadFeed() {
+    func loadFeed() {
         feedLoadingView?.display(isLoading: true)
         feedLoader?.load { [weak self] result in
             if case let .success(images) = result {

@@ -10,15 +10,14 @@ import UIKit
 
 final class FeedRefreshViewController: NSObject, FeedLoadingView {
     private(set) lazy var view = make(UIRefreshControl())
+    private let loadFeed: (() -> Void)
     
-    private let presenter: FeedViewPresenter
-    
-    init(presenter: FeedViewPresenter) {
-        self.presenter = presenter
+    init(loadFeed: @escaping () -> Void) {
+        self.loadFeed = loadFeed
     }
     
     @objc func refresh() {
-        presenter.loadFeed()
+        loadFeed()
     }
     
     func display(isLoading: Bool) {

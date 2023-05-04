@@ -8,21 +8,16 @@
 import Foundation
 import EssentialFeed
 
-struct FeedImageViewModel<Image> {
-    let description: String?
-    let location: String?
-    let image: Image?
-    let shouldRetry: Bool
-    
-    var hasLocation: Bool {
-        location != nil
-    }
-}
-
 protocol FeedImageView: AnyObject {
     associatedtype Image
     
     func display(_ viewModel: FeedImageViewModel<Image>)
+}
+
+protocol FeedImageViewPresenterInput {
+    func loadImage()
+    func loadImageData()
+    func cancelImageData()
 }
 
 final class FeedImageViewPresenter<View: FeedImageView, Image> where View.Image == Image {
@@ -40,8 +35,14 @@ final class FeedImageViewPresenter<View: FeedImageView, Image> where View.Image 
         self.imageTransformer = imageTransformer
     }
     
+    func displayView(withImage image: Image?, shouldRetry: Bool) {
+        view?.display(FeedImageViewModel(description: model.description, location: model.location, image: image, shouldRetry: shouldRetry))
+    }
+}
+
+extension FeedImageViewPresenter: FeedImageViewPresenterInput {
     func loadImage() {
-        view?.display(FeedImageViewModel(description: model.description, location: model.location, image: nil, shouldRetry: false))
+        displayView(withImage: nil, shouldRetry: false)
         task = imageLoader.load(model.url) { [weak self] result in
             self?.handle(result)
         }
@@ -49,10 +50,10 @@ final class FeedImageViewPresenter<View: FeedImageView, Image> where View.Image 
     
     private func handle(_ result: FeedImageDataLoader.Result) {
         if let image = (try? result.get()).flatMap(imageTransformer) {
-            view?.display(FeedImageViewModel(description: model.description, location: model.location, image: image, shouldRetry: false))
+            displayView(withImage: image, shouldRetry: false)
         }
         else {
-            view?.display(FeedImageViewModel(description: model.description, location: model.location, image: nil, shouldRetry: true))
+            displayView(withImage: nil, shouldRetry: true)
         }
     }
     

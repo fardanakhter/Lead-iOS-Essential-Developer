@@ -22,13 +22,15 @@ public class FeedUIComposer {
     }
 }
 
-final class WeakRefProxyInstance<T: AnyObject>: FeedLoadingView where T: FeedLoadingView {
+final class WeakRefProxyInstance<T: AnyObject>{
     private weak var instance: T?
     
     init(_ instance: T?) {
         self.instance = instance
     }
-    
+}
+
+extension WeakRefProxyInstance: FeedLoadingView where T: FeedLoadingView {
     func display(_ viewModel: FeedLoadingViewModel) {
         instance?.display(viewModel)
     }
@@ -45,8 +47,10 @@ final class FeedViewAdapter: FeedView {
     
     func display(_ viewModel: FeedViewModel) {
         controller?.tableModels = viewModel.feed.map {
-            let feedCellViewModel = FeedImageCellViewModel(model: $0, imageLoader: imageDataLoader, imageTransformer: { UIImage(data: $0) })
-            return FeedImageCellController(viewModel: feedCellViewModel)
+            let presenter = FeedImageViewPresenter<FeedImageCellController, UIImage>(model: $0, imageLoader: imageDataLoader, imageTransformer: { UIImage(data: $0) })
+            let controller = FeedImageCellController(presenter: presenter)
+            presenter.view = controller
+            return controller
         }
     }
 }

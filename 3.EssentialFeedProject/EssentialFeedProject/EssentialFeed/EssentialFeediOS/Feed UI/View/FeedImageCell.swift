@@ -13,16 +13,11 @@ public class FeedImageCell: UITableViewCell {
     @IBOutlet public private(set) var imageDescription: UILabel!
     @IBOutlet public private(set) var location: UILabel!
     @IBOutlet public private(set) var feedImageView: UIImageView!
-    
-    lazy public var retryImageLoad: UIButton = {
-       let button = UIButton()
-        button.addTarget(self, action: #selector(retryImageLoading), for: .touchUpInside)
-        return button
-    }()
+    @IBOutlet public private(set) var retryImageButton: UIButton!
     
     var retryImageAction: (() -> Void)?
     
-    @objc private func retryImageLoading() {
+    @IBAction private func retryImageLoading() {
         retryImageAction?()
     }
 }

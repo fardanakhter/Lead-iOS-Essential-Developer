@@ -326,7 +326,7 @@ private extension FeedImageCell {
     }
     
     var isShowingRetryOptionView: Bool {
-        !retryImageLoad.isHidden
+        !retryImageButton.isHidden
     }
     
     var renderedImage: Data? {
@@ -334,7 +334,7 @@ private extension FeedImageCell {
     }
     
     func simulateRetryImageLoad() {
-        retryImageLoad.simulateRetryImageLoad()
+        retryImageButton.simulateRetryImageLoad()
     }
 }
 

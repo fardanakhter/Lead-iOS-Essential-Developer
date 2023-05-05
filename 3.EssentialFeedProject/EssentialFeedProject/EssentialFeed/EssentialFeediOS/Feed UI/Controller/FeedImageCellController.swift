@@ -44,7 +44,7 @@ extension FeedImageCellController: FeedImageView {
         view.imageDescription?.text = viewModel.description
         view.location?.text = viewModel.location
         view.feedImageView?.image = viewModel.image
-        view.retryImageLoad.isHidden = !viewModel.shouldRetry
+        view.retryImageButton.isHidden = !viewModel.shouldRetry
         view.retryImageAction = presenter.loadImage
         view.locationContainer?.isHidden = !viewModel.hasLocation
     }

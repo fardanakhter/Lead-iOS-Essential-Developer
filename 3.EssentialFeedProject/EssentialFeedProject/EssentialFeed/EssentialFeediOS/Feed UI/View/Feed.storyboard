@@ -71,13 +71,27 @@
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Dxh-JX-ePa" userLabel="Image View">
                                                             <rect key="frame" x="0.0" y="0.0" width="361" height="361"/>
                                                         </imageView>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Ie-5Z-iGd">
+                                                            <rect key="frame" x="0.0" y="0.0" width="361" height="361"/>
+                                                            <state key="normal" title="Button"/>
+                                                            <buttonConfiguration key="configuration" style="plain" title="♻︎">
+                                                                <fontDescription key="titleFontDescription" type="system" pointSize="81"/>
+                                                            </buttonConfiguration>
+                                                            <connections>
+                                                                <action selector="retryImageLoading" destination="E55-J0-H15" eventType="touchUpInside" id="FGJ-0c-hXw"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.9336028555" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="Dxh-JX-ePa" secondAttribute="bottom" id="2zb-W2-PHk"/>
+                                                        <constraint firstAttribute="bottom" secondItem="7Ie-5Z-iGd" secondAttribute="bottom" id="6xX-J1-Su3"/>
+                                                        <constraint firstAttribute="trailing" secondItem="7Ie-5Z-iGd" secondAttribute="trailing" id="7A7-1h-1xy"/>
                                                         <constraint firstItem="Dxh-JX-ePa" firstAttribute="leading" secondItem="xwr-gS-vMt" secondAttribute="leading" id="OJc-BJ-3CC"/>
                                                         <constraint firstAttribute="width" secondItem="xwr-gS-vMt" secondAttribute="height" multiplier="1:1" id="UYy-XA-h4n"/>
                                                         <constraint firstAttribute="trailing" secondItem="Dxh-JX-ePa" secondAttribute="trailing" id="Xsu-FJ-Fch"/>
+                                                        <constraint firstItem="7Ie-5Z-iGd" firstAttribute="leading" secondItem="xwr-gS-vMt" secondAttribute="leading" id="Yl5-Hv-hgu"/>
+                                                        <constraint firstItem="7Ie-5Z-iGd" firstAttribute="top" secondItem="xwr-gS-vMt" secondAttribute="top" id="hFK-ID-anB"/>
                                                         <constraint firstItem="Dxh-JX-ePa" firstAttribute="top" secondItem="xwr-gS-vMt" secondAttribute="top" id="kUa-Qa-4Oo"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
@@ -111,6 +125,7 @@
                                     <outlet property="imageDescription" destination="eoY-TF-nNw" id="tPQ-oB-wk7"/>
                                     <outlet property="location" destination="lzh-TK-g1e" id="RcM-Sl-FcN"/>
                                     <outlet property="locationContainer" destination="hCS-bl-A8l" id="kgV-ge-ZnF"/>
+                                    <outlet property="retryImageButton" destination="7Ie-5Z-iGd" id="m2w-58-yJK"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

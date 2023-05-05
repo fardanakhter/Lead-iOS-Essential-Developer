@@ -191,6 +191,18 @@ final class FeedViewControllerTest: XCTestCase {
         XCTAssertEqual(loader.cancelledImageLoadURLs, [image1URL, image2URL], "Expected to cancel image requests when views is not near visible")
     }
     
+    func test_feedView_doesNotRenderFeedImageWhenFeedImageIsNotVisibleAnymore() {
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoadingSuccessfully(with: [makeImage()], at: 0)
+        
+        let view = sut.simulateImageViewNotVisible(at: 0)
+        loader.completeImageLoadingSuccessfully(with: UIImage.make(withColor: .red).pngData()!, at: 0)
+        
+        XCTAssertNil(view.renderedImage, "Expected to remove reference to view when not visible")
+    }
+    
     class LoaderSpy: FeedLoader, FeedImageDataLoader {
         //MARK: - FeedLoader
         private var requestCompletions = [(FeedLoader.Result) -> Void]()
@@ -281,11 +293,13 @@ private extension FeedViewController {
         return feedImageView(at: index)
     }
     
-    func simulateImageViewNotVisible(at index: Int) {
+    @discardableResult
+    func simulateImageViewNotVisible(at index: Int) -> FeedImageCell {
         let view = feedImageView(at: index)
         let indexpath = IndexPath(row: index, section: feedImageViewsSection)
         let delegate = tableView.delegate!
         delegate.tableView?(tableView, didEndDisplaying: view, forRowAt: indexpath)
+        return view
     }
     
     func simulateImageViewNearVisible(at index: Int) {

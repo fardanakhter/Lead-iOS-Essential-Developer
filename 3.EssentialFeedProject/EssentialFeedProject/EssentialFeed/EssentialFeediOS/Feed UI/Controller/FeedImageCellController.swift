@@ -30,8 +30,12 @@ final class FeedImageCellController {
     }
     
     func cancelTask() {
-        imageCell = nil
+        removeCellforResuse()
         presenter.cancelImageData()
+    }
+    
+    private func removeCellforResuse() {
+        imageCell = nil
     }
 }
 
@@ -48,13 +52,5 @@ extension FeedImageCellController: FeedImageView {
         view.retryImageButton.isHidden = !viewModel.shouldRetry
         view.retryImageAction = presenter.loadImage
         view.locationContainer?.isHidden = !viewModel.hasLocation
-    }
-}
-
-extension UITableView {
-    func dequeueReusableCell<T: UITableViewCell>() -> T {
-        let identifier = String(describing: T.self)
-        let cell = dequeueReusableCell(withIdentifier: identifier) as! T
-        return cell
     }
 }

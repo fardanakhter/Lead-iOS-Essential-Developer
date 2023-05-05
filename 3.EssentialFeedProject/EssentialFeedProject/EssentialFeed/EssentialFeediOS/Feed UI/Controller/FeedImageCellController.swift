@@ -18,8 +18,8 @@ final class FeedImageCellController {
         self.presenter = presenter
     }
     
-    func view() -> UITableViewCell {
-        let view = FeedImageCell()
+    func view(_ tableView: UITableView) -> UITableViewCell {
+        let view = tableView.dequeueReusableCell(withIdentifier: "FeedImageCell") as! FeedImageCell
         self.imageCell = view
         presenter.loadImage()
         return view
@@ -41,11 +41,11 @@ extension FeedImageCellController: FeedImageView {
     }
     
     private func load(_ view: FeedImageCell, with viewModel: FeedImageViewModel<Image>) {
-        view.imageDescription = viewModel.description
-        view.location = viewModel.location
-        view.feedImageView.image = viewModel.image
+        view.imageDescription?.text = viewModel.description
+        view.location?.text = viewModel.location
+        view.feedImageView?.image = viewModel.image
         view.retryImageLoad.isHidden = !viewModel.shouldRetry
         view.retryImageAction = presenter.loadImage
-        view.locationContainer.isHidden = !viewModel.hasLocation
+        view.locationContainer?.isHidden = !viewModel.hasLocation
     }
 }

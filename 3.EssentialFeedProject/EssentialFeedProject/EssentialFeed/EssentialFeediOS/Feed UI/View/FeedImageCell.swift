@@ -9,10 +9,10 @@ import Foundation
 import UIKit
 
 public class FeedImageCell: UITableViewCell {
-    public var locationContainer: UIView = UIView()
-    public var imageDescription: String? = ""
-    public var location: String? = ""
-    public var feedImageView: UIImageView = UIImageView()
+    @IBOutlet public private(set) var locationContainer: UIView!
+    @IBOutlet public private(set) var imageDescription: UILabel!
+    @IBOutlet public private(set) var location: UILabel!
+    @IBOutlet public private(set) var feedImageView: UIImageView!
     
     lazy public var retryImageLoad: UIButton = {
        let button = UIButton()

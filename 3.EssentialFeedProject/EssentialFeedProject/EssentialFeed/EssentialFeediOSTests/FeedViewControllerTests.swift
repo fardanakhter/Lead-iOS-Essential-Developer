@@ -265,9 +265,9 @@ final class FeedViewControllerTest: XCTestCase {
     
     private func assert(that sut: FeedViewController, render image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
         let view = sut.simulateImageViewVisible(at: index)
-        XCTAssertEqual(view.imageDescription, image.description, file: file, line: line)
+        XCTAssertEqual(view.imageDescription?.text, image.description, file: file, line: line)
         XCTAssertEqual(view.isShowingLocation, image.location != nil, file: file, line: line)
-        XCTAssertEqual(view.location, image.location, file: file, line: line)
+        XCTAssertEqual(view.location?.text, image.location, file: file, line: line)
     }
 }
 

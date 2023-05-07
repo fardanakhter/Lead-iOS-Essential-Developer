@@ -26,7 +26,7 @@ final class FeedViewPresenter {
         self.feedLoader = feedLoader
     }
     
-    var feedViewTitle: String {
+    static var feedViewTitle: String {
         "My Feed"
     }
     

@@ -1,4 +1,4 @@
-//
+    //
 //  FeedViewControllerTests.swift
 //  EssentialFeediOSTests
 //
@@ -17,12 +17,18 @@ final class FeedViewControllerTest: XCTestCase {
         
         sut.loadViewIfNeeded()
         
-        let localizedStringKey = "FEED_VIEW_TITLE"
+        let localizedString = localizedString(withKey: "FEED_VIEW_TITLE")
+        XCTAssertEqual(sut.title, localizedString, "Feed View title mismatched!")
+    }
+    
+    private func localizedString(withKey key: String, file: StaticString = #file, line: UInt = #line) -> String {
         let bundle = Bundle(for: FeedViewController.self)
-        let localizedStringValue = bundle.localizedString(forKey: localizedStringKey, value: nil, table: "Feed")
+        let value = bundle.localizedString(forKey: key, value: nil, table: "Feed")
         
-        XCTAssertNotEqual(localizedStringValue, localizedStringKey, "Missing localized string for key \(localizedStringKey)")
-        XCTAssertEqual(sut.title, localizedStringValue, "Feed View title mismatched!")
+        if value == key {
+            XCTFail("Missing localized string for key: \(key)", file: file, line: line)
+        }
+        return value
     }
     
     func test_loadFeedActions_loadsFeed() {

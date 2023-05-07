@@ -27,7 +27,10 @@ final class FeedViewPresenter {
     }
     
     static var feedViewTitle: String {
-        "My Feed"
+        NSLocalizedString("FEED_VIEW_TITLE",
+                          tableName: "Feed",
+                          bundle: Bundle(for: FeedViewPresenter.self),
+                          comment: "Title for Feed View")
     }
     
     func loadFeed() {

@@ -26,6 +26,10 @@ final class FeedViewPresenter {
         self.feedLoader = feedLoader
     }
     
+    var feedViewTitle: String {
+        "My Feed"
+    }
+    
     func loadFeed() {
         feedLoadingView?.display(FeedLoadingViewModel(isLoading: true))
         feedLoader?.load { [weak self] result in

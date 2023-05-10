@@ -212,6 +212,20 @@ final class FeedUIIntegrationTest: XCTestCase {
         XCTAssertNil(view.renderedImage, "Expected to remove reference to view when not visible")
     }
     
+    func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
+        let (sut, loader) = makeSUT()
+        
+        sut.loadViewIfNeeded()
+        let exp = expectation(description: "Waiting for load feed completion")
+        DispatchQueue.global().async { [weak self] in
+            guard let self else { return }
+            loader.completeFeedLoadingSuccessfully(with: [self.makeImage()], at: 0)
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     // MARK: - Helper
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {

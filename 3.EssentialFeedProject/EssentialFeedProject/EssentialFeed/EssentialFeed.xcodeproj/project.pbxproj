@@ -318,7 +318,6 @@
 			children = (
 				77062F792A0C342700428068 /* MainQueueDispatchDecorator.swift */,
 				77062F7C2A0C349F00428068 /* WeakRefProxyInstance.swift */,
-				77062F7E2A0C361500428068 /* FeedViewAdaptor.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -366,20 +365,21 @@
 			children = (
 				77162A6B2A02ABD500481896 /* Presenters */,
 				7720EF5929FF2BFF007FA574 /* Models */,
-				7720EF5629FD9705007FA574 /* Composer */,
+				7720EF5629FD9705007FA574 /* Composers */,
 				7720EF4C29FAF746007FA574 /* Controller */,
 				7720EF4D29FAF74D007FA574 /* View */,
 			);
 			path = "Feed UI";
 			sourceTree = "<group>";
 		};
-		7720EF5629FD9705007FA574 /* Composer */ = {
+		7720EF5629FD9705007FA574 /* Composers */ = {
 			isa = PBXGroup;
 			children = (
 				7720EF5729FD9715007FA574 /* FeedUIComposer.swift */,
+				77062F7E2A0C361500428068 /* FeedViewAdaptor.swift */,
 				77062F7B2A0C349400428068 /* Helpers */,
 			);
-			path = Composer;
+			path = Composers;
 			sourceTree = "<group>";
 		};
 		7720EF5929FF2BFF007FA574 /* Models */ = {

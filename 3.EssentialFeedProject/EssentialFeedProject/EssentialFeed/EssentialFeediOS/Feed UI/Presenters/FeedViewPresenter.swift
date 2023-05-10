@@ -36,10 +36,6 @@ final class FeedViewPresenter {
     func loadFeed() {
         feedLoadingView?.display(FeedLoadingViewModel(isLoading: true))
         feedLoader?.load { [weak self] result in
-            guard Thread.isMainThread else {
-                DispatchQueue.main.async { self?.handleFeedResult(result) }
-                return
-            }
             self?.handleFeedResult(result)
         }
     }

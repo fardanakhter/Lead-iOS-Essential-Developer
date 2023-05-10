@@ -13,7 +13,7 @@ public class FeedUIComposer {
     private init() {}
     
     public static func feedUIComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
-        let feedPresenter = FeedViewPresenter(feedLoader: feedLoader)
+        let feedPresenter = FeedViewPresenter(feedLoader: MainQueueDispatchDecorator(loader: feedLoader))
         let feedViewController = makeFeedView()
         feedViewController.title = FeedViewPresenter.feedViewTitle
         
@@ -31,6 +31,24 @@ public class FeedUIComposer {
         let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
         let feedViewController = storyboard.instantiateInitialViewController() as! FeedViewController
         return feedViewController
+    }
+}
+
+final class MainQueueDispatchDecorator: FeedLoader {
+    private let loader: FeedLoader
+    
+    init(loader: FeedLoader) {
+        self.loader = loader
+    }
+    
+    func load(completion: @escaping (Result<[FeedImage], Error>) -> Void) {
+        loader.load { result in
+            guard Thread.isMainThread else {
+                DispatchQueue.main.async { completion(result) }
+                return
+            }
+            completion(result)
+        }
     }
 }
 

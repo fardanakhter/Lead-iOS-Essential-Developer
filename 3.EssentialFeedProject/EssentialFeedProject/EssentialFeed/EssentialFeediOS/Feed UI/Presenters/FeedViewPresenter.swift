@@ -36,10 +36,18 @@ final class FeedViewPresenter {
     func loadFeed() {
         feedLoadingView?.display(FeedLoadingViewModel(isLoading: true))
         feedLoader?.load { [weak self] result in
-            if case let .success(images) = result {
-                self?.feedView?.display(FeedViewModel(feed: images))
+            guard Thread.isMainThread else {
+                DispatchQueue.main.async { self?.handleFeedResult(result) }
+                return
             }
-            self?.feedLoadingView?.display(FeedLoadingViewModel(isLoading: false))
+            self?.handleFeedResult(result)
         }
+    }
+    
+    private func handleFeedResult(_ result: FeedLoader.Result) {
+        if case let .success(images) = result {
+            feedView?.display(FeedViewModel(feed: images))
+        }
+        feedLoadingView?.display(FeedLoadingViewModel(isLoading: false))
     }
 }

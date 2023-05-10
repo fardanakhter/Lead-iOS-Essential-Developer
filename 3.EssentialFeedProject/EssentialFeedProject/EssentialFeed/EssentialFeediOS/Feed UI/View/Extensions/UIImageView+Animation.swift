@@ -12,7 +12,7 @@ extension UIImageView {
     func setImageAnimation(_ newImage: UIImage?) {
         image = newImage
         
-        guard let image else { return }
+        guard let _ = image else { return }
         
         self.alpha = 0
         UIView.animate(withDuration: 0.25, animations: {

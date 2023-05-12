@@ -57,16 +57,6 @@ final class FeedViewPresenterTests: XCTestCase {
         return (sut, view)
     }
     
-    private func localizedString(withKey key: String, file: StaticString = #file, line: UInt = #line) -> String {
-        let bundle = Bundle(for: FeedViewPresenter.self)
-        let value = bundle.localizedString(forKey: key, value: nil, table: "Feed")
-        
-        if value == key {
-            XCTFail("Missing localized string for key: \(key)", file: file, line: line)
-        }
-        return value
-    }
-    
     private class FeedViewSpy: FeedView, FeedLoadingView{
         private(set) var messages = Set<Message>()
         

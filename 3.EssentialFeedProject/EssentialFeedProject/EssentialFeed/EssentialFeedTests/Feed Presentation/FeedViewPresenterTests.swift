@@ -41,6 +41,10 @@ final class FeedViewPresenter {
         loadingView.display(FeedLoadingViewModel(isLoading: false))
         feedView.display(FeedViewModel(feed: feed))
     }
+    
+    func didCompleteLoadingFeed(with error: Error) {
+        loadingView.display(FeedLoadingViewModel(isLoading: false))
+    }
 }
 
 final class FeedViewPresenterTests: XCTestCase {
@@ -51,7 +55,7 @@ final class FeedViewPresenterTests: XCTestCase {
         XCTAssertEqual(view.messages, [], "Expected no event on init")
     }
     
-    func test_didStartLoadingFeed_requestsFeedLoadingEvent() {
+    func test_didStartLoadingFeed_startsDisplayingFeedLoading() {
         let (sut, view) = makeSUT()
         
         sut.didStartLoadingFeed()
@@ -59,13 +63,21 @@ final class FeedViewPresenterTests: XCTestCase {
         XCTAssertEqual(view.messages, [.display(isLoading: true)], "Expected display loading event")
     }
     
-    func test_didCompleteLoadingFeed_requestsFeedEventAndFeedLoadingEvent() {
+    func test_didCompleteLoadingFeedWithFeed_displaysFeedAndStopsDisplayingFeedLoading() {
         let (sut, view) = makeSUT()
         let feed = [uniqueImage()]
         
         sut.didCompleteLoadingFeed(with: feed)
         
         XCTAssertEqual(view.messages, [.display(feed: feed), .display(isLoading: false)], "Expected display feed and display loading events")
+    }
+    
+    func test_didCompleteLoadingFeedWithError_stopsDisplayingFeedLoading() {
+        let (sut, view) = makeSUT()
+        
+        sut.didCompleteLoadingFeed(with: anyError())
+        
+        XCTAssertEqual(view.messages, [.display(isLoading: false)], "Expected display loading event")
     }
     
     // MARK: - Helper

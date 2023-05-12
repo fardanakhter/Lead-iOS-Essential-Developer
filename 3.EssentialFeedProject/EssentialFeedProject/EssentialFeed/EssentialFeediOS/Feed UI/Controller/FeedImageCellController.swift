@@ -20,7 +20,7 @@ final class FeedImageCellController {
     
     func view(_ tableView: UITableView) -> UITableViewCell {
         cell = tableView.dequeueReusableCell()
-        presenter.loadImage()
+        presenter.loadImageData()
         return cell!
     }
     
@@ -49,7 +49,7 @@ extension FeedImageCellController: FeedImageView {
         view.location?.text = viewModel.location
         view.feedImageView?.setImageAnimation(viewModel.image)
         view.retryImageButton.isHidden = !viewModel.shouldRetry
-        view.retryImageAction = presenter.loadImage
+        view.retryImageAction = presenter.loadImageData
         view.locationContainer?.isHidden = !viewModel.hasLocation
     }
 }

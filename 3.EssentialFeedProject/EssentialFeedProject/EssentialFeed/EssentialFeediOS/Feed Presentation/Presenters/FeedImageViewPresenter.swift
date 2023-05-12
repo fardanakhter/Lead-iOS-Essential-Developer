@@ -15,7 +15,6 @@ protocol FeedImageView: AnyObject {
 }
 
 protocol FeedImageViewPresenterInput {
-    func loadImage()
     func loadImageData()
     func cancelImageData()
 }
@@ -41,12 +40,6 @@ final class FeedImageViewPresenter<View: FeedImageView, Image> where View.Image 
 }
 
 extension FeedImageViewPresenter: FeedImageViewPresenterInput {
-    func loadImage() {
-        displayView(withImage: nil, shouldRetry: false)
-        task = imageLoader.load(model.url) { [weak self] result in
-            self?.handle(result)
-        }
-    }
     
     private func handle(_ result: FeedImageDataLoader.Result) {
         if let image = (try? result.get()).flatMap(imageTransformer) {
@@ -58,7 +51,10 @@ extension FeedImageViewPresenter: FeedImageViewPresenterInput {
     }
     
     func loadImageData() {
-        task = imageLoader.load(model.url) { _ in }
+        displayView(withImage: nil, shouldRetry: false)
+        task = imageLoader.load(model.url) { [weak self] result in
+            self?.handle(result)
+        }
     }
     
     func cancelImageData() {

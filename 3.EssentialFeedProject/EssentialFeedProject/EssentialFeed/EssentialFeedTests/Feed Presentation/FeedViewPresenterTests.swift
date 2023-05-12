@@ -6,6 +6,15 @@
 //
 
 import XCTest
+import EssentialFeed
+
+struct FeedViewModel {
+    let feed: [FeedImage]
+}
+
+protocol FeedView {
+    func display(_ viewModel: FeedViewModel)
+}
 
 struct FeedLoadingViewModel {
     let isLoading: Bool
@@ -16,14 +25,21 @@ protocol FeedLoadingView {
 }
 
 final class FeedViewPresenter {
+    let feedView: FeedView
     let loadingView: FeedLoadingView
     
-    init(loadingView: FeedLoadingView) {
+    init(feedView: FeedView, loadingView: FeedLoadingView) {
+        self.feedView = feedView
         self.loadingView = loadingView
     }
     
     func didStartLoadingFeed() {
         loadingView.display(FeedLoadingViewModel(isLoading: true))
+    }
+    
+    func didCompleteLoadingFeed(with feed: [FeedImage]) {
+        feedView.display(FeedViewModel(feed: feed))
+        loadingView.display(FeedLoadingViewModel(isLoading: false))
     }
 }
 
@@ -43,19 +59,33 @@ final class FeedViewPresenterTests: XCTestCase {
         XCTAssertEqual(view.messages, [.display(isLoading: true)])
     }
     
+    func test_didCompleteLoadingFeed_requestsFeedEventAndFeedLoadingEvent() {
+        let (sut, view) = makeSUT()
+        let feed = [uniqueImage()]
+        
+        sut.didCompleteLoadingFeed(with: feed)
+        
+        XCTAssertEqual(view.messages, [.display(feed: feed), .display(isLoading: false)])
+    }
+    
     private func makeSUT() -> (sut: FeedViewPresenter, view: FeedViewSpy) {
         let view = FeedViewSpy()
-        let sut = FeedViewPresenter(loadingView: view)
+        let sut = FeedViewPresenter(feedView: view, loadingView: view)
         trackMemoryLeak(view)
         trackMemoryLeak(sut)
         return (sut, view)
     }
     
-    private class FeedViewSpy: FeedLoadingView {
+    private class FeedViewSpy: FeedView, FeedLoadingView{
         private(set) var messages = [Message]()
         
         enum Message: Equatable {
             case display(isLoading: Bool)
+            case display(feed: [FeedImage])
+        }
+        
+        func display(_ viewModel: FeedViewModel) {
+            messages.append(.display(feed: viewModel.feed))
         }
         
         func display(_ viewModel: FeedLoadingViewModel) {

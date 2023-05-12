@@ -16,15 +16,32 @@ protocol FeedLoadingView {
     func display(_ viewModel: FeedLoadingViewModel)
 }
 
-final class FeedViewPresenter {
-    private var feedLoader: FeedLoader?
+final class FeedLoaderPresentationAdaptor {
+    private let loader: FeedLoader
+    private let presenter: FeedViewPresenter
     
-    var feedView: FeedView?
-    var feedLoadingView: FeedLoadingView?
-    
-    init(feedLoader: FeedLoader) {
-        self.feedLoader = feedLoader
+    init(loader: FeedLoader, presenter: FeedViewPresenter) {
+        self.loader = loader
+        self.presenter = presenter
     }
+    
+    func loadFeed() {
+        presenter.didStartLoadingFeed()
+        loader.load { [weak self] result in
+            switch result {
+            case .success(let feed):
+                self?.presenter.didCompleteLoadingFeed(with: feed)
+            case .failure(let error):
+                self?.presenter.didEndLoadingFeed(with: error)
+            }
+        }
+    }
+}
+
+
+final class FeedViewPresenter {
+    var feedView: FeedView?
+    var loadingView: FeedLoadingView?
     
     static var feedViewTitle: String {
         NSLocalizedString("FEED_VIEW_TITLE",
@@ -33,17 +50,16 @@ final class FeedViewPresenter {
                           comment: "Title for Feed View")
     }
     
-    func loadFeed() {
-        feedLoadingView?.display(FeedLoadingViewModel(isLoading: true))
-        feedLoader?.load { [weak self] result in
-            self?.handleFeedResult(result)
-        }
+    func didStartLoadingFeed() {
+        loadingView?.display(FeedLoadingViewModel(isLoading: true))
     }
     
-    private func handleFeedResult(_ result: FeedLoader.Result) {
-        if case let .success(images) = result {
-            feedView?.display(FeedViewModel(feed: images))
-        }
-        feedLoadingView?.display(FeedLoadingViewModel(isLoading: false))
+    func didCompleteLoadingFeed(with feed: [FeedImage]) {
+        feedView?.display(FeedViewModel(feed: feed))
+        loadingView?.display(FeedLoadingViewModel(isLoading: false))
+    }
+    
+    func didEndLoadingFeed(with error: Error) {
+        loadingView?.display(FeedLoadingViewModel(isLoading: false))
     }
 }

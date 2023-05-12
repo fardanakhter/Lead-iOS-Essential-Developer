@@ -8,14 +8,19 @@
 import Foundation
 import UIKit
 
+protocol FeedRefreshViewControllerDelegate {
+    func didStartLoadingFeed()
+}
+
 final class FeedRefreshViewController: NSObject, FeedLoadingView {
     @IBOutlet private var view: UIRefreshControl?
-    var loadFeed: (() -> Void)?
+    
+    var delegate: FeedRefreshViewControllerDelegate?
     
     override init() {}
     
     @IBAction func refresh() {
-        loadFeed?()
+        delegate?.didStartLoadingFeed()
     }
 
     func display(_ viewModel: FeedLoadingViewModel) {

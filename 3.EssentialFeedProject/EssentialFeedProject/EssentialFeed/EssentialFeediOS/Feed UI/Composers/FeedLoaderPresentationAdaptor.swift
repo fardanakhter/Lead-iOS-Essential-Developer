@@ -7,7 +7,7 @@
 
 import EssentialFeed
 
-final class FeedLoaderPresentationAdaptor {
+final class FeedLoaderPresentationAdaptor: FeedRefreshViewControllerDelegate {
     private let loader: FeedLoader
     private let presenter: FeedViewPresenter
     
@@ -16,7 +16,7 @@ final class FeedLoaderPresentationAdaptor {
         self.presenter = presenter
     }
     
-    func loadFeed() {
+    func didStartLoadingFeed() {
         presenter.didStartLoadingFeed()
         loader.load { [weak self] result in
             switch result {

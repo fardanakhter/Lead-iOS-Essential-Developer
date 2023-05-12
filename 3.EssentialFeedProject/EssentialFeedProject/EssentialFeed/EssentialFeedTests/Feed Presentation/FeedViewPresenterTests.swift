@@ -8,45 +8,6 @@
 import XCTest
 import EssentialFeed
 
-struct FeedViewModel {
-    let feed: [FeedImage]
-}
-
-protocol FeedView {
-    func display(_ viewModel: FeedViewModel)
-}
-
-struct FeedLoadingViewModel {
-    let isLoading: Bool
-}
-
-protocol FeedLoadingView {
-    func display(_ viewModel: FeedLoadingViewModel)
-}
-
-final class FeedViewPresenter {
-    let feedView: FeedView
-    let loadingView: FeedLoadingView
-    
-    init(feedView: FeedView, loadingView: FeedLoadingView) {
-        self.feedView = feedView
-        self.loadingView = loadingView
-    }
-    
-    func didStartLoadingFeed() {
-        loadingView.display(FeedLoadingViewModel(isLoading: true))
-    }
-    
-    func didCompleteLoadingFeed(with feed: [FeedImage]) {
-        loadingView.display(FeedLoadingViewModel(isLoading: false))
-        feedView.display(FeedViewModel(feed: feed))
-    }
-    
-    func didCompleteLoadingFeed(with error: Error) {
-        loadingView.display(FeedLoadingViewModel(isLoading: false))
-    }
-}
-
 final class FeedViewPresenterTests: XCTestCase {
 
     func test_init_doesnotRequestEvent() {

@@ -48,7 +48,7 @@ final class FeedViewPresenterTests: XCTestCase {
     func test_init_doesnotRequestEvent() {
         let (_, view) = makeSUT()
         
-        XCTAssertEqual(view.messages, [])
+        XCTAssertEqual(view.messages, [], "Expected no event on init")
     }
     
     func test_didStartLoadingFeed_requestsFeedLoadingEvent() {
@@ -56,7 +56,7 @@ final class FeedViewPresenterTests: XCTestCase {
         
         sut.didStartLoadingFeed()
         
-        XCTAssertEqual(view.messages, [.display(isLoading: true)])
+        XCTAssertEqual(view.messages, [.display(isLoading: true)], "Expected display loading event")
     }
     
     func test_didCompleteLoadingFeed_requestsFeedEventAndFeedLoadingEvent() {
@@ -65,8 +65,10 @@ final class FeedViewPresenterTests: XCTestCase {
         
         sut.didCompleteLoadingFeed(with: feed)
         
-        XCTAssertEqual(view.messages, [.display(feed: feed), .display(isLoading: false)])
+        XCTAssertEqual(view.messages, [.display(feed: feed), .display(isLoading: false)], "Expected display feed and display loading events")
     }
+    
+    // MARK: - Helper
     
     private func makeSUT() -> (sut: FeedViewPresenter, view: FeedViewSpy) {
         let view = FeedViewSpy()

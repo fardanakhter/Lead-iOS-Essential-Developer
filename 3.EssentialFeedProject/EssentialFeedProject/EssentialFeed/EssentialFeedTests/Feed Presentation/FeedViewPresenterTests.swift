@@ -38,8 +38,8 @@ final class FeedViewPresenter {
     }
     
     func didCompleteLoadingFeed(with feed: [FeedImage]) {
-        feedView.display(FeedViewModel(feed: feed))
         loadingView.display(FeedLoadingViewModel(isLoading: false))
+        feedView.display(FeedViewModel(feed: feed))
     }
 }
 
@@ -79,19 +79,19 @@ final class FeedViewPresenterTests: XCTestCase {
     }
     
     private class FeedViewSpy: FeedView, FeedLoadingView{
-        private(set) var messages = [Message]()
+        private(set) var messages = Set<Message>()
         
-        enum Message: Equatable {
+        enum Message: Hashable {
             case display(isLoading: Bool)
             case display(feed: [FeedImage])
         }
         
         func display(_ viewModel: FeedViewModel) {
-            messages.append(.display(feed: viewModel.feed))
+            messages.insert(.display(feed: viewModel.feed))
         }
         
         func display(_ viewModel: FeedLoadingViewModel) {
-            messages.append(.display(isLoading: viewModel.isLoading))
+            messages.insert(.display(isLoading: viewModel.isLoading))
         }
     }
     

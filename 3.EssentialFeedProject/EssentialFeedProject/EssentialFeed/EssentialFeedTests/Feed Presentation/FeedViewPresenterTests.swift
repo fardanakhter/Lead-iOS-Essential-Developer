@@ -10,6 +10,12 @@ import EssentialFeed
 
 final class FeedViewPresenterTests: XCTestCase {
 
+    func test_title_isLocalized() {
+        let localizedTitle = localizedString(withKey: "FEED_VIEW_TITLE")
+        
+        XCTAssertEqual(FeedViewPresenter.feedViewTitle, localizedTitle, "Expected title string to match \(localizedTitle), found \(FeedViewPresenter.feedViewTitle) instead")
+    }
+    
     func test_init_doesnotRequestEvent() {
         let (_, view) = makeSUT()
         
@@ -49,6 +55,16 @@ final class FeedViewPresenterTests: XCTestCase {
         trackMemoryLeak(view)
         trackMemoryLeak(sut)
         return (sut, view)
+    }
+    
+    private func localizedString(withKey key: String, file: StaticString = #file, line: UInt = #line) -> String {
+        let bundle = Bundle(for: FeedViewPresenter.self)
+        let value = bundle.localizedString(forKey: key, value: nil, table: "Feed")
+        
+        if value == key {
+            XCTFail("Missing localized string for key: \(key)", file: file, line: line)
+        }
+        return value
     }
     
     private class FeedViewSpy: FeedView, FeedLoadingView{

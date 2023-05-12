@@ -9,21 +9,20 @@ import EssentialFeed
 
 final class FeedLoaderPresentationAdaptor: FeedRefreshViewControllerDelegate {
     private let loader: FeedLoader
-    private let presenter: FeedViewPresenter
+    var presenter: FeedViewPresenter?
     
-    init(loader: FeedLoader, presenter: FeedViewPresenter) {
+    init(loader: FeedLoader) {
         self.loader = loader
-        self.presenter = presenter
     }
     
     func didStartLoadingFeed() {
-        presenter.didStartLoadingFeed()
+        presenter?.didStartLoadingFeed()
         loader.load { [weak self] result in
             switch result {
             case .success(let feed):
-                self?.presenter.didCompleteLoadingFeed(with: feed)
+                self?.presenter?.didCompleteLoadingFeed(with: feed)
             case .failure(let error):
-                self?.presenter.didEndLoadingFeed(with: error)
+                self?.presenter?.didEndLoadingFeed(with: error)
             }
         }
     }

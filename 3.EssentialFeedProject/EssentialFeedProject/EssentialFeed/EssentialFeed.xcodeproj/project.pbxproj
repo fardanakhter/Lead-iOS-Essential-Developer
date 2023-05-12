@@ -385,9 +385,9 @@
 			isa = PBXGroup;
 			children = (
 				7720EF5729FD9715007FA574 /* FeedUIComposer.swift */,
+				77062F842A0E636700428068 /* FeedLoaderPresentationAdaptor.swift */,
 				77062F7E2A0C361500428068 /* FeedViewAdaptor.swift */,
 				77062F7B2A0C349400428068 /* Helpers */,
-				77062F842A0E636700428068 /* FeedLoaderPresentationAdaptor.swift */,
 			);
 			path = Composers;
 			sourceTree = "<group>";

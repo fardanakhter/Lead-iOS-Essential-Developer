@@ -16,29 +16,6 @@ protocol FeedLoadingView {
     func display(_ viewModel: FeedLoadingViewModel)
 }
 
-final class FeedLoaderPresentationAdaptor {
-    private let loader: FeedLoader
-    private let presenter: FeedViewPresenter
-    
-    init(loader: FeedLoader, presenter: FeedViewPresenter) {
-        self.loader = loader
-        self.presenter = presenter
-    }
-    
-    func loadFeed() {
-        presenter.didStartLoadingFeed()
-        loader.load { [weak self] result in
-            switch result {
-            case .success(let feed):
-                self?.presenter.didCompleteLoadingFeed(with: feed)
-            case .failure(let error):
-                self?.presenter.didEndLoadingFeed(with: error)
-            }
-        }
-    }
-}
-
-
 final class FeedViewPresenter {
     var feedView: FeedView?
     var loadingView: FeedLoadingView?

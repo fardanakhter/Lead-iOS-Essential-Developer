@@ -22,7 +22,7 @@ final class FeedLoaderPresentationAdaptor: FeedRefreshViewControllerDelegate {
             case .success(let feed):
                 self?.presenter?.didCompleteLoadingFeed(with: feed)
             case .failure(let error):
-                self?.presenter?.didEndLoadingFeed(with: error)
+                self?.presenter?.didCompleteLoadingFeed(with: error)
             }
         }
     }

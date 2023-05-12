@@ -30,20 +30,25 @@ final class FeedViewPresenter {
 final class FeedViewPresenterTests: XCTestCase {
 
     func test_init_doesnotRequestEvent() {
-        let view = FeedViewSpy()
-        
-        let _ = FeedViewPresenter(loadingView: view)
+        let (_, view) = makeSUT()
         
         XCTAssertEqual(view.messages, [])
     }
     
-    func test_didStartLoadingFeed_requestsFeedLoading() {
-        let view = FeedViewSpy()
+    func test_didStartLoadingFeed_requestsFeedLoadingEvent() {
+        let (sut, view) = makeSUT()
         
-        let sut = FeedViewPresenter(loadingView: view)
         sut.didStartLoadingFeed()
         
         XCTAssertEqual(view.messages, [.display(isLoading: true)])
+    }
+    
+    private func makeSUT() -> (sut: FeedViewPresenter, view: FeedViewSpy) {
+        let view = FeedViewSpy()
+        let sut = FeedViewPresenter(loadingView: view)
+        trackMemoryLeak(view)
+        trackMemoryLeak(sut)
+        return (sut, view)
     }
     
     private class FeedViewSpy: FeedLoadingView {

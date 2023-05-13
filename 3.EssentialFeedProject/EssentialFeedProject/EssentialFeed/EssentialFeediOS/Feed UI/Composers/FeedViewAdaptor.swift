@@ -24,7 +24,7 @@ final class FeedViewAdapter: FeedView {
             let controller = FeedImageCellController()
             controller.delegate = presentationAdaptor
             
-            let presenter = FeedImageViewPresenter<WeakRefProxyInstance<FeedImageCellController>, UIImage>(view: WeakRefProxyInstance(controller))
+            let presenter = FeedImageViewPresenter<WeakFeedImageCellController, UIImage>(view: WeakFeedImageCellController(controller))
             presentationAdaptor.presenter = presenter
             
             return controller

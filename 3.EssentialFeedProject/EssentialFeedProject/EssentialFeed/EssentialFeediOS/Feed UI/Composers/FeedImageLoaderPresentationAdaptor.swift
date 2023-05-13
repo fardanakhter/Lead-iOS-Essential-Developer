@@ -8,12 +8,14 @@
 import UIKit
 import EssentialFeed
 
+typealias WeakFeedImageCellController = WeakRefProxyInstance<FeedImageCellController>
+
 final class FeedImageLoaderPresentationAdaptor: FeedImageCellControllerDelegate {
     private let model: FeedImage
     private let loader: FeedImageDataLoader
     private var task: FeedImageDataLoaderTask?
     
-    var presenter: FeedImageViewPresenter<WeakRefProxyInstance<FeedImageCellController>, UIImage>?
+    var presenter: FeedImageViewPresenter<WeakFeedImageCellController, UIImage>?
     
     init(model: FeedImage, loader: FeedImageDataLoader){
         self.model = model

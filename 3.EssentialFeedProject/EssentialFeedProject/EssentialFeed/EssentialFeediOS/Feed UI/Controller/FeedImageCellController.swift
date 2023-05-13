@@ -8,29 +8,30 @@
 import Foundation
 import UIKit
 
+protocol FeedImageCellControllerDelegate {
+    func startImageLoading()
+    func cancelImageLoading()
+}
+
 final class FeedImageCellController {
     typealias Image = UIImage
     
-    private let presenter: FeedImageViewPresenterInput
     private var cell: FeedImageCell?
-    
-    init(presenter: FeedImageViewPresenterInput) {
-        self.presenter = presenter
-    }
+    var delegate: FeedImageCellControllerDelegate?
     
     func view(_ tableView: UITableView) -> UITableViewCell {
         cell = tableView.dequeueReusableCell()
-        presenter.loadImageData()
+        delegate?.startImageLoading()
         return cell!
     }
     
     func preload() {
-        presenter.loadImageData()
+        delegate?.startImageLoading()
     }
     
     func cancelTask() {
         removeCellforResuse()
-        presenter.cancelImageData()
+        delegate?.cancelImageLoading()
     }
     
     private func removeCellforResuse() {
@@ -49,7 +50,7 @@ extension FeedImageCellController: FeedImageView {
         view.location?.text = viewModel.location
         view.feedImageView?.setImageAnimation(viewModel.image)
         view.retryImageButton.isHidden = !viewModel.shouldRetry
-        view.retryImageAction = presenter.loadImageData
+        view.retryImageAction = delegate?.startImageLoading
         view.locationContainer?.isHidden = !viewModel.hasLocation
     }
 }

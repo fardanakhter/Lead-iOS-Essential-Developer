@@ -14,50 +14,14 @@ protocol FeedImageView: AnyObject {
     func display(_ viewModel: FeedImageViewModel<Image>)
 }
 
-protocol FeedImageViewPresenterInput {
-    func loadImageData()
-    func cancelImageData()
-}
-
 final class FeedImageViewPresenter<View: FeedImageView, Image> where View.Image == Image {
-    private let model: FeedImage
-    private let imageLoader: FeedImageDataLoader
-    private var task: FeedImageDataLoaderTask?
+    private let view: View
     
-    private let imageTransformer: (Data) -> Image?
-    
-    weak var view: View?
-    
-    init(model: FeedImage, imageLoader: FeedImageDataLoader, imageTransformer: @escaping (Data) -> Image?){
-        self.model = model
-        self.imageLoader = imageLoader
-        self.imageTransformer = imageTransformer
+    init(view: View) {
+        self.view = view
     }
     
-    func displayView(withImage image: Image?, shouldRetry: Bool) {
-        view?.display(FeedImageViewModel(description: model.description, location: model.location, image: image, shouldRetry: shouldRetry))
-    }
-}
-
-extension FeedImageViewPresenter: FeedImageViewPresenterInput {
-    
-    private func handle(_ result: FeedImageDataLoader.Result) {
-        if let image = (try? result.get()).flatMap(imageTransformer) {
-            displayView(withImage: image, shouldRetry: false)
-        }
-        else {
-            displayView(withImage: nil, shouldRetry: true)
-        }
-    }
-    
-    func loadImageData() {
-        displayView(withImage: nil, shouldRetry: false)
-        task = imageLoader.load(model.url) { [weak self] result in
-            self?.handle(result)
-        }
-    }
-    
-    func cancelImageData() {
-        task?.cancel()
+    func displayView(with model: FeedImage, image: Image?, shouldRetry: Bool) {
+        view.display(FeedImageViewModel(description: model.description, location: model.location, image: image, shouldRetry: shouldRetry))
     }
 }

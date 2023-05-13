@@ -23,7 +23,9 @@ extension WeakRefProxyInstance: FeedLoadingView where T: FeedLoadingView {
 }
 
 extension WeakRefProxyInstance: FeedImageView where T: FeedImageCellController {
-    func display(_ viewModel: FeedImageViewModel<UIImage>) {
+    typealias Image = FeedImageCellController.Image
+    
+    func display(_ viewModel: FeedImageViewModel<Image>) {
         instance?.display(viewModel)
     }
 }

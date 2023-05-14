@@ -8,35 +8,6 @@
 import XCTest
 import EssentialFeed
 
-struct FeedImageViewModel<Image> {
-    let description: String?
-    let location: String?
-    let image: Image?
-    let shouldRetry: Bool
-    
-    var hasLocation: Bool {
-        location != nil
-    }
-}
-
-protocol FeedImageView: AnyObject {
-    associatedtype Image
-    
-    func display(_ viewModel: FeedImageViewModel<Image>)
-}
-
-final class FeedImageViewPresenter<View: FeedImageView, Image> where View.Image == Image {
-    private let view: View
-    
-    init(view: View) {
-        self.view = view
-    }
-    
-    func displayView(with model: FeedImage, image: Image?, shouldRetry: Bool) {
-        view.display(FeedImageViewModel(description: model.description, location: model.location, image: image, shouldRetry: shouldRetry))
-    }
-}
-
 final class FeedImageViewPresenterTests: XCTestCase {
 
     func test_init_doesNotRequestViewEvent() {
@@ -70,7 +41,7 @@ final class FeedImageViewPresenterTests: XCTestCase {
         return (sut, view)
     }
     
-    class AnyPresenterImage: Equatable {
+    private class AnyPresenterImage: Equatable {
         private let id = UUID()
         
         static func == (lhs: AnyPresenterImage, rhs: AnyPresenterImage) -> Bool {
@@ -78,7 +49,7 @@ final class FeedImageViewPresenterTests: XCTestCase {
         }
     }
     
-    class FeedImageViewSpy<Image: Equatable>: FeedImageView {
+    private class FeedImageViewSpy<Image: Equatable>: FeedImageView {
         private(set) var messages = [Message]()
         
         enum Message: Equatable {

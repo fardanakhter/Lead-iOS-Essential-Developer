@@ -172,38 +172,4 @@ class LoadFeedRemoteUseCaseTests: XCTestCase {
         return .failure(error)
     }
     
-    class HTTPClientSpy: HTTPClient {
-        
-        var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
-        
-        var requestedURLs: [URL] {
-            messages.map{ $0.url }
-        }
-        
-        private(set) var cancelledURL = [URL]()
-        
-        func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
-            messages.append((url, completion))
-            return EmptyTask()
-        }
-        
-        // MARK: - Helper
-        
-        func complete(withError error: Error, at index: Int = 0) {
-            messages[index].completion(.failure(error))
-        }
-        
-        func complete(withStatusCode code: Int, data: Data, at index: Int = 0) {
-            let response = HTTPURLResponse(url: messages[index].url,
-                                           statusCode: code,
-                                           httpVersion: nil,
-                                           headerFields: nil)!
-            messages[index].completion(.success((data, response)))
-        }
-    }
-    
-    private class EmptyTask: HTTPClientTask {
-        func cancel() {}
-    }
-    
 }

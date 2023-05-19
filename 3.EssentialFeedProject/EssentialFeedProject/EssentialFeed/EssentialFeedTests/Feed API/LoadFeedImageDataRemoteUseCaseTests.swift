@@ -97,14 +97,18 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         let (sut, client) = makeSUT()
         let imageURL = anyURL()
         
-        var capturedResult = [RemoteFeedImageDataLoader.Result]()
-        let task = sut.load(imageURL, completion: { receivedResult in
-            capturedResult.append(receivedResult)
+        assertThatLoadDoesNotCompletesWhenCanceled(given: sut, when: {
+            client.complete(withError: anyError())
         })
-        task.cancel()
-        client.complete(withError: anyError())
-
-        XCTAssertEqual(capturedResult.isEmpty, true)
+    }
+    
+    func test_load_doesNotDeliverResponseAfterCanceled() {
+        let (sut, client) = makeSUT()
+        let imageURL = anyURL()
+        
+        assertThatLoadDoesNotCompletesWhenCanceled(given: sut, when: {
+            client.complete(withStatusCode: 200, data: "any data".data(using: .utf8)!)
+        })
     }
     
     private func makeSUT() -> (RemoteFeedImageDataLoader, HTTPClientSpy) {
@@ -130,6 +134,18 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         
         action()
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func assertThatLoadDoesNotCompletesWhenCanceled(given sut: RemoteFeedImageDataLoader, when action: () -> Void) {
+        var capturedResult = [RemoteFeedImageDataLoader.Result]()
+        let task = sut.load(anyURL(), completion: { receivedResult in
+            capturedResult.append(receivedResult)
+        })
+        task.cancel()
+        
+        action()
+
+        XCTAssertEqual(capturedResult.isEmpty, true)
     }
     
     private class HTTPClientSpy: HTTPClient {

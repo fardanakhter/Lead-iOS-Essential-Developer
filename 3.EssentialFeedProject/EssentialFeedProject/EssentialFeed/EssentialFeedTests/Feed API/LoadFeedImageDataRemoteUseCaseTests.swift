@@ -19,11 +19,19 @@ class RemoteFeedImageDataLoader {
     
     enum Error: Swift.Error {
         case invalidData
+        case noConnection
     }
     
     func load(_ url: URL, completion: @escaping (Result) -> Void) {
         client.get(url) { result in
-            completion(.failure(.invalidData))
+            
+            switch result {
+            case .success(_):
+                completion(.failure(.invalidData))
+                
+            case .failure:
+                completion(.failure(.noConnection))
+            }
         }
     }
 }
@@ -39,7 +47,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
     func test_load_requestsImageUrl() {
         let (sut, client) = makeSUT()
         let imageUrl = anyURL()
-        
+
         let _ = sut.load(imageUrl, completion: {_ in})
         
         XCTAssertEqual(client.requestedURLs, [imageUrl])
@@ -66,6 +74,26 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_load_deliversErrorOnNoInternetConnection() {
+        let (sut, client) = makeSUT()
+        
+        let exp = expectation(description: "Waits for load() to complete")
+        let expectedError: RemoteFeedImageDataLoader.Error = .noConnection
+        
+        let _ = sut.load(anyURL(), completion: { result in
+            switch result {
+            case .failure(let receivedError):
+                XCTAssertEqual(receivedError, expectedError)
+            default:
+                XCTFail("Loaded error not same as expected")
+            }
+            exp.fulfill()
+        })
+        
+        client.complete(withError: NSError(domain: "No Internet Connection", code: 0))
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     private func makeSUT() -> (RemoteFeedImageDataLoader, HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteFeedImageDataLoader(client)
@@ -89,6 +117,10 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
                                            httpVersion: nil,
                                            headerFields: nil)!
             messages[index](.success((data, response)))
+        }
+        
+        func complete(withError error: NSError, at index: Int = 0) {
+            messages[index](.failure(error))
         }
     }
     

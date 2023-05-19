@@ -96,7 +96,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
     func test_load_deliversErrorOnInvalidImageData() {
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWithError: .invalidData, when: {
+        expect(sut, toCompleteWith: .failure(.invalidData), when: {
             let invalidData = Data()
             client.complete(withStatusCode: 200, data: invalidData)
         })
@@ -105,7 +105,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
     func test_load_deliversErrorOnNoInternetConnection() {
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWithError: .noConnection, when: {
+        expect(sut, toCompleteWith: .failure(.noConnection), when: {
             let noConnectionError = NSError(domain: "No Internet Connection", code: 0)
             client.complete(withError: noConnectionError)
         })
@@ -140,21 +140,9 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
     func test_load_deliversImageDataWith200Response() {
         let (sut, client) = makeSUT()
         
-        let exp = expectation(description: "Waits for load() completion")
-        let expectedData = anyData()
-        
-        let _ = sut.load(anyURL(), completion: { result in
-            switch result {
-            case let .success(receivedData):
-                XCTAssertEqual(receivedData, expectedData)
-            default:
-                XCTFail("Expected success with image data, found \(result) instead")
-            }
-            exp.fulfill()
+        expect(sut, toCompleteWith: .success(anyData()), when: {
+            client.complete(withStatusCode: 200, data: anyData())
         })
-        
-        client.complete(withStatusCode: 200, data: anyData())
-        wait(for: [exp], timeout: 1.0)
     }
     
     private func makeSUT() -> (RemoteFeedImageDataLoader, HTTPClientSpy) {
@@ -165,15 +153,20 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         return (sut, client)
     }
     
-    private func expect(_ sut: RemoteFeedImageDataLoader, toCompleteWithError expectedError: RemoteFeedImageDataLoader.Error, when action: () -> Void) {
+    private func expect(_ sut: RemoteFeedImageDataLoader, toCompleteWith expectedResult: RemoteFeedImageDataLoader.Result, when action: () -> Void) {
         
         let exp = expectation(description: "Waits for load() to complete")
-        let _ = sut.load(anyURL(), completion: { result in
-            switch result {
-            case .failure(let receivedError):
+        let _ = sut.load(anyURL(), completion: { receivedResult in
+            switch (receivedResult, expectedResult) {
+            
+            case let (.success(receivedData), .success(expectedData)):
+                XCTAssertEqual(receivedData, expectedData)
+            
+            case let (.failure(receivedError), .failure(expectedError)):
                 XCTAssertEqual(receivedError, expectedError)
+
             default:
-                XCTFail("Loaded error not same as expected")
+                XCTFail("Expected result \(expectedResult), found result \(receivedResult) instead")
             }
             exp.fulfill()
         })

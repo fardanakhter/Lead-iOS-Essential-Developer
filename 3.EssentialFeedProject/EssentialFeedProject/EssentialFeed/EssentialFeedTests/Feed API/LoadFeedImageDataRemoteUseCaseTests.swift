@@ -35,7 +35,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         
         XCTAssertEqual(client.requestedURLs, [])
     }
-    
+
     func test_load_requestsImageUrl() {
         let (sut, client) = makeSUT()
         let imageUrl = anyURL()

@@ -75,6 +75,22 @@ final class URLSessionHTTPClientTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+//    func test_task_cancelsGETRequest() {
+//        let url = anyURL()
+//        
+//        let exp = expectation(description: "Waits for completion")
+//        URLProtocolStub.observeCanceledRequest { request in
+//            XCTAssertEqual(request.url, url)
+//            XCTAssertEqual(request.httpMethod, "GET")
+//            exp.fulfill()
+//        }
+//
+//        let task = makeSUT().get(url) { _ in }
+////        task.cancel()
+//        
+//        wait(for: [exp], timeout: 1.0)
+//    }
+    
     // Helpers
     
     private func anyNonHttpUrlResponse() -> URLResponse {

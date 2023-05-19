@@ -61,18 +61,15 @@ class RemoteFeedImageDataLoader {
         let task = HTTPClientTaskWrapper(completion)
         
         task.wrapper = client.get(url) { result in
-            switch result {
-            case let .success((data, response)):
-                if response.isOK && !data.isEmpty {
-                    task.complete(with: .success(data))
+            task.complete(with: result
+                .mapError {_ in .noConnection }
+                .flatMap { (data, response) in
+                    if response.isOK && !data.isEmpty {
+                        return .success(data)
+                    }
+                    return .failure(.invalidData)
                 }
-                else {
-                    task.complete(with: .failure(.invalidData))
-                }
-                
-            case .failure:
-                task.complete(with: .failure(.noConnection))
-            }
+            )
         }
         
         return task

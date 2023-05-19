@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import EssentialFeed
 
 internal func anyError() -> NSError {
     NSError(domain: "Test", code: 0)
@@ -13,4 +14,8 @@ internal func anyError() -> NSError {
 
 internal func anyURL() -> URL {
     return URL(string: "https://any-url.com")!
+}
+
+internal func uniqueImage() -> FeedImage {
+    return FeedImage(id: UUID(), description: nil, location: nil, url: anyURL())
 }

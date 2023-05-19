@@ -122,7 +122,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         })
     }
     
-    func test_load_doesNotDeliverResponseAfterCanceled() {
+    func test_load_doesNotDeliverImageDataAfterCanceled() {
         let (sut, client) = makeSUT()
         
         assertThatLoadDoesNotCompletesWhenCanceled(given: sut, when: {

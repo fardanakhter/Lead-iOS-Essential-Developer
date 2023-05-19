@@ -56,30 +56,31 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
     func test_load_deliversErrorOnInvalidImageData() {
         let (sut, client) = makeSUT()
         
-        let exp = expectation(description: "Waits for load() to complete")
-        let expectedError: RemoteFeedImageDataLoader.Error = .invalidData
-        
-        let _ = sut.load(anyURL(), completion: { result in
-            switch result {
-            case .failure(let error):
-                XCTAssertEqual(error, expectedError)
-            default:
-                XCTFail("Loaded error not same as expected")
-            }
-            exp.fulfill()
+        expect(sut, toCompleteWithError: .invalidData, when: {
+            let invalidData = "invalid data".data(using: .utf8)!
+            client.complete(withStatusCode: 200, data: invalidData)
         })
-        
-        let invalidData = "invalid data".data(using: .utf8)!
-        client.complete(withStatusCode: 200, data: invalidData)
-        wait(for: [exp], timeout: 1.0)
     }
     
     func test_load_deliversErrorOnNoInternetConnection() {
         let (sut, client) = makeSUT()
         
-        let exp = expectation(description: "Waits for load() to complete")
-        let expectedError: RemoteFeedImageDataLoader.Error = .noConnection
+        expect(sut, toCompleteWithError: .noConnection, when: {
+            client.complete(withError: NSError(domain: "No Internet Connection", code: 0))
+        })
+    }
+    
+    private func makeSUT() -> (RemoteFeedImageDataLoader, HTTPClientSpy) {
+        let client = HTTPClientSpy()
+        let sut = RemoteFeedImageDataLoader(client)
+        trackMemoryLeak(sut)
+        trackMemoryLeak(client)
+        return (sut, client)
+    }
+    
+    private func expect(_ sut: RemoteFeedImageDataLoader, toCompleteWithError expectedError: RemoteFeedImageDataLoader.Error, when action: () -> Void) {
         
+        let exp = expectation(description: "Waits for load() to complete")
         let _ = sut.load(anyURL(), completion: { result in
             switch result {
             case .failure(let receivedError):
@@ -90,16 +91,8 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
             exp.fulfill()
         })
         
-        client.complete(withError: NSError(domain: "No Internet Connection", code: 0))
+        action()
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private func makeSUT() -> (RemoteFeedImageDataLoader, HTTPClientSpy) {
-        let client = HTTPClientSpy()
-        let sut = RemoteFeedImageDataLoader(client)
-        trackMemoryLeak(sut)
-        trackMemoryLeak(client)
-        return (sut, client)
     }
     
     class HTTPClientSpy: HTTPClient {

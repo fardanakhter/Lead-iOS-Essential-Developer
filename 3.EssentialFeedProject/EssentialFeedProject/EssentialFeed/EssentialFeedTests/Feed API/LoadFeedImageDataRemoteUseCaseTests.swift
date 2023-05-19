@@ -8,76 +8,6 @@
 import XCTest
 import EssentialFeed
 
-
-protocol HTTPFeedImageLoaderClientTask {
-    func cancel()
-}
-
-protocol HTTPFeedImageLoaderClient {
-    typealias Result = Swift.Result<(Data, HTTPURLResponse), Error>
-    
-    func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPFeedImageLoaderClientTask
-}
-
-public protocol FeedImageDataLoaderTask {
-    func cancel()
-}
-
-class HTTPClientTaskWrapper: FeedImageDataLoaderTask {
-    private var completion: ((RemoteFeedImageDataLoader.Result) -> Void)?
-    
-    var wrapper: HTTPFeedImageLoaderClientTask?
-    
-    init(_ completion: @escaping (Result<Data, RemoteFeedImageDataLoader.Error>) -> Void) {
-        self.completion = completion
-    }
-    
-    func complete(with result: RemoteFeedImageDataLoader.Result) {
-        completion?(result)
-    }
-    
-    func cancel() {
-        wrapper?.cancel()
-        wrapper = nil
-        completion = nil
-    }
-}
-
-class RemoteFeedImageDataLoader {
-    private let client: HTTPFeedImageLoaderClient
-    
-    init(_ client: HTTPFeedImageLoaderClient) {
-        self.client = client
-    }
-    
-    typealias Result = Swift.Result<Data, Error>
-    
-    enum Error: Swift.Error {
-        case invalidData
-        case noConnection
-    }
-    
-    func load(_ url: URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask {
-        let task = HTTPClientTaskWrapper(completion)
-        
-        task.wrapper = client.get(url) {[weak self] result in
-            guard let _ = self else { return }
-            
-            task.complete(with: result
-                .mapError {_ in .noConnection }
-                .flatMap { (data, response) in
-                    if response.isOK && !data.isEmpty {
-                        return .success(data)
-                    }
-                    return .failure(.invalidData)
-                }
-            )
-        }
-        
-        return task
-    }
-}
-
 class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
     
     func test_init_doesNotRequestImageUrl() {
@@ -245,3 +175,5 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
     }
     
 }
+
+

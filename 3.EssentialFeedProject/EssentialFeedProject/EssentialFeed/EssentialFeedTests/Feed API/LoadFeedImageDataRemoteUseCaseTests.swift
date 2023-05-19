@@ -8,12 +8,27 @@
 import XCTest
 import EssentialFeed
 
+
+protocol HTTPFeedImageLoaderClientTask {
+    func cancel()
+}
+
+protocol HTTPFeedImageLoaderClient {
+    typealias Result = Swift.Result<(Data, HTTPURLResponse), Error>
+    
+    func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPFeedImageLoaderClientTask
+}
+
+
+
 public protocol FeedImageDataLoaderTask {
     func cancel()
 }
 
-class HttpClientTaskWrapper: FeedImageDataLoaderTask {
+class HTTPClientTaskWrapper: FeedImageDataLoaderTask {
     private var completion: ((RemoteFeedImageDataLoader.Result) -> Void)?
+    
+    var wrapper: HTTPFeedImageLoaderClientTask?
     
     init(_ completion: @escaping (Result<Data, RemoteFeedImageDataLoader.Error>) -> Void) {
         self.completion = completion
@@ -24,14 +39,16 @@ class HttpClientTaskWrapper: FeedImageDataLoaderTask {
     }
     
     func cancel() {
+        wrapper?.cancel()
+        wrapper = nil
         completion = nil
     }
 }
 
 class RemoteFeedImageDataLoader {
-    private let client: HTTPClient
+    private let client: HTTPFeedImageLoaderClient
     
-    init(_ client: HTTPClient) {
+    init(_ client: HTTPFeedImageLoaderClient) {
         self.client = client
     }
     
@@ -43,9 +60,9 @@ class RemoteFeedImageDataLoader {
     }
     
     func load(_ url: URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask {
-        let task = HttpClientTaskWrapper(completion)
+        let task = HTTPClientTaskWrapper(completion)
         
-        client.get(url) { result in
+        task.wrapper = client.get(url) { result in
             switch result {
             case .success(_):
                 task.complete(with: .failure(.invalidData))
@@ -54,6 +71,7 @@ class RemoteFeedImageDataLoader {
                 task.complete(with: .failure(.noConnection))
             }
         }
+        
         return task
     }
 }
@@ -111,6 +129,16 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         })
     }
     
+    func test_cancelLoad_cancelsRequestingImageUrl() {
+        let (sut, client) = makeSUT()
+        let imageURL = anyURL()
+     
+        let task = sut.load(imageURL, completion: { _ in })
+        task.cancel()
+        
+        XCTAssertEqual(client.cancelledURL, [imageURL])
+    }
+    
     private func makeSUT() -> (RemoteFeedImageDataLoader, HTTPClientSpy) {
         let client = HTTPClientSpy()
         let sut = RemoteFeedImageDataLoader(client)
@@ -148,15 +176,20 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         XCTAssertEqual(capturedResult.isEmpty, true)
     }
     
-    private class HTTPClientSpy: HTTPClient {
+    private class HTTPClientSpy: HTTPFeedImageLoaderClient {
         var requestedURLs: [URL] {
             messages.map{ $0.url }
         }
         
+        private(set) var cancelledURL = [URL]()
+        
         private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
         
-        func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+        func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPFeedImageLoaderClientTask {
             messages.append((url, completion))
+            return HTTPClientTaskSpy { [weak self] in
+                self?.cancelledURL.append(url)
+            }
         }
         
         func complete(withStatusCode code: Int, data: Data, at index: Int = 0) {
@@ -169,6 +202,18 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         
         func complete(withError error: NSError, at index: Int = 0) {
             messages[index].completion(.failure(error))
+        }
+    }
+    
+    private class HTTPClientTaskSpy: HTTPFeedImageLoaderClientTask {
+        let closure: () -> Void
+        
+        init(closure: @escaping () -> Void) {
+            self.closure = closure
+        }
+        
+        func cancel() {
+            closure()
         }
     }
     

@@ -197,10 +197,6 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         XCTAssertEqual(capturedResult.isEmpty, true)
     }
     
-    private func anyData() -> Data {
-        return "any data".data(using: .utf8)!
-    }
-    
     private class HTTPClientSpy: HTTPFeedImageLoaderClient {
         var requestedURLs: [URL] {
             messages.map{ $0.url }

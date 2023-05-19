@@ -19,3 +19,7 @@ internal func anyURL() -> URL {
 internal func uniqueImage() -> FeedImage {
     return FeedImage(id: UUID(), description: nil, location: nil, url: anyURL())
 }
+
+internal func anyData() -> Data {
+    return "any data".data(using: .utf8)!
+}

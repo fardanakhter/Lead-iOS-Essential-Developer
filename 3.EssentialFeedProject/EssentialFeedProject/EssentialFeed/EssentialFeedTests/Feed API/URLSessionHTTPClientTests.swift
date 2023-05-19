@@ -194,5 +194,4 @@ final class URLSessionHTTPClientTests: XCTestCase {
             URLProtocolStub.requestObserver = nil
         }
     }
-    
 }

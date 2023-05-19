@@ -245,9 +245,3 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
     }
     
 }
-
-extension HTTPURLResponse {
-    var isOK: Bool {
-        return statusCode == 200
-    }
-}

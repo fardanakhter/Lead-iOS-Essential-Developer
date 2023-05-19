@@ -19,8 +19,6 @@ protocol HTTPFeedImageLoaderClient {
     func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPFeedImageLoaderClientTask
 }
 
-
-
 public protocol FeedImageDataLoaderTask {
     func cancel()
 }
@@ -64,8 +62,13 @@ class RemoteFeedImageDataLoader {
         
         task.wrapper = client.get(url) { result in
             switch result {
-            case .success(_):
-                task.complete(with: .failure(.invalidData))
+            case let .success((data, response)):
+                if response.isOK && !data.isEmpty {
+                    task.complete(with: .success(data))
+                }
+                else {
+                    task.complete(with: .failure(.invalidData))
+                }
                 
             case .failure:
                 task.complete(with: .failure(.noConnection))
@@ -97,7 +100,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         let (sut, client) = makeSUT()
         
         expect(sut, toCompleteWithError: .invalidData, when: {
-            let invalidData = "invalid data".data(using: .utf8)!
+            let invalidData = Data()
             client.complete(withStatusCode: 200, data: invalidData)
         })
     }
@@ -125,7 +128,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         let imageURL = anyURL()
         
         assertThatLoadDoesNotCompletesWhenCanceled(given: sut, when: {
-            client.complete(withStatusCode: 200, data: "any data".data(using: .utf8)!)
+            client.complete(withStatusCode: 200, data: anyData())
         })
     }
     
@@ -137,6 +140,26 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         task.cancel()
         
         XCTAssertEqual(client.cancelledURL, [imageURL])
+    }
+    
+    func test_load_deliversImageDataWith200Response() {
+        let (sut, client) = makeSUT()
+        
+        let exp = expectation(description: "Waits for load() completion")
+        let expectedData = anyData()
+        
+        let _ = sut.load(anyURL(), completion: { result in
+            switch result {
+            case let .success(receivedData):
+                XCTAssertEqual(receivedData, expectedData)
+            default:
+                XCTFail("Expected success with image data, found \(result) instead")
+            }
+            exp.fulfill()
+        })
+        
+        client.complete(withStatusCode: 200, data: anyData())
+        wait(for: [exp], timeout: 1.0)
     }
     
     private func makeSUT() -> (RemoteFeedImageDataLoader, HTTPClientSpy) {
@@ -174,6 +197,10 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         action()
 
         XCTAssertEqual(capturedResult.isEmpty, true)
+    }
+    
+    private func anyData() -> Data {
+        return "any data".data(using: .utf8)!
     }
     
     private class HTTPClientSpy: HTTPFeedImageLoaderClient {
@@ -217,4 +244,10 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         }
     }
     
+}
+
+extension HTTPURLResponse {
+    var isOK: Bool {
+        return statusCode == 200
+    }
 }

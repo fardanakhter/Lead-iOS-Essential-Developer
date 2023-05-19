@@ -7,20 +7,10 @@
 
 import Foundation
 
-public protocol HTTPFeedImageLoaderClientTask {
-    func cancel()
-}
-
-public protocol HTTPFeedImageLoaderClient {
-    typealias Result = Swift.Result<(Data, HTTPURLResponse), Error>
-    
-    func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPFeedImageLoaderClientTask
-}
-
 class HTTPClientTaskWrapper: FeedImageDataLoaderTask {
     private var completion: ((RemoteFeedImageDataLoader.Result) -> Void)?
     
-    var wrapper: HTTPFeedImageLoaderClientTask?
+    var wrapper: HTTPClientTask?
     
     init(_ completion: @escaping (Result<Data, RemoteFeedImageDataLoader.Error>) -> Void) {
         self.completion = completion

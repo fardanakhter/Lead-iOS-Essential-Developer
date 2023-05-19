@@ -8,9 +8,9 @@
 import Foundation
 
 public class RemoteFeedImageDataLoader {
-    private let client: HTTPFeedImageLoaderClient
+    private let client: HTTPClient
     
-    public init(_ client: HTTPFeedImageLoaderClient) {
+    public init(_ client: HTTPClient) {
         self.client = client
     }
     

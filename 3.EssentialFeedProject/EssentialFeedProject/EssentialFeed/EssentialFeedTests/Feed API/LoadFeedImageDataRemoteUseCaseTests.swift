@@ -133,7 +133,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         XCTAssertEqual(capturedResult.isEmpty, true)
     }
     
-    private class HTTPClientSpy: HTTPFeedImageLoaderClient {
+    private class HTTPClientSpy: HTTPClient {
         var requestedURLs: [URL] {
             messages.map{ $0.url }
         }
@@ -142,7 +142,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         
         private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
         
-        func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPFeedImageLoaderClientTask {
+        func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
             messages.append((url, completion))
             return HTTPClientTaskSpy { [weak self] in
                 self?.cancelledURL.append(url)
@@ -162,7 +162,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         }
     }
     
-    private class HTTPClientTaskSpy: HTTPFeedImageLoaderClientTask {
+    private class HTTPClientTaskSpy: HTTPClientTask {
         let closure: () -> Void
         
         init(closure: @escaping () -> Void) {

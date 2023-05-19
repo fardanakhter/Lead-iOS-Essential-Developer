@@ -180,8 +180,13 @@ class LoadFeedRemoteUseCaseTests: XCTestCase {
             messages.map{ $0.url }
         }
         
-        func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
+        private(set) var cancelledURL = [URL]()
+        
+        func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask{
             messages.append((url, completion))
+            return HTTPClientTaskSpy { [weak self] in
+                self?.cancelledURL.append(url)
+            }
         }
         
         // MARK: - Helper
@@ -198,5 +203,18 @@ class LoadFeedRemoteUseCaseTests: XCTestCase {
             messages[index].completion(.success((data, response)))
         }
     }
+    
+    private class HTTPClientTaskSpy: HTTPClientTask {
+        let closure: () -> Void
+        
+        init(closure: @escaping () -> Void) {
+            self.closure = closure
+        }
+        
+        func cancel() {
+            closure()
+        }
+    }
+    
     
 }

@@ -66,7 +66,8 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         let (sut, client) = makeSUT()
         
         expect(sut, toCompleteWithError: .noConnection, when: {
-            client.complete(withError: NSError(domain: "No Internet Connection", code: 0))
+            let noConnectionError = NSError(domain: "No Internet Connection", code: 0)
+            client.complete(withError: noConnectionError)
         })
     }
     
@@ -96,12 +97,14 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
     }
     
     class HTTPClientSpy: HTTPClient {
-        private(set) var requestedURLs = [URL]()
-        private var messages = [(HTTPClient.Result) -> Void]()
+        var requestedURLs: [URL] {
+            messages.map{ $0.url }
+        }
+        
+        private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
         
         func get(_ url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
-            requestedURLs.append(url)
-            messages.append(completion)
+            messages.append((url, completion))
         }
         
         func complete(withStatusCode code: Int, data: Data, at index: Int = 0) {
@@ -109,11 +112,11 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
                                            statusCode: code,
                                            httpVersion: nil,
                                            headerFields: nil)!
-            messages[index](.success((data, response)))
+            messages[index].completion(.success((data, response)))
         }
         
         func complete(withError error: NSError, at index: Int = 0) {
-            messages[index](.failure(error))
+            messages[index].completion(.failure(error))
         }
     }
     

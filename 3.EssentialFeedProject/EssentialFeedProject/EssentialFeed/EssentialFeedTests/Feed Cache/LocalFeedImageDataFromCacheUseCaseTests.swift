@@ -8,8 +8,7 @@
 import XCTest
 
 public protocol FeedImageDataStore {
-    typealias CachedFeedImageData = (data: Data, timestamp: Date)
-    typealias LoadResult = Result<CachedFeedImageData?, Error>
+    typealias LoadResult = Result<Data?, Error>
     typealias LoadCompletion = (LoadResult) -> Void
 
     /// The completion handler can be invoked in any thread.
@@ -35,8 +34,13 @@ final class LocalFeedImageDataLoader {
         store.loadFeedImageDataCache(with: url) { result in
             
             switch result {
-            case .success:
-                completion(.failure(.notFound))
+            case let .success(data):
+                if let cachedData = data, !cachedData.isEmpty {
+                    completion(.success(cachedData))
+                }
+                else {
+                    completion(.failure(.notFound))
+                }
                 
             case let .failure(error):
                 completion(.failure(.unknown(error)))
@@ -76,6 +80,15 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         
         expect(sut, toCompleteWith: .failure(.notFound), when: {
             store.completeLoadWithEmptyCache()
+        })
+    }
+    
+    func test_load_deliversImageDataWhenCacheIsNonEmpty() {
+        let (sut, store) = makeSUT()
+        let imageData = anyData()
+        
+        expect(sut, toCompleteWith: .success(imageData), when: {
+            store.completeLoad(withCache: imageData)
         })
     }
     
@@ -126,6 +139,10 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         
         func completeLoadWithEmptyCache(at index: Int = 0) {
             completions[index](.success(nil))
+        }
+        
+        func completeLoad(withCache data: Data, at index: Int = 0) {
+            completions[index](.success(data))
         }
     }
 }

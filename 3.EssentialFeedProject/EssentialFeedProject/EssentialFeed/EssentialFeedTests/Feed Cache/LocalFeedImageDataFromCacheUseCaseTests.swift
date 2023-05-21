@@ -32,19 +32,15 @@ final class LocalFeedImageDataLoader {
     
     func load(_ url: URL, completion: @escaping (Result) -> Void) {
         store.loadFeedImageDataCache(with: url) { result in
-            
-            switch result {
-            case let .success(data):
-                if let cachedData = data, !cachedData.isEmpty {
-                    completion(.success(cachedData))
+            completion(result
+                .mapError{ .unknown($0) }
+                .flatMap{ data in
+                    if let cachedData = data, !cachedData.isEmpty {
+                        return .success(cachedData)
+                    }
+                    return .failure(.notFound)
                 }
-                else {
-                    completion(.failure(.notFound))
-                }
-                
-            case let .failure(error):
-                completion(.failure(.unknown(error)))
-            }
+            )
         }
     }
 }

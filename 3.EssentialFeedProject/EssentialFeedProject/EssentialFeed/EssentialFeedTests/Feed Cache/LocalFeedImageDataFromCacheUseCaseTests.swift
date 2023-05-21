@@ -125,24 +125,26 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
     }
     
     private class FeedImageDataStoreSpy: FeedImageDataStore {
-        private(set) var requestedURLs = [URL]()
-        private var completions = [LoadCompletion]()
+        private var messages = [(url: URL, completion: LoadCompletion)]()
+        
+        var requestedURLs: [URL] {
+            messages.map { $0.url }
+        }
         
         func loadFeedImageDataCache(with url: URL, completion: @escaping LoadCompletion) {
-            requestedURLs.append(url)
-            completions.append(completion)
+            messages.append((url, completion))
         }
         
         func completeLoad(withError error: Error, at index: Int = 0) {
-            completions[index](.failure(error))
+            messages[index].completion(.failure(error))
         }
         
         func completeLoadWithEmptyCache(at index: Int = 0) {
-            completions[index](.success(nil))
+            messages[index].completion(.success(nil))
         }
         
         func completeLoad(withCache data: Data, at index: Int = 0) {
-            completions[index](.success(data))
+            messages[index].completion(.success(data))
         }
     }
 }

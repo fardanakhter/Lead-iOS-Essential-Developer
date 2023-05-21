@@ -27,7 +27,11 @@ final class LocalFeedImageDataLoader {
     typealias Result = Swift.Result<Data,Error>
     
     func load(_ url: URL, completion: @escaping (Result) -> Void) {
-        store.loadFeedImageDataCache(with: url) { _ in }
+        store.loadFeedImageDataCache(with: url) { result in
+            if case let .failure(error) = result {
+                completion(.failure(error))
+            }
+        }
     }
 }
 
@@ -48,6 +52,17 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         XCTAssertEqual(store.requestedURLs, [imageURL])
     }
     
+    func test_load_deliversErrorOnLoadImageDataFailure() {
+        let (sut, store) = makeSUT()
+        let retrievalError = anyError()
+        
+        expect(sut, toCompleteWith: .failure(retrievalError), when: {
+            store.completeLoad(withError: retrievalError)
+        })
+    }
+    
+    // MARK: - Helpers
+    
     private func makeSUT() -> (LocalFeedImageDataLoader, FeedImageDataStoreSpy) {
         let store = FeedImageDataStoreSpy()
         let sut = LocalFeedImageDataLoader(store: store)
@@ -56,11 +71,39 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         return (sut, store)
     }
     
+    private func expect(_ sut: LocalFeedImageDataLoader, toCompleteWith expectedResult: LocalFeedImageDataLoader.Result, when action: @escaping () -> Void, file: StaticString = #file, line: UInt = #line) {
+        let exp = expectation(description: "Waits for load completion")
+
+        sut.load(anyURL(), completion: { receivedResult in
+            
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedImages), .success(expectedImages)):
+                XCTAssertEqual(receivedImages, expectedImages)
+                
+            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
+                XCTAssertEqual(receivedError, expectedError)
+            
+            default:
+                XCTFail("Expected \(expectedResult), got \(receivedResult) instead", file: file, line: line)
+            }
+            exp.fulfill()
+        })
+        
+        action()
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     private class FeedImageDataStoreSpy: FeedImageDataStore {
         private(set) var requestedURLs = [URL]()
+        private var completions = [LoadCompletion]()
         
         func loadFeedImageDataCache(with url: URL, completion: @escaping LoadCompletion) {
             requestedURLs.append(url)
+            completions.append(completion)
+        }
+        
+        func completeLoad(withError error: Error, at index: Int = 0) {
+            completions[index](.failure(error))
         }
     }
 }

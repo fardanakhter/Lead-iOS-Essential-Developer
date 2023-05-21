@@ -26,10 +26,20 @@ final class LocalFeedImageDataLoader {
     
     typealias Result = Swift.Result<Data,Error>
     
+    enum Error: Swift.Error {
+        case notFound
+        case unknown(Swift.Error)
+    }
+    
     func load(_ url: URL, completion: @escaping (Result) -> Void) {
         store.loadFeedImageDataCache(with: url) { result in
-            if case let .failure(error) = result {
-                completion(.failure(error))
+            
+            switch result {
+            case .success:
+                completion(.failure(.notFound))
+                
+            case let .failure(error):
+                completion(.failure(.unknown(error)))
             }
         }
     }
@@ -56,8 +66,16 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         let retrievalError = anyError()
         
-        expect(sut, toCompleteWith: .failure(retrievalError), when: {
+        expect(sut, toCompleteWith: .failure(.unknown(retrievalError)), when: {
             store.completeLoad(withError: retrievalError)
+        })
+    }
+    
+    func test_load_deliversNotFoundErrorWhenCacheIsEmpty() {
+        let (sut, store) = makeSUT()
+        
+        expect(sut, toCompleteWith: .failure(.notFound), when: {
+            store.completeLoadWithEmptyCache()
         })
     }
     
@@ -104,6 +122,10 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         
         func completeLoad(withError error: Error, at index: Int = 0) {
             completions[index](.failure(error))
+        }
+        
+        func completeLoadWithEmptyCache(at index: Int = 0) {
+            completions[index](.success(nil))
         }
     }
 }

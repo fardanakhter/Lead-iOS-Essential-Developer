@@ -28,7 +28,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
     func test_load_deliversErrorOnInvalidImageData() {
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWith: .failure(.invalidData), when: {
+        expect(sut, toCompleteWith: invalidData(), when: {
             let invalidData = Data()
             client.complete(withStatusCode: 200, data: invalidData)
         })
@@ -37,7 +37,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
     func test_load_deliversErrorOnNoInternetConnection() {
         let (sut, client) = makeSUT()
         
-        expect(sut, toCompleteWith: .failure(.noConnection), when: {
+        expect(sut, toCompleteWith: noConnection() , when: {
             let noConnectionError = NSError(domain: "No Internet Connection", code: 0)
             client.complete(withError: noConnectionError)
         })
@@ -108,7 +108,7 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
             case let (.success(receivedData), .success(expectedData)):
                 XCTAssertEqual(receivedData, expectedData)
             
-            case let (.failure(receivedError), .failure(expectedError)):
+            case let (.failure(receivedError as NSError), .failure(expectedError as NSError)):
                 XCTAssertEqual(receivedError, expectedError)
 
             default:
@@ -131,6 +131,14 @@ class LoadFeedImageDataRemoteUseCaseTests: XCTestCase {
         action()
 
         XCTAssertEqual(capturedResult.isEmpty, true)
+    }
+    
+    private func invalidData() -> RemoteFeedImageDataLoader.Result {
+        return .failure(RemoteFeedImageDataLoader.LoadError.invalidData)
+    }
+    
+    private func noConnection() -> RemoteFeedImageDataLoader.Result {
+        return .failure(RemoteFeedImageDataLoader.LoadError.noConnection)
     }
 }
 

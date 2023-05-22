@@ -12,7 +12,7 @@ class HTTPClientTaskWrapper: FeedImageDataLoaderTask {
     
     var wrapper: HTTPClientTask?
     
-    init(_ completion: @escaping (Result<Data, RemoteFeedImageDataLoader.Error>) -> Void) {
+    init(_ completion: @escaping (Result<Data, Error>) -> Void) {
         self.completion = completion
     }
     

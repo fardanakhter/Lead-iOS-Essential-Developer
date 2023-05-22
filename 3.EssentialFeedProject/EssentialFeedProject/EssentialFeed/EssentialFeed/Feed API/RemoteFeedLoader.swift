@@ -8,7 +8,6 @@
 import Foundation
 
 public final class RemoteFeedLoader: FeedLoader {
-   
     private let url: URL
     private let httpClient: HTTPClient
     

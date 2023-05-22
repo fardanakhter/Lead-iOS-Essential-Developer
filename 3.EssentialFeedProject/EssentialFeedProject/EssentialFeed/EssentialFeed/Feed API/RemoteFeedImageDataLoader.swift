@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class RemoteFeedImageDataLoader {
+public class RemoteFeedImageDataLoader: FeedImageDataLoader {
     private let client: HTTPClient
     
     public init(_ client: HTTPClient) {
@@ -16,7 +16,7 @@ public class RemoteFeedImageDataLoader {
     
     public typealias Result = Swift.Result<Data, Error>
     
-    public enum Error: Swift.Error {
+    public enum LoadError: Error {
         case invalidData
         case noConnection
     }
@@ -28,12 +28,12 @@ public class RemoteFeedImageDataLoader {
             guard let _ = self else { return }
             
             task.complete(with: result
-                .mapError {_ in .noConnection }
+                .mapError {_ in LoadError.noConnection }
                 .flatMap { (data, response) in
                     if response.isOK && !data.isEmpty {
                         return .success(data)
                     }
-                    return .failure(.invalidData)
+                    return .failure(LoadError.invalidData)
                 }
             )
         }

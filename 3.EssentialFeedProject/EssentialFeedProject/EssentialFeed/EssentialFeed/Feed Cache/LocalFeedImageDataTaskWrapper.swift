@@ -8,13 +8,13 @@
 import Foundation
 
 final class LocalFeedImageDataTaskWrapper: FeedImageDataLoaderTask {
-    private let completion: (LocalFeedImageDataLoader.Result) -> Void
+    private let completion: (LocalFeedImageDataLoader.LoadResult) -> Void
     
-    init(_ completion: @escaping (LocalFeedImageDataLoader.Result) -> Void) {
+    init(_ completion: @escaping (LocalFeedImageDataLoader.LoadResult) -> Void) {
         self.completion = completion
     }
     
-    func completeWith(_ result: LocalFeedImageDataLoader.Result) {
+    func completeWith(_ result: LocalFeedImageDataLoader.LoadResult) {
         self.completion(result)
     }
     

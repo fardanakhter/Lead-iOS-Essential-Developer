@@ -13,6 +13,6 @@ public protocol FeedImageDataStore {
     typealias LoadResult = Result<Data?, Error>
     typealias LoadCompletion = (LoadResult) -> Void
 
-    func insert(cache: Data, with url: URL, completion: @escaping InsertCompletion)
+    func insert(_ cache: Data, with url: URL, completion: @escaping InsertCompletion)
     func loadCache(with url: URL, completion: @escaping LoadCompletion)
 }

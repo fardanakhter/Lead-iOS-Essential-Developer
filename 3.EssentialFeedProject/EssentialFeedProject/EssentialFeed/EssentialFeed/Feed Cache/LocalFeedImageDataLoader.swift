@@ -7,31 +7,55 @@
 
 import Foundation
 
+public protocol FeedImageDataSaver {
+    typealias Result = Swift.Result<Void, Error>
+    func save(cacheData: Data, with url: URL, completion: @escaping (Result) -> Void)
+}
+
 public final class LocalFeedImageDataLoader {
     private let store: FeedImageDataStore
     
     public init(store: FeedImageDataStore) {
         self.store = store
     }
+}
+
+extension LocalFeedImageDataLoader : FeedImageDataLoader {
+    public typealias LoadResult = FeedImageDataLoader.Result
     
-    public typealias Result = Swift.Result<Data,Error>
-    
-    public enum Error: Swift.Error {
+    public enum LoadError: Swift.Error {
         case notFound
         case unknown(Swift.Error)
     }
     
-    public func load(_ url: URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask {
+    public func load(_ url: URL, completion: @escaping (LoadResult) -> Void) -> FeedImageDataLoaderTask {
         let task = LocalFeedImageDataTaskWrapper(completion)
         store.loadCache(with: url) {[weak self] result in
             guard let _ = self else { return }
             task.completeWith(result
-                .mapError { .unknown($0) }
+                .mapError { LoadError.unknown($0) }
                 .flatMap { data in
-                    data.map { .success($0) } ?? .failure(.notFound)
+                    data.map { .success($0) } ?? .failure(LoadError.notFound)
                 }
             )
         }
         return task
+    }
+}
+
+extension LocalFeedImageDataLoader : FeedImageDataSaver {
+    public typealias SaveResult = FeedImageDataSaver.Result
+    
+    public enum SaveError: Swift.Error {
+        case failed
+    }
+    
+    public func save(cacheData: Data, with url: URL, completion: @escaping (SaveResult) -> Void) {
+        store.insert(cacheData, with: url) { result in
+            completion(result
+                .mapError{ _ in SaveError.failed }
+                .flatMap{ .success(()) }
+            )
+        }
     }
 }

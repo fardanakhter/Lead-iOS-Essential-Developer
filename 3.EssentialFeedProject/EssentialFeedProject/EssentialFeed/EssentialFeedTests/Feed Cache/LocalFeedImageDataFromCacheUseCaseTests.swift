@@ -13,7 +13,7 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
     func test_init_doesNotPerformLoadImageDataRequestOnCreation() {
         let (_, store) = makeSUT()
         
-        XCTAssertEqual(store.requestedURLs, [])
+        XCTAssertEqual(store.receivedMessages, [])
     }
     
     func test_load_requestsImageData() {
@@ -22,14 +22,14 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         
         let _ = sut.load(imageURL) { _ in }
         
-        XCTAssertEqual(store.requestedURLs, [imageURL])
+        XCTAssertEqual(store.receivedMessages, [.load(dataForUrl: imageURL)])
     }
     
     func test_load_deliversErrorOnLoadImageDataFailure() {
         let (sut, store) = makeSUT()
         let retrievalError = anyError()
         
-        expect(sut, toCompleteWith: .failure(.unknown(retrievalError)), when: {
+        expect(sut, toCompleteWith: .failure(failed()), when: {
             store.completeLoad(withError: retrievalError)
         })
     }
@@ -37,7 +37,7 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
     func test_load_deliversNotFoundErrorWhenCacheIsEmpty() {
         let (sut, store) = makeSUT()
         
-        expect(sut, toCompleteWith: .failure(.notFound), when: {
+        expect(sut, toCompleteWith: .failure(notFound()), when: {
             store.completeLoadWithEmptyCache()
         })
     }
@@ -55,7 +55,7 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         let (sut, _) = makeSUT()
         let imageURL = anyURL()
         
-        var capturedResult = [LocalFeedImageDataLoader.Result]()
+        var capturedResult = [LocalFeedImageDataLoader.LoadResult]()
         let task = sut.load(imageURL) { receivedResult in
             capturedResult.append(receivedResult)
         }
@@ -68,7 +68,7 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         let store = FeedImageDataStoreSpy()
         var sut: LocalFeedImageDataLoader? = LocalFeedImageDataLoader(store: store)
         
-        var capturedResult = [LocalFeedImageDataLoader.Result]()
+        var capturedResult = [LocalFeedImageDataLoader.LoadResult]()
         let _ = sut?.load(anyURL()) { receivedResult in
             capturedResult.append(receivedResult)
         }
@@ -89,7 +89,7 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         return (sut, store)
     }
     
-    private func expect(_ sut: LocalFeedImageDataLoader, toCompleteWith expectedResult: LocalFeedImageDataLoader.Result, when action: @escaping () -> Void, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: LocalFeedImageDataLoader, toCompleteWith expectedResult: LocalFeedImageDataLoader.LoadResult, when action: @escaping () -> Void, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Waits for load completion")
 
         let _ = sut.load(anyURL(), completion: { receivedResult in
@@ -109,6 +109,14 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         
         action()
         wait(for: [exp], timeout: 1.0)
+    }
+    
+    private func notFound() -> LocalFeedImageDataLoader.LoadError {
+        return .notFound
+    }
+    
+    private func failed() -> LocalFeedImageDataLoader.LoadError {
+        return .unknown(anyError())
     }
     
 }

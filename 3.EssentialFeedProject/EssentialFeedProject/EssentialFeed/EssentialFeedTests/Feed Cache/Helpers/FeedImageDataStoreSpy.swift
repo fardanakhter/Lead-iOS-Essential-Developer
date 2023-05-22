@@ -9,29 +9,45 @@ import Foundation
 import EssentialFeed
 
 class FeedImageDataStoreSpy: FeedImageDataStore {
-    private var messages = [(url: URL, completion: LoadCompletion)]()
+    private(set) var receivedMessages = [Message]()
+    private var completionsForInsertion = [FeedImageDataStore.InsertCompletion]()
+    private var completionsForLoad = [FeedImageDataStore.LoadCompletion]()
     
-    var requestedURLs: [URL] {
-        messages.map { $0.url }
+    enum Message: Equatable {
+        case insert(data: Data, for: URL)
+        case load(dataForUrl: URL)
     }
     
-    func insert(cache: Data, with url: URL, completion: @escaping InsertCompletion) {
+    func insert(_ cache: Data, with url: URL, completion: @escaping FeedImageDataStore.InsertCompletion) {
+        receivedMessages.append(.insert(data: cache, for: url))
+        completionsForInsertion.append(completion)
     }
     
-    func loadCache(with url: URL, completion: @escaping LoadCompletion) {
-        messages.append((url, completion))
+    func loadCache(with url: URL, completion: @escaping FeedImageDataStore.LoadCompletion) {
+        receivedMessages.append(.load(dataForUrl: url))
+        completionsForLoad.append(completion)
+    }
+    
+    // MARK: - Helpers
+    
+    func completeInsertion(withError error: Error, at index: Int = 0) {
+        completionsForInsertion[index](.failure(error))
+    }
+    
+    func completeInsertionSuccessfully(at index: Int = 0) {
+        completionsForInsertion[index](.success(()))
     }
     
     func completeLoad(withError error: Error, at index: Int = 0) {
-        messages[index].completion(.failure(error))
+        completionsForLoad[index](.failure(error))
     }
     
     func completeLoadWithEmptyCache(at index: Int = 0) {
-        messages[index].completion(.success(nil))
+        completionsForLoad[index](.success(nil))
     }
     
     func completeLoad(withCache data: Data, at index: Int = 0) {
-        messages[index].completion(.success(data))
+        completionsForLoad[index](.success(data))
     }
-    
+
 }

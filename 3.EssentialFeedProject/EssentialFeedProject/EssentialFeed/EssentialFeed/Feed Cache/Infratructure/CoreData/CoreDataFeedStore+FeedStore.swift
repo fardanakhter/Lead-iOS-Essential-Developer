@@ -8,7 +8,7 @@
 import Foundation
 
 extension CoreDataFeedStore: FeedStore {
-    public func loadFeedCache(completion: @escaping LoadCompletion) {
+    public func loadFeedCache(completion: @escaping FeedStore.LoadCompletion) {
         perform { context in
             completion(Result(catching: {
                 try ManagedFeedCache.find(in: context).map {
@@ -18,7 +18,7 @@ extension CoreDataFeedStore: FeedStore {
         }
     }
    
-    public func insertFeedCache(with feed: [LocalFeedImage], and timestamp: Date, completion: @escaping InsertCompletion) {
+    public func insertFeedCache(with feed: [LocalFeedImage], and timestamp: Date, completion: @escaping FeedStore.InsertCompletion) {
         perform { context in
             completion(Result(catching: {
                 let newInstance = try ManagedFeedCache.newUniqueInstance(in: context)
@@ -29,7 +29,7 @@ extension CoreDataFeedStore: FeedStore {
         }
     }
     
-    public func deleteFeedCache(completion: @escaping DeleteCompletion) {
+    public func deleteFeedCache(completion: @escaping FeedStore.DeleteCompletion) {
         perform { context in
             completion(Result(catching: {
                 try ManagedFeedCache.find(in: context).map(context.delete).map(context.save)

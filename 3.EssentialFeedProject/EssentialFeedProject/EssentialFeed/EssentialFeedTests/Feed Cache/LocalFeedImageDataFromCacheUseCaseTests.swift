@@ -8,59 +8,6 @@
 import XCTest
 import EssentialFeed
 
-protocol FeedImageDataStore {
-    typealias InsertionResult = Result<Void, Error>
-    typealias InsertCompletion = (InsertionResult) -> Void
-    typealias LoadResult = Result<Data?, Error>
-    typealias LoadCompletion = (LoadResult) -> Void
-
-    func insert(cache: Data, with url: URL, completion: @escaping InsertCompletion)
-    func loadCache(with url: URL, completion: @escaping LoadCompletion)
-}
-
-final class LocalFeedImageDataTaskWrapper: FeedImageDataLoaderTask {
-    private let completion: (LocalFeedImageDataLoader.Result) -> Void
-    
-    init(_ completion: @escaping (LocalFeedImageDataLoader.Result) -> Void) {
-        self.completion = completion
-    }
-    
-    func completeWith(_ result: LocalFeedImageDataLoader.Result) {
-        self.completion(result)
-    }
-    
-    func cancel() {}
-}
-
-final class LocalFeedImageDataLoader {
-    private let store: FeedImageDataStore
-    
-    init(store: FeedImageDataStore) {
-        self.store = store
-    }
-    
-    typealias Result = Swift.Result<Data,Error>
-    
-    enum Error: Swift.Error {
-        case notFound
-        case unknown(Swift.Error)
-    }
-    
-    func load(_ url: URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask {
-        let task = LocalFeedImageDataTaskWrapper(completion)
-        store.loadCache(with: url) {[weak self] result in
-            guard let _ = self else { return }
-            task.completeWith(result
-                .mapError { .unknown($0) }
-                .flatMap { data in
-                    data.map { .success($0) } ?? .failure(.notFound)
-                }
-            )
-        }
-        return task
-    }
-}
-
 class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
     
     func test_init_doesNotPerformLoadImageDataRequestOnCreation() {

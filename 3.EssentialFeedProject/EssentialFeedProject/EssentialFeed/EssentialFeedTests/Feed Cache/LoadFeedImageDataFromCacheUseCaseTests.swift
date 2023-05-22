@@ -29,7 +29,7 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
         let (sut, store) = makeSUT()
         let retrievalError = anyError()
         
-        expect(sut, toCompleteWith: .failure(failed()), when: {
+        expect(sut, toCompleteWith: failed(), when: {
             store.completeLoad(withError: retrievalError)
         })
     }
@@ -37,7 +37,7 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
     func test_load_deliversNotFoundErrorWhenCacheIsEmpty() {
         let (sut, store) = makeSUT()
         
-        expect(sut, toCompleteWith: .failure(notFound()), when: {
+        expect(sut, toCompleteWith: notFound(), when: {
             store.completeLoadWithEmptyCache()
         })
     }
@@ -112,12 +112,12 @@ class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func notFound() -> LocalFeedImageDataLoader.LoadError {
-        return .notFound
+    private func notFound() -> LocalFeedImageDataLoader.LoadResult {
+        return .failure(LocalFeedImageDataLoader.LoadError.notFound)
     }
     
-    private func failed() -> LocalFeedImageDataLoader.LoadError {
-        return .unknown(anyError())
+    private func failed() -> LocalFeedImageDataLoader.LoadResult {
+        return .failure(LocalFeedImageDataLoader.LoadError.failed)
     }
     
 }

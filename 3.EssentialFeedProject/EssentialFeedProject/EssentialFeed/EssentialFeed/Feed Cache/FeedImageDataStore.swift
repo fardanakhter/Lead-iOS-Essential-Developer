@@ -8,8 +8,9 @@
 import Foundation
 
 public protocol FeedImageDataStore {
-    typealias InsertionResult = Result<Void, Error>
-    typealias InsertCompletion = (InsertionResult) -> Void
+    typealias InsertResult = Result<Void, Error>
+    typealias InsertCompletion = (InsertResult) -> Void
+    
     typealias LoadResult = Result<Data?, Error>
     typealias LoadCompletion = (LoadResult) -> Void
 

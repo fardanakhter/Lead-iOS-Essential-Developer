@@ -7,11 +7,6 @@
 
 import Foundation
 
-public protocol FeedImageDataSaver {
-    typealias Result = Swift.Result<Void, Error>
-    func save(_ cache: Data, with url: URL, completion: @escaping (Result) -> Void)
-}
-
 public final class LocalFeedImageDataLoader {
     private let store: FeedImageDataStore
     
@@ -20,33 +15,10 @@ public final class LocalFeedImageDataLoader {
     }
 }
 
-extension LocalFeedImageDataLoader : FeedImageDataLoader {
-    public typealias LoadResult = FeedImageDataLoader.Result
+extension LocalFeedImageDataLoader {
+    public typealias SaveResult = Swift.Result<Void, Error>
     
-    public enum LoadError: Swift.Error {
-        case notFound
-        case unknown(Swift.Error)
-    }
-    
-    public func load(_ url: URL, completion: @escaping (LoadResult) -> Void) -> FeedImageDataLoaderTask {
-        let task = LocalFeedImageDataTaskWrapper(completion)
-        store.loadCache(with: url) {[weak self] result in
-            guard let _ = self else { return }
-            task.completeWith(result
-                .mapError { LoadError.unknown($0) }
-                .flatMap { data in
-                    data.map { .success($0) } ?? .failure(LoadError.notFound)
-                }
-            )
-        }
-        return task
-    }
-}
-
-extension LocalFeedImageDataLoader : FeedImageDataSaver {
-    public typealias SaveResult = FeedImageDataSaver.Result
-    
-    public enum SaveError: Swift.Error {
+    public enum SaveError: Error {
         case failed
     }
     
@@ -60,3 +32,28 @@ extension LocalFeedImageDataLoader : FeedImageDataSaver {
         }
     }
 }
+
+extension LocalFeedImageDataLoader : FeedImageDataLoader {
+    public typealias LoadResult = FeedImageDataLoader.Result
+    
+    public enum LoadError: Swift.Error {
+        case notFound
+        case failed
+    }
+    
+    public func load(_ url: URL, completion: @escaping (LoadResult) -> Void) -> FeedImageDataLoaderTask {
+        let task = LocalFeedImageDataTaskWrapper(completion)
+        store.loadCache(with: url) {[weak self] result in
+            guard let _ = self else { return }
+            task.completeWith(result
+                .mapError { _ in LoadError.failed }
+                .flatMap { data in
+                    data.map { .success($0) } ?? .failure(LoadError.notFound)
+                }
+            )
+        }
+        return task
+    }
+}
+
+

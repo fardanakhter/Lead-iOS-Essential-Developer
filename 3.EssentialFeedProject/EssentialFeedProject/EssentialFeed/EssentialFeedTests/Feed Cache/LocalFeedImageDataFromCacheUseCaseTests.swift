@@ -55,7 +55,8 @@ final class LocalFeedImageDataLoader {
     
     func load(_ url: URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask {
         let task = LocalFeedImageDataTaskWrapper(completion)
-        task.wrapper = store.loadFeedImageDataCache(with: url) { result in
+        task.wrapper = store.loadFeedImageDataCache(with: url) {[weak self] result in
+            guard let self else { return }
             task.completeWith(result
                 .mapError{ .unknown($0) }
                 .flatMap { ($0?.isEmpty ?? true) ? .failure(.notFound) : .success($0!) }
@@ -120,6 +121,21 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         
         XCTAssertTrue(capturedResult.isEmpty)
         XCTAssertEqual(store.cancelledURLs, [imageURL])
+    }
+    
+    func test_load_doesNotInvokeCompletionAfterSUTInstanceIsDeallocated() {
+        let store = FeedImageDataStoreSpy()
+        var sut: LocalFeedImageDataLoader? = LocalFeedImageDataLoader(store: store)
+        
+        var capturedResult = [LocalFeedImageDataLoader.Result]()
+        let _ = sut?.load(anyURL()) { receivedResult in
+            capturedResult.append(receivedResult)
+        }
+        
+        sut = nil
+        store.completeLoadWithEmptyCache()
+        
+        XCTAssertTrue(capturedResult.isEmpty)
     }
     
     // MARK: - Helpers

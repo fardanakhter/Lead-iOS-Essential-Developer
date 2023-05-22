@@ -8,22 +8,17 @@
 import XCTest
 import EssentialFeed
 
-protocol FeedImageDataStoreTask {
-    func cancel()
-}
-
 protocol FeedImageDataStore {
+    typealias InsertionResult = Result<Void, Error>
+    typealias InsertCompletion = (InsertionResult) -> Void
     typealias LoadResult = Result<Data?, Error>
     typealias LoadCompletion = (LoadResult) -> Void
 
-    /// The completion handler can be invoked in any thread.
-    /// Clients are responsible to dispatch to appropriate threads, if needed.
-    func loadFeedImageDataCache(with url: URL, completion: @escaping LoadCompletion) -> FeedImageDataStoreTask
+    func insert(cache: Data, with url: URL, completion: @escaping InsertCompletion)
+    func loadCache(with url: URL, completion: @escaping LoadCompletion)
 }
 
 final class LocalFeedImageDataTaskWrapper: FeedImageDataLoaderTask {
-    var wrapper: FeedImageDataStoreTask?
-    
     private let completion: (LocalFeedImageDataLoader.Result) -> Void
     
     init(_ completion: @escaping (LocalFeedImageDataLoader.Result) -> Void) {
@@ -34,9 +29,7 @@ final class LocalFeedImageDataTaskWrapper: FeedImageDataLoaderTask {
         self.completion(result)
     }
     
-    func cancel() {
-        wrapper?.cancel()
-    }
+    func cancel() {}
 }
 
 final class LocalFeedImageDataLoader {
@@ -55,11 +48,13 @@ final class LocalFeedImageDataLoader {
     
     func load(_ url: URL, completion: @escaping (Result) -> Void) -> FeedImageDataLoaderTask {
         let task = LocalFeedImageDataTaskWrapper(completion)
-        task.wrapper = store.loadFeedImageDataCache(with: url) {[weak self] result in
-            guard let self else { return }
+        store.loadCache(with: url) {[weak self] result in
+            guard let _ = self else { return }
             task.completeWith(result
-                .mapError{ .unknown($0) }
-                .flatMap { ($0?.isEmpty ?? true) ? .failure(.notFound) : .success($0!) }
+                .mapError { .unknown($0) }
+                .flatMap { data in
+                    data.map { .success($0) } ?? .failure(.notFound)
+                }
             )
         }
         return task
@@ -110,7 +105,7 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
     }
     
     func test_load_doesNotInvokeCompletionWhenCancelled() {
-        let (sut, store) = makeSUT()
+        let (sut, _) = makeSUT()
         let imageURL = anyURL()
         
         var capturedResult = [LocalFeedImageDataLoader.Result]()
@@ -120,7 +115,6 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
         task.cancel()
         
         XCTAssertTrue(capturedResult.isEmpty)
-        XCTAssertEqual(store.cancelledURLs, [imageURL])
     }
     
     func test_load_doesNotInvokeCompletionAfterSUTInstanceIsDeallocated() {
@@ -171,30 +165,17 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
     }
     
     private class FeedImageDataStoreSpy: FeedImageDataStore {
-        
-        private struct Task: FeedImageDataStoreTask {
-            private let callback: () -> Void
-            
-            init(callback: @escaping () -> Void) {
-                self.callback = callback
-            }
-            
-            func cancel() { callback() }
-        }
-        
         private var messages = [(url: URL, completion: LoadCompletion)]()
         
         var requestedURLs: [URL] {
             messages.map { $0.url }
         }
         
-        var cancelledURLs = [URL]()
+        func insert(cache: Data, with url: URL, completion: @escaping InsertCompletion) {
+        }
         
-        func loadFeedImageDataCache(with url: URL, completion: @escaping LoadCompletion) -> FeedImageDataStoreTask {
+        func loadCache(with url: URL, completion: @escaping LoadCompletion) {
             messages.append((url, completion))
-            return Task { [weak self] in
-                self?.cancelledURLs.append(url)
-            }
         }
         
         func completeLoad(withError error: Error, at index: Int = 0) {

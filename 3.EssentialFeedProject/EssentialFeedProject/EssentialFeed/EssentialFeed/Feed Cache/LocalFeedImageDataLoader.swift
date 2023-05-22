@@ -9,7 +9,7 @@ import Foundation
 
 public protocol FeedImageDataSaver {
     typealias Result = Swift.Result<Void, Error>
-    func save(cacheData: Data, with url: URL, completion: @escaping (Result) -> Void)
+    func save(_ cache: Data, with url: URL, completion: @escaping (Result) -> Void)
 }
 
 public final class LocalFeedImageDataLoader {
@@ -50,8 +50,9 @@ extension LocalFeedImageDataLoader : FeedImageDataSaver {
         case failed
     }
     
-    public func save(cacheData: Data, with url: URL, completion: @escaping (SaveResult) -> Void) {
-        store.insert(cacheData, with: url) { result in
+    public func save(_ cache: Data, with url: URL, completion: @escaping (SaveResult) -> Void) {
+        store.insert(cache, with: url) {[weak self] result in
+            guard let _ = self else { return }
             completion(result
                 .mapError{ _ in SaveError.failed }
                 .flatMap{ .success(()) }

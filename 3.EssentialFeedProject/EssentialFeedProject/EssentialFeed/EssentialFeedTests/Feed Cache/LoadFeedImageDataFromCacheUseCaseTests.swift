@@ -1,5 +1,5 @@
 //
-//  LocalFeedImageDataFromCacheUseCaseTests.swift
+//  LoadFeedImageDataFromCacheUseCaseTests.swift
 //  EssentialFeedTests
 //
 //  Created by Fardan Akhter on 21/05/2023.
@@ -8,7 +8,7 @@
 import XCTest
 import EssentialFeed
 
-class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
+class LoadFeedImageDataFromCacheUseCaseTests: XCTestCase {
     
     func test_init_doesNotPerformLoadImageDataRequestOnCreation() {
         let (_, store) = makeSUT()
@@ -52,7 +52,7 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
     }
     
     func test_load_doesNotInvokeCompletionWhenCancelled() {
-        let (sut, _) = makeSUT()
+        let (sut, store) = makeSUT()
         let imageURL = anyURL()
         
         var capturedResult = [LocalFeedImageDataLoader.LoadResult]()
@@ -60,6 +60,7 @@ class LocalFeedImageDataFromCacheUseCaseTests: XCTestCase {
             capturedResult.append(receivedResult)
         }
         task.cancel()
+        store.completeLoad(withCache: anyData())
         
         XCTAssertTrue(capturedResult.isEmpty)
     }

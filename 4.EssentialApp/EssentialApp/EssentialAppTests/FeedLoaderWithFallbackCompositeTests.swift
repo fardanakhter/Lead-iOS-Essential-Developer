@@ -33,40 +33,16 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
     
     func test_load_deliversPrimaryFeedOnPrimaryLoaderSuccess() {
         let remoteFeed = uniqueFeed()
-        let localFeed = uniqueFeed()
-        let sut = makeSUT(primaryResult: .success(remoteFeed), fallbackResult: .success(localFeed))
+        let sut = makeSUT(primaryResult: .success(remoteFeed), fallbackResult: .success(uniqueFeed()))
         
-        let exp = expectation(description: "Waiting for load to complete!")
-        sut.load { result in
-            switch result {
-            case let .success(feed):
-                XCTAssertEqual(feed, remoteFeed, "Expected received feed to match remote feed")
-            default:
-                XCTFail("Expected load to complete with success, found \(result) instead")
-            }
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toLoadSuccessfullyWith: remoteFeed)
     }
     
     func test_load_deliversFallbackFeedOnPrimaryLoaderFailureAndFallbackSuccess() {
-        let remoteFeed = uniqueFeed()
         let localFeed = uniqueFeed()
         let sut = makeSUT(primaryResult: .failure(anyError()), fallbackResult: .success(localFeed))
         
-        let exp = expectation(description: "Waiting for load to complete!")
-        sut.load { result in
-            switch result {
-            case let .success(feed):
-                XCTAssertEqual(feed, localFeed, "Expected received feed to match remote feed")
-            default:
-                XCTFail("Expected load to complete with success, found \(result) instead")
-            }
-            exp.fulfill()
-        }
-        
-        wait(for: [exp], timeout: 1.0)
+        expect(sut, toLoadSuccessfullyWith: localFeed)
     }
     
     // MARK: - Helpers
@@ -80,6 +56,21 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
         trackMemoryLeak(localLoader, file: file, line: line)
         trackMemoryLeak(sut, file: file, line: line)
         return sut
+    }
+    
+    private func expect(_ sut: FeedLoaderWithFallbackComposite, toLoadSuccessfullyWith expectedFeed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
+        let exp = expectation(description: "Waiting for load to complete!")
+        sut.load { result in
+            switch result {
+            case let .success(feed):
+                XCTAssertEqual(feed, expectedFeed, "Expected received feed to match remote feed", file: file, line: line)
+            default:
+                XCTFail("Expected load to complete with success, found \(result) instead", file: file, line: line)
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
     }
     
     private class LoaderStub: FeedLoader {

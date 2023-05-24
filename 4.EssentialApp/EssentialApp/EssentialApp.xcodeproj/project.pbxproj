@@ -14,6 +14,10 @@
 		772BE5612A1BEBDB00EEF1B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 772BE5602A1BEBDB00EEF1B7 /* Assets.xcassets */; };
 		772BE5642A1BEBDB00EEF1B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 772BE5622A1BEBDB00EEF1B7 /* LaunchScreen.storyboard */; };
 		772C9FE82A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772C9FE72A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift */; };
+		772CA02C2A1E8F7800B714D2 /* FeedImageDataLoaderWithFallbackCompositeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772CA02B2A1E8F7800B714D2 /* FeedImageDataLoaderWithFallbackCompositeTests.swift */; };
+		772CA02F2A1E8FE900B714D2 /* FeedImageDataLoaderWithFallbackComposite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772CA02E2A1E8FE900B714D2 /* FeedImageDataLoaderWithFallbackComposite.swift */; };
+		772CA0322A1EB6D700B714D2 /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772CA0312A1EB6D700B714D2 /* SharedTestHelpers.swift */; };
+		772CA0342A1EC58900B714D2 /* FeedImageDataLoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772CA0332A1EC58900B714D2 /* FeedImageDataLoaderSpy.swift */; };
 		77A529492A1BEEC900672F74 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77A529472A1BEEC900672F74 /* EssentialFeed.framework */; };
 		77A5294A2A1BEEC900672F74 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 77A529472A1BEEC900672F74 /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		77A5294B2A1BEEC900672F74 /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77A529482A1BEEC900672F74 /* EssentialFeediOS.framework */; };
@@ -58,6 +62,10 @@
 		772BE5632A1BEBDB00EEF1B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		772BE5652A1BEBDB00EEF1B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		772C9FE72A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderWithFallbackComposite.swift; sourceTree = "<group>"; };
+		772CA02B2A1E8F7800B714D2 /* FeedImageDataLoaderWithFallbackCompositeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderWithFallbackCompositeTests.swift; sourceTree = "<group>"; };
+		772CA02E2A1E8FE900B714D2 /* FeedImageDataLoaderWithFallbackComposite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderWithFallbackComposite.swift; sourceTree = "<group>"; };
+		772CA0312A1EB6D700B714D2 /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
+		772CA0332A1EC58900B714D2 /* FeedImageDataLoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderSpy.swift; sourceTree = "<group>"; };
 		77A529472A1BEEC900672F74 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77A529482A1BEEC900672F74 /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77AED0952A1E47D600AA4169 /* EssentialAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +117,7 @@
 		772BE5562A1BEBDA00EEF1B7 /* EssentialApp */ = {
 			isa = PBXGroup;
 			children = (
+				772CA02D2A1E8FBC00B714D2 /* Helper */,
 				772BE5572A1BEBDA00EEF1B7 /* AppDelegate.swift */,
 				772BE5592A1BEBDA00EEF1B7 /* SceneDelegate.swift */,
 				772BE55B2A1BEBDA00EEF1B7 /* ViewController.swift */,
@@ -116,9 +125,17 @@
 				772BE5602A1BEBDB00EEF1B7 /* Assets.xcassets */,
 				772BE5622A1BEBDB00EEF1B7 /* LaunchScreen.storyboard */,
 				772BE5652A1BEBDB00EEF1B7 /* Info.plist */,
-				772C9FE72A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift */,
 			);
 			path = EssentialApp;
+			sourceTree = "<group>";
+		};
+		772CA02D2A1E8FBC00B714D2 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				772C9FE72A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift */,
+				772CA02E2A1E8FE900B714D2 /* FeedImageDataLoaderWithFallbackComposite.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		77A529462A1BEEC900672F74 /* Frameworks */ = {
@@ -136,6 +153,7 @@
 			children = (
 				77AED0A12A1E669100AA4169 /* Helper */,
 				77AED09C2A1E483900AA4169 /* FeedLoaderWithFallbackCompositeTests.swift */,
+				772CA02B2A1E8F7800B714D2 /* FeedImageDataLoaderWithFallbackCompositeTests.swift */,
 			);
 			path = EssentialAppTests;
 			sourceTree = "<group>";
@@ -144,6 +162,8 @@
 			isa = PBXGroup;
 			children = (
 				77AED0A22A1E66B100AA4169 /* XCTextCase+MemoryLeakTracking.swift */,
+				772CA0312A1EB6D700B714D2 /* SharedTestHelpers.swift */,
+				772CA0332A1EC58900B714D2 /* FeedImageDataLoaderSpy.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -254,6 +274,7 @@
 				772BE5582A1BEBDA00EEF1B7 /* AppDelegate.swift in Sources */,
 				772C9FE82A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift in Sources */,
 				772BE55A2A1BEBDA00EEF1B7 /* SceneDelegate.swift in Sources */,
+				772CA02F2A1E8FE900B714D2 /* FeedImageDataLoaderWithFallbackComposite.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,8 +282,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				772CA0322A1EB6D700B714D2 /* SharedTestHelpers.swift in Sources */,
 				77AED0A32A1E66B100AA4169 /* XCTextCase+MemoryLeakTracking.swift in Sources */,
+				772CA0342A1EC58900B714D2 /* FeedImageDataLoaderSpy.swift in Sources */,
 				77AED09D2A1E483900AA4169 /* FeedLoaderWithFallbackCompositeTests.swift in Sources */,
+				772CA02C2A1E8F7800B714D2 /* FeedImageDataLoaderWithFallbackCompositeTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -432,9 +456,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fardanakhter.EssentialApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -460,9 +487,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fardanakhter.EssentialApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

@@ -13,6 +13,7 @@
 		772BE55F2A1BEBDA00EEF1B7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 772BE55D2A1BEBDA00EEF1B7 /* Main.storyboard */; };
 		772BE5612A1BEBDB00EEF1B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 772BE5602A1BEBDB00EEF1B7 /* Assets.xcassets */; };
 		772BE5642A1BEBDB00EEF1B7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 772BE5622A1BEBDB00EEF1B7 /* LaunchScreen.storyboard */; };
+		772C9FE82A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772C9FE72A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift */; };
 		77A529492A1BEEC900672F74 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77A529472A1BEEC900672F74 /* EssentialFeed.framework */; };
 		77A5294A2A1BEEC900672F74 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 77A529472A1BEEC900672F74 /* EssentialFeed.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		77A5294B2A1BEEC900672F74 /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77A529482A1BEEC900672F74 /* EssentialFeediOS.framework */; };
@@ -21,6 +22,16 @@
 		77AED09F2A1E5D8C00AA4169 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77AED09E2A1E5D8C00AA4169 /* EssentialFeed.framework */; };
 		77AED0A32A1E66B100AA4169 /* XCTextCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77AED0A22A1E66B100AA4169 /* XCTextCase+MemoryLeakTracking.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		772C9FEC2A1E854E00B714D2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 772BE54C2A1BEBDA00EEF1B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 772BE5532A1BEBDA00EEF1B7;
+			remoteInfo = EssentialApp;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		77A5294D2A1BEEC900672F74 /* Embed Frameworks */ = {
@@ -46,6 +57,7 @@
 		772BE5602A1BEBDB00EEF1B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		772BE5632A1BEBDB00EEF1B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		772BE5652A1BEBDB00EEF1B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		772C9FE72A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderWithFallbackComposite.swift; sourceTree = "<group>"; };
 		77A529472A1BEEC900672F74 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77A529482A1BEEC900672F74 /* EssentialFeediOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeediOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77AED0952A1E47D600AA4169 /* EssentialAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,6 +116,7 @@
 				772BE5602A1BEBDB00EEF1B7 /* Assets.xcassets */,
 				772BE5622A1BEBDB00EEF1B7 /* LaunchScreen.storyboard */,
 				772BE5652A1BEBDB00EEF1B7 /* Info.plist */,
+				772C9FE72A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift */,
 			);
 			path = EssentialApp;
 			sourceTree = "<group>";
@@ -167,6 +180,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				772C9FED2A1E854E00B714D2 /* PBXTargetDependency */,
 			);
 			name = EssentialAppTests;
 			productName = EssentialAppTests;
@@ -188,6 +202,7 @@
 					};
 					77AED0942A1E47D600AA4169 = {
 						CreatedOnToolsVersion = 14.3;
+						TestTargetID = 772BE5532A1BEBDA00EEF1B7;
 					};
 				};
 			};
@@ -237,6 +252,7 @@
 			files = (
 				772BE55C2A1BEBDA00EEF1B7 /* ViewController.swift in Sources */,
 				772BE5582A1BEBDA00EEF1B7 /* AppDelegate.swift in Sources */,
+				772C9FE82A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift in Sources */,
 				772BE55A2A1BEBDA00EEF1B7 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -251,6 +267,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		772C9FED2A1E854E00B714D2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 772BE5532A1BEBDA00EEF1B7 /* EssentialApp */;
+			targetProxy = 772C9FEC2A1E854E00B714D2 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		772BE55D2A1BEBDA00EEF1B7 /* Main.storyboard */ = {
@@ -445,6 +469,7 @@
 		77AED0992A1E47D600AA4169 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = D3F6RWD56C;
@@ -454,14 +479,20 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "Fardan-Akhter.EssentialAppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EssentialApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EssentialApp";
 			};
 			name = Debug;
 		};
 		77AED09A2A1E47D600AA4169 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = D3F6RWD56C;
@@ -471,8 +502,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "Fardan-Akhter.EssentialAppTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EssentialApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/EssentialApp";
 			};
 			name = Release;
 		};

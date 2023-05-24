@@ -18,7 +18,7 @@ class FeedLoaderWithFallbackComposite {
     }
     
     func load(completion: @escaping (Result<[FeedImage], Error>) -> Void) {
-        primaryLoader.load {[weak self] primaryResult in
+        primaryLoader.load { [weak self] primaryResult in
             switch primaryResult {
             case let .success(primaryFeed):
                 completion(.success(primaryFeed))
@@ -32,18 +32,25 @@ class FeedLoaderWithFallbackComposite {
 class FeedLoaderWithFallbackCompositeTests: XCTestCase {
     
     func test_load_deliversPrimaryFeedOnPrimaryLoaderSuccess() {
-        let remoteFeed = uniqueFeed()
-        let sut = makeSUT(primaryResult: .success(remoteFeed), fallbackResult: .success(uniqueFeed()))
+        let primaryFeed = uniqueFeed()
+        let sut = makeSUT(primaryResult: .success(primaryFeed), fallbackResult: .success(uniqueFeed()))
         
-        expect(sut, toLoadSuccessfullyWith: remoteFeed)
+        expect(sut, toCompleteWith: .success(primaryFeed))
     }
     
     func test_load_deliversFallbackFeedOnPrimaryLoaderFailureAndFallbackSuccess() {
-        let localFeed = uniqueFeed()
-        let sut = makeSUT(primaryResult: .failure(anyError()), fallbackResult: .success(localFeed))
+        let fallbackFeed = uniqueFeed()
+        let sut = makeSUT(primaryResult: .failure(anyError()), fallbackResult: .success(fallbackFeed))
         
-        expect(sut, toLoadSuccessfullyWith: localFeed)
+        expect(sut, toCompleteWith: .success(fallbackFeed))
     }
+    
+    func test_load_deliversErorrOnBothPrimaryAndFallbackLoaderFailure() {
+        let sut = makeSUT(primaryResult: .failure(anyError()), fallbackResult: .failure(anyError()))
+        
+        expect(sut, toCompleteWith: .failure(anyError()))
+    }
+    
     
     // MARK: - Helpers
     
@@ -58,14 +65,18 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
         return sut
     }
     
-    private func expect(_ sut: FeedLoaderWithFallbackComposite, toLoadSuccessfullyWith expectedFeed: [FeedImage], file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: FeedLoaderWithFallbackComposite, toCompleteWith expectedResult: FeedLoader.Result, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Waiting for load to complete!")
-        sut.load { result in
-            switch result {
-            case let .success(feed):
+        sut.load { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(feed), .success(expectedFeed)):
                 XCTAssertEqual(feed, expectedFeed, "Expected received feed to match remote feed", file: file, line: line)
+                
+            case (.failure, .failure):
+                XCTAssertTrue(true)
+                
             default:
-                XCTFail("Expected load to complete with success, found \(result) instead", file: file, line: line)
+                XCTFail("Expected load to complete with \(expectedResult), found \(receivedResult) instead", file: file, line: line)
             }
             exp.fulfill()
         }

@@ -34,8 +34,8 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase, FeedLoaderTestCase {
     // MARK: - Helpers
     
     private func makeSUT(primaryResult: FeedLoader.Result, fallbackResult: FeedLoader.Result, file: StaticString = #file, line: UInt = #line) -> FeedLoaderWithFallbackComposite {
-        let remoteLoader = LoaderStub(result: primaryResult)
-        let localLoader = LoaderStub(result: fallbackResult)
+        let remoteLoader = FeedLoaderStub(result: primaryResult)
+        let localLoader = FeedLoaderStub(result: fallbackResult)
         let sut = FeedLoaderWithFallbackComposite(primary: remoteLoader,
                                                   fallback: localLoader)
         trackMemoryLeak(remoteLoader, file: file, line: line)

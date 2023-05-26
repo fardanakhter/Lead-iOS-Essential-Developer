@@ -38,7 +38,6 @@ class FeedLoaderCacheDecoratorTests: XCTestCase {
         expect(sut, toCompleteWith: .failure(anyError()))
     }
     
-    
     //MARK: - Helper
     
     private func expect(_ sut: FeedLoader, toCompleteWith expectedResult: FeedLoader.Result, file: StaticString = #file, line: UInt = #line) {
@@ -58,10 +57,6 @@ class FeedLoaderCacheDecoratorTests: XCTestCase {
         }
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private func uniqueFeed() -> [FeedImage] {
-        [FeedImage(id: UUID(), description: "some-description", location: "some-location", url: anyURL())]
     }
     
     private class LoaderStub: FeedLoader {

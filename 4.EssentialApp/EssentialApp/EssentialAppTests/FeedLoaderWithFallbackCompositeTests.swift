@@ -75,8 +75,4 @@ class FeedLoaderWithFallbackCompositeTests: XCTestCase {
         }
     }
     
-    private func uniqueFeed() -> [FeedImage] {
-        [FeedImage(id: UUID(), description: "some-description", location: "some-location", url: anyURL())]
-    }
-    
 }

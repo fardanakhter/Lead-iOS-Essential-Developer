@@ -111,12 +111,22 @@
             </BuildableReference>
          </TestableReference>
          <TestableReference
+<<<<<<< HEAD
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "771016372A24EBEB008F2F27"
                BuildableName = "EssentialAppUIAcceptanceTests.xctest"
                BlueprintName = "EssentialAppUIAcceptanceTests"
+=======
+            skipped = "NO"
+            testExecutionOrdering = "random">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "773A2C4B2A24E7BF0071BC47"
+               BuildableName = "EssentialAppUIAcceptanceTest.xctest"
+               BlueprintName = "EssentialAppUIAcceptanceTest"
+>>>>>>> 0ff4c669475634e660c2b14083afc25ada159528
                ReferencedContainer = "container:EssentialApp.xcodeproj">
             </BuildableReference>
          </TestableReference>

@@ -67,6 +67,7 @@
                ReferencedContainer = "container:EssentialApp.xcodeproj">
             </BuildableReference>
          </TestableReference>
+<<<<<<< HEAD
          <TestableReference
             skipped = "NO"
             parallelizable = "YES">
@@ -78,6 +79,8 @@
                ReferencedContainer = "container:EssentialApp.xcodeproj">
             </BuildableReference>
          </TestableReference>
+=======
+>>>>>>> 0ff4c669475634e660c2b14083afc25ada159528
       </Testables>
    </TestAction>
    <LaunchAction

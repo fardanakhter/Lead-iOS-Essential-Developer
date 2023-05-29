@@ -9,5 +9,10 @@ import XCTest
 
 final class EssentialAppUIAcceptanceTests: XCTestCase {
 
-    
+    func test_onLaunch_displaysRemoteFeedWhenAppHasConnectivity() {
+        let app = XCUIApplication()
+        app.launch()
+        
+        XCTAssertEqual(app.cells.count, 6)
+    }
 }

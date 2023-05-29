@@ -23,21 +23,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let session = URLSession(configuration: .ephemeral)
         let client = URLSessionHTTPClient(session: session)
         let remoteFeedLoader = RemoteFeedLoader(url: url, httpClient: client)
-        
-        let localStoreURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("feedStore.store")
-        let localStore = try! CoreDataFeedStore(storeURL: localStoreURL, bundle: Bundle(for: CoreDataFeedStore.self))
-        let localFeedLoader = LocalFeedLoader(store: localStore, timestamp: Date.init)
-        
-        
-        let feedLoaderWithFallback = FeedLoaderWithFallbackComposite(primary: FeedLoaderCacheDecorator(decoratee: remoteFeedLoader, cache: localFeedLoader), fallback: localFeedLoader)
-        
         let remoteImageLoader = RemoteFeedImageDataLoader(client)
-        let localImageLoader = LocalFeedImageDataLoader(store: localStore)
-        
-        let feedImageLoaderWithFallback = FeedImageDataLoaderWithFallbackComposite(primary: localImageLoader, fallback: FeedImageDataLoaderCacheDecorator(decoratee: remoteImageLoader, cache: localImageLoader))
-        
-        let feedViewController = FeedUIComposer.feedUIComposedWith(feedLoader: feedLoaderWithFallback,
-                                                                   imageLoader: feedImageLoaderWithFallback)
+        let feedViewController = FeedUIComposer.feedUIComposedWith(feedLoader: remoteFeedLoader,
+                                                                   imageLoader: remoteImageLoader)
         window?.rootViewController = feedViewController
         
     }

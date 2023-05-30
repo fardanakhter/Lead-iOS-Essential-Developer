@@ -27,6 +27,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let remoteImageLoader = RemoteFeedImageDataLoader(client)
         
         let localStoreURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("feedStore.store")
+        
+        if CommandLine.arguments.contains("reset") {
+            try? FileManager().removeItem(at: localStoreURL)
+        }
+        
         let localStore = try! CoreDataFeedStore(storeURL: localStoreURL, bundle: Bundle(for: CoreDataFeedStore.self))
         let localFeedLoader = LocalFeedLoader(store: localStore, timestamp: Date.init)
         let localImageLoader = LocalFeedImageDataLoader(store: localStore)

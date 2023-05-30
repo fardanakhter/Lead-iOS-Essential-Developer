@@ -14,6 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    let localStoreURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("feedStore.store")
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
@@ -25,50 +26,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let remoteFeedLoader = RemoteFeedLoader(url: url, httpClient: client)
         let remoteImageLoader = RemoteFeedImageDataLoader(client)
         
-        let localStoreURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("feedStore.store")
-        
-        #if DEBUG
-        if CommandLine.arguments.contains("reset") {
-            try? FileManager().removeItem(at: localStoreURL)
-        }
-        #endif
-        
         let localStore = try! CoreDataFeedStore(storeURL: localStoreURL, bundle: Bundle(for: CoreDataFeedStore.self))
         let localFeedLoader = LocalFeedLoader(store: localStore, timestamp: Date.init)
         let localImageLoader = LocalFeedImageDataLoader(store: localStore)
         
         let feedFallbackLoader = FeedLoaderWithFallbackComposite(primary: FeedLoaderCacheDecorator(decoratee: remoteFeedLoader, cache: localFeedLoader), fallback: localFeedLoader)
-        
         let feedImageFallbackLoader = FeedImageDataLoaderWithFallbackComposite(primary: localImageLoader, fallback: FeedImageDataLoaderCacheDecorator(decoratee: remoteImageLoader, cache: localImageLoader))
         
         let feedViewController = FeedUIComposer.feedUIComposedWith(feedLoader: feedFallbackLoader, imageLoader: feedImageFallbackLoader)
         window?.rootViewController = feedViewController
-        
     }
     
-    private func makeHttpClient() -> HTTPClient {
-        #if DEBUG
-        if let connectivity = UserDefaults.standard.string(forKey: "connectivity"), connectivity == "offline" {
-            return FailingHTTPClient()
-        }
-        #endif
+    func makeHttpClient() -> HTTPClient {
         let session = URLSession(configuration: .ephemeral)
         return URLSessionHTTPClient(session: session)
     }
-
-    #if DEBUG
-    private struct FailingHTTPClient: HTTPClient {
-        private struct Task: HTTPClientTask {
-            func cancel() {}
-        }
-        
-        func get(_ url: URL, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void) -> HTTPClientTask {
-            completion(.failure(NSError(domain: "", code: 0)))
-            return Task()
-        }
-    }
-    #endif
-    
     
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

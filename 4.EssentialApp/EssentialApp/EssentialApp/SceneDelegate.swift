@@ -21,16 +21,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let url = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5d1c78f21e661a0001ce7cfd/1562147059075/feed-case-study-v1-api-feed.json")!
         
-        let session = URLSession(configuration: .ephemeral)
-        let client = makeHttpClient(with: session)
+        let client = makeHttpClient()
         let remoteFeedLoader = RemoteFeedLoader(url: url, httpClient: client)
         let remoteImageLoader = RemoteFeedImageDataLoader(client)
         
         let localStoreURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("feedStore.store")
         
+        #if DEBUG
         if CommandLine.arguments.contains("reset") {
             try? FileManager().removeItem(at: localStoreURL)
         }
+        #endif
         
         let localStore = try! CoreDataFeedStore(storeURL: localStoreURL, bundle: Bundle(for: CoreDataFeedStore.self))
         let localFeedLoader = LocalFeedLoader(store: localStore, timestamp: Date.init)
@@ -45,13 +46,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
     }
     
-    private func makeHttpClient(with session: URLSession) -> HTTPClient {
+    private func makeHttpClient() -> HTTPClient {
+        #if DEBUG
         if let connectivity = UserDefaults.standard.string(forKey: "connectivity"), connectivity == "offline" {
             return FailingHTTPClient()
         }
+        #endif
+        let session = URLSession(configuration: .ephemeral)
         return URLSessionHTTPClient(session: session)
     }
 
+    #if DEBUG
     private struct FailingHTTPClient: HTTPClient {
         private struct Task: HTTPClientTask {
             func cancel() {}
@@ -62,6 +67,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return Task()
         }
     }
+    #endif
+    
     
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.

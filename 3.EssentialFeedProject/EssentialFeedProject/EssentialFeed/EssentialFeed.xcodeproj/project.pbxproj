@@ -369,10 +369,10 @@
 		77062F862A0E7FFA00428068 /* Feed Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				77062F9E2A0EED2000428068 /* Helper */,
 				77062F872A0E801500428068 /* FeedViewPresenterTests.swift */,
 				772C56222A1059BD00FEA4D5 /* FeedImageViewPresenterTests.swift */,
 				77285AB22A0895E8006E4D63 /* FeedUILocalizationTests.swift */,
-				77062F9E2A0EED2000428068 /* Helper */,
 			);
 			path = "Feed Presentation";
 			sourceTree = "<group>";

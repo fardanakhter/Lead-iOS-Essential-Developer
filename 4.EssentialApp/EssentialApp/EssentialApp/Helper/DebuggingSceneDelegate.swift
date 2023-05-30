@@ -19,22 +19,65 @@ final class DebuggingSceneDelegate: SceneDelegate {
     }
     
     override func makeHttpClient() -> HTTPClient {
-        if let connectivity = UserDefaults.standard.string(forKey: "connectivity"), connectivity == "offline" {
-            return FailingHTTPClient()
+        if let connectivity = UserDefaults.standard.string(forKey: "connectivity") {
+            return DebugginHTTPClient(connectivityStatus: connectivity)
         }
         return super.makeHttpClient()
     }
     
 }
 
-private struct FailingHTTPClient: HTTPClient {
+private struct DebugginHTTPClient: HTTPClient {
+    private let connectivityStatus: String
+    
+    init(connectivityStatus: String) {
+        self.connectivityStatus = connectivityStatus
+    }
+    
     private struct Task: HTTPClientTask {
         func cancel() {}
     }
     
     func get(_ url: URL, completion: @escaping (Result<(Data, HTTPURLResponse), Error>) -> Void) -> HTTPClientTask {
-        completion(.failure(NSError(domain: "", code: 0)))
+        completion(Result(catching:{
+            switch connectivityStatus {
+            case "online":
+                return makeSuccessfulResponse(for: url)
+            default:
+                throw NSError(domain: "offline", code: 0)
+            }
+        }))
         return Task()
+    }
+    
+    private func makeSuccessfulResponse(for url: URL) -> (Data, HTTPURLResponse) {
+        let urlResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
+        return (makeData(for: url), urlResponse)
+    }
+    
+    private func makeData(for url: URL) -> Data {
+        switch url.absoluteString {
+        case "https://any-url.com":
+            return makeImageData()
+        default:
+            return makeFeedData()
+        }
+    }
+    
+    private func makeImageData() -> Data {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()!
+        context.setFillColor(UIColor.red.cgColor)
+        context.fill(rect)
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return img!.pngData()!
+    }
+    
+    private func makeFeedData() -> Data {
+        return try! JSONSerialization.data(withJSONObject: ["items": [["id" : UUID().uuidString, "image" : "https://any-url.com"],
+                                                                      ["id" : UUID().uuidString, "image" : "https://any-url.com"]]])
     }
 }
 #endif

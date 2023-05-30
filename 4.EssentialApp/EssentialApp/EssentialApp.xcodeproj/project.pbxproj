@@ -180,9 +180,9 @@
 			isa = PBXGroup;
 			children = (
 				77A8FE892A21898F00DE2FC2 /* FeedLoaderCacheDecorator.swift */,
+				777E8BDC2A21998900278897 /* FeedImageDataLoaderCacheDecorator.swift */,
 				772C9FE72A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift */,
 				772CA02E2A1E8FE900B714D2 /* FeedImageDataLoaderWithFallbackComposite.swift */,
-				777E8BDC2A21998900278897 /* FeedImageDataLoaderCacheDecorator.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";

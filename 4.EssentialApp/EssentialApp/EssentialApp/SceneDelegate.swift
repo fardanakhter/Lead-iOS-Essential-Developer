@@ -11,15 +11,17 @@ import EssentialFeediOS
 import CoreData
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    
     var window: UIWindow?
-
+    
     let localStoreURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("feedStore.store")
-
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        
         guard let _ = (scene as? UIWindowScene) else { return }
-        
+        configureWindow()
+    }
+    
+    func configureWindow() {
         let url = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5d1c78f21e661a0001ce7cfd/1562147059075/feed-case-study-v1-api-feed.json")!
         
         let client = makeHttpClient()
@@ -33,8 +35,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let feedFallbackLoader = FeedLoaderWithFallbackComposite(primary: FeedLoaderCacheDecorator(decoratee: remoteFeedLoader, cache: localFeedLoader), fallback: localFeedLoader)
         let feedImageFallbackLoader = FeedImageDataLoaderWithFallbackComposite(primary: localImageLoader, fallback: FeedImageDataLoaderCacheDecorator(decoratee: remoteImageLoader, cache: localImageLoader))
         
-        let feedViewController = FeedUIComposer.feedUIComposedWith(feedLoader: feedFallbackLoader, imageLoader: feedImageFallbackLoader)
-        window?.rootViewController = feedViewController
+        let navigationController = UINavigationController(rootViewController: FeedUIComposer.feedUIComposedWith(feedLoader: feedFallbackLoader, imageLoader: feedImageFallbackLoader))
+        
+        window?.rootViewController = navigationController
     }
     
     func makeHttpClient() -> HTTPClient {

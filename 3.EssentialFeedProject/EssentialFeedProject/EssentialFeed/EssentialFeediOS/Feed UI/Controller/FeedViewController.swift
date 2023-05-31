@@ -9,9 +9,9 @@ import Foundation
 import UIKit
 
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    @IBOutlet private(set) var refreshController: FeedRefreshViewController?
+    @IBOutlet public private(set) var refreshController: FeedRefreshViewController?
     
-    var tableModels = [FeedImageCellController]() {
+    private var tableModels = [FeedImageCellController]() {
         didSet {
             tableView.reloadData()
         }
@@ -48,5 +48,9 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     
     private func removeCellController(at indexPath: IndexPath) {
         tableModels[indexPath.row].cancelTask()
+    }
+    
+    public func setDataSource(_ dataSource: [FeedImageCellController]) {
+        tableModels = dataSource
     }
 }

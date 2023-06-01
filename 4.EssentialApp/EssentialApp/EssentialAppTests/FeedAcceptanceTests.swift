@@ -28,11 +28,19 @@ final class FeedAcceptanceTests: XCTestCase {
     }
     
     func test_onLaunch_displaysCachedFeedWhenAppHasNoConnectivity() {
-        
     }
     
     func test_onLaunch_displaysEmptyFeedWhenAppHasNoConnectivityAndCacheIsEmpty() {
+        let clientStub = HTTPClientStub.offline
+        let storeStub = InMemoryStoreStub()
+        let sut = SceneDelegate(httpClient: clientStub, store: storeStub)
+        sut.window = UIWindow()
+        sut.configureWindow()
         
+        let nav = sut.window?.rootViewController as! UINavigationController
+        let feed = nav.topViewController as! FeedViewController
+        
+        XCTAssertEqual(feed.numberOfFeedImageViews, 0)
     }
     
     private class HTTPClientStub: HTTPClient {

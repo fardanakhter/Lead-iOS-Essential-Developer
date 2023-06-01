@@ -14,13 +14,15 @@ extension FeedViewController {
     }
     
     @discardableResult
-    func simulateImageViewVisible(at index: Int) -> FeedImageCell{
+    func simulateImageViewVisible(at index: Int) -> FeedImageCell? {
         return feedImageView(at: index)
     }
     
     @discardableResult
-    func simulateImageViewNotVisible(at index: Int) -> FeedImageCell {
-        let view = feedImageView(at: index)
+    func simulateImageViewNotVisible(at index: Int) -> FeedImageCell? {
+        guard let view = feedImageView(at: index) else {
+            return nil
+        }
         let indexpath = IndexPath(row: index, section: feedImageViewsSection)
         let delegate = tableView.delegate!
         delegate.tableView?(tableView, didEndDisplaying: view, forRowAt: indexpath)
@@ -52,10 +54,13 @@ extension FeedViewController {
         return 0
     }
     
-    private func feedImageView(at index: Int) -> FeedImageCell {
+    private func feedImageView(at index: Int) -> FeedImageCell? {
+        guard index < numberOfFeedImageViews else {
+            return nil
+        }
         let indexpath = IndexPath(row: index, section: feedImageViewsSection)
         let ds = tableView.dataSource!
-        return ds.tableView(tableView, cellForRowAt: indexpath) as! FeedImageCell
+        return ds.tableView(tableView, cellForRowAt: indexpath) as? FeedImageCell
     }
 }
 

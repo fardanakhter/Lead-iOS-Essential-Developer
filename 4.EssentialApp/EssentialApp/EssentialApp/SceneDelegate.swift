@@ -16,6 +16,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     let localStoreURL = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent("feedStore.store")
     
+    private lazy var httpClient: HTTPClient = {
+        URLSessionHTTPClient(session: URLSession(configuration: .ephemeral))
+    }()
+    
+    private lazy var store: FeedStore & FeedImageDataStore = {
+        try! CoreDataFeedStore(storeURL: localStoreURL, bundle: Bundle(for: CoreDataFeedStore.self))
+    }()
+    
+    convenience init(httpClient: HTTPClient, store: FeedStore & FeedImageDataStore) {
+        self.init()
+        self.httpClient = httpClient
+        self.store = store
+    }
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let _ = (scene as? UIWindowScene) else { return }
         configureWindow()
@@ -25,12 +39,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let url = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5d1c78f21e661a0001ce7cfd/1562147059075/feed-case-study-v1-api-feed.json")!
         
         let client = makeHttpClient()
+        
         let remoteFeedLoader = RemoteFeedLoader(url: url, httpClient: client)
         let remoteImageLoader = RemoteFeedImageDataLoader(client)
         
-        let localStore = try! CoreDataFeedStore(storeURL: localStoreURL, bundle: Bundle(for: CoreDataFeedStore.self))
-        let localFeedLoader = LocalFeedLoader(store: localStore, timestamp: Date.init)
-        let localImageLoader = LocalFeedImageDataLoader(store: localStore)
+        let localFeedLoader = LocalFeedLoader(store: store, timestamp: Date.init)
+        let localImageLoader = LocalFeedImageDataLoader(store: store)
         
         let feedFallbackLoader = FeedLoaderWithFallbackComposite(primary: FeedLoaderCacheDecorator(decoratee: remoteFeedLoader, cache: localFeedLoader), fallback: localFeedLoader)
         let feedImageFallbackLoader = FeedImageDataLoaderWithFallbackComposite(primary: localImageLoader, fallback: FeedImageDataLoaderCacheDecorator(decoratee: remoteImageLoader, cache: localImageLoader))
@@ -41,8 +55,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func makeHttpClient() -> HTTPClient {
-        let session = URLSession(configuration: .ephemeral)
-        return URLSessionHTTPClient(session: session)
+        httpClient
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -48,6 +48,7 @@
 		77FB19432A27F0C200F8BA78 /* FeedUIIntegrationTest+LoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB193D2A27F0C200F8BA78 /* FeedUIIntegrationTest+LoaderSpy.swift */; };
 		77FB19442A27F0C200F8BA78 /* FeedViewController+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB19382A27F0C100F8BA78 /* FeedViewController+TestHelpers.swift */; };
 		77FB19462A27F11700F8BA78 /* FeedUIIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB19452A27F11700F8BA78 /* FeedUIIntegrationTest.swift */; };
+		77FB194A2A27F5C200F8BA78 /* FeedAcceptanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB19492A27F5C200F8BA78 /* FeedAcceptanceTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,7 @@
 		77FB193C2A27F0C200F8BA78 /* UIButton+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+TestHelpers.swift"; sourceTree = "<group>"; };
 		77FB193D2A27F0C200F8BA78 /* FeedUIIntegrationTest+LoaderSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedUIIntegrationTest+LoaderSpy.swift"; sourceTree = "<group>"; };
 		77FB19452A27F11700F8BA78 /* FeedUIIntegrationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUIIntegrationTest.swift; sourceTree = "<group>"; };
+		77FB19492A27F5C200F8BA78 /* FeedAcceptanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedAcceptanceTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +238,7 @@
 				772CA02B2A1E8F7800B714D2 /* FeedImageDataLoaderWithFallbackCompositeTests.swift */,
 				777E8BD82A218CAD00278897 /* FeedImageDataLoaderCacheDecoratorTests.swift */,
 				77FB19282A27C14A00F8BA78 /* SceneDelegateTests.swift */,
+				77FB19492A27F5C200F8BA78 /* FeedAcceptanceTests.swift */,
 			);
 			path = EssentialAppTests;
 			sourceTree = "<group>";
@@ -431,6 +434,7 @@
 			files = (
 				77FB19432A27F0C200F8BA78 /* FeedUIIntegrationTest+LoaderSpy.swift in Sources */,
 				772CA0322A1EB6D700B714D2 /* SharedTestHelpers.swift in Sources */,
+				77FB194A2A27F5C200F8BA78 /* FeedAcceptanceTests.swift in Sources */,
 				77AED0A32A1E66B100AA4169 /* XCTextCase+MemoryLeakTracking.swift in Sources */,
 				772CA0342A1EC58900B714D2 /* FeedImageDataLoaderSpy.swift in Sources */,
 				77FB19442A27F0C200F8BA78 /* FeedViewController+TestHelpers.swift in Sources */,

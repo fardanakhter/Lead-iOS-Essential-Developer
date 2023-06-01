@@ -13,7 +13,7 @@ import EssentialFeediOS
 final class FeedAcceptanceTests: XCTestCase {
     
     func test_onLaunch_displaysRemoteFeedWhenAppHasConnectivity() {
-        let clientStub = HTTPClientStub.online()
+        let clientStub = HTTPClientStub.online(response)
         let storeStub = InMemoryStoreStub()
         let sut = SceneDelegate(httpClient: clientStub, store: storeStub)
         sut.window = UIWindow()
@@ -55,14 +55,14 @@ final class FeedAcceptanceTests: XCTestCase {
             HTTPClientStub { _ in .failure(anyError()) }
         }
         
-        static func online() -> HTTPClientStub {
-            HTTPClientStub{ url in .success(makeSuccessfulResponse(for: url)) }
+        static func online(_ stub: @escaping (URL) -> (Data, HTTPURLResponse)) -> HTTPClientStub {
+            HTTPClientStub{ url in .success(stub(url)) }
         }
     }
     
     private class InMemoryStoreStub: FeedStore, FeedImageDataStore {
         private var feedCache: CachedFeed?
-        private var imageCache = [URL : Data]()
+        private var imageCache: [URL : Data] = [:]
         
         func deleteFeedCache(completion: @escaping FeedStore.DeleteCompletion) {
             feedCache = nil
@@ -88,34 +88,27 @@ final class FeedAcceptanceTests: XCTestCase {
         }
     }
     
-    private static func makeSuccessfulResponse(for url: URL) -> (Data, HTTPURLResponse) {
+    private func response(for url: URL) -> (Data, HTTPURLResponse) {
         let urlResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
         return (makeData(for: url), urlResponse)
     }
     
-    private static func makeData(for url: URL) -> Data {
+    private func makeData(for url: URL) -> Data {
         switch url.absoluteString {
-        case "https://any-url.com":
+        case "https://image-url.com":
             return makeImageData()
         default:
             return makeFeedData()
         }
     }
     
-    private static func makeImageData() -> Data {
-        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
-        UIGraphicsBeginImageContext(rect.size)
-        let context = UIGraphicsGetCurrentContext()!
-        context.setFillColor(UIColor.red.cgColor)
-        context.fill(rect)
-        let img = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return img!.pngData()!
+    private func makeImageData() -> Data {
+        return UIImage.make(withColor: .red).pngData()!
     }
     
-    private static func makeFeedData() -> Data {
-        return try! JSONSerialization.data(withJSONObject: ["items": [["id" : UUID().uuidString, "image" : "https://any-url.com"],
-                                                                      ["id" : UUID().uuidString, "image" : "https://any-url.com"]]])
+    private func makeFeedData() -> Data {
+        return try! JSONSerialization.data(withJSONObject: ["items": [["id" : UUID().uuidString, "image" : "https://image-url.com"],
+                                                                      ["id" : UUID().uuidString, "image" : "https://image-url.com"]]])
     }
     
 }

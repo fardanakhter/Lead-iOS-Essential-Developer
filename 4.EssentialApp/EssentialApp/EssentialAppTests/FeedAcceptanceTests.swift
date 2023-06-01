@@ -13,14 +13,7 @@ import EssentialFeediOS
 final class FeedAcceptanceTests: XCTestCase {
     
     func test_onLaunch_displaysRemoteFeedWhenAppHasConnectivity() {
-        let clientStub = HTTPClientStub.online(response)
-        let storeStub = InMemoryStoreStub()
-        let sut = SceneDelegate(httpClient: clientStub, store: storeStub)
-        sut.window = UIWindow()
-        sut.configureWindow()
-        
-        let nav = sut.window?.rootViewController as! UINavigationController
-        let feed = nav.topViewController as! FeedViewController
+        let feed = launch(client: .online(response), store: .empty)
         
         XCTAssertEqual(feed.numberOfFeedImageViews, 2)
         XCTAssertNotNil(feed.simulateImageViewVisible(at: 0)?.renderedImage)
@@ -28,19 +21,34 @@ final class FeedAcceptanceTests: XCTestCase {
     }
     
     func test_onLaunch_displaysCachedFeedWhenAppHasNoConnectivity() {
+        let sharedMemory = InMemoryStoreStub.empty
+        let onlineFeed = launch(client: .online(response), store: sharedMemory)
+        XCTAssertNotNil(onlineFeed.simulateImageViewVisible(at: 0)?.renderedImage)
+        XCTAssertNotNil(onlineFeed.simulateImageViewVisible(at: 1)?.renderedImage)
+        
+        let offlineFeed = launch(client: .offline, store: sharedMemory)
+        
+        XCTAssertEqual(offlineFeed.numberOfFeedImageViews, 2)
+        XCTAssertNotNil(offlineFeed.simulateImageViewVisible(at: 0)?.renderedImage)
+        XCTAssertNotNil(offlineFeed.simulateImageViewVisible(at: 1)?.renderedImage)
     }
     
     func test_onLaunch_displaysEmptyFeedWhenAppHasNoConnectivityAndCacheIsEmpty() {
-        let clientStub = HTTPClientStub.offline
-        let storeStub = InMemoryStoreStub()
-        let sut = SceneDelegate(httpClient: clientStub, store: storeStub)
+        let feed = launch(client: .offline, store: .empty)
+        
+        XCTAssertEqual(feed.numberOfFeedImageViews, 0)
+    }
+    
+    // MARK: - Helpers
+    
+    private func launch(client: HTTPClientStub, store: InMemoryStoreStub) -> FeedViewController {
+        let sut = SceneDelegate(httpClient: client, store: store)
         sut.window = UIWindow()
         sut.configureWindow()
         
         let nav = sut.window?.rootViewController as! UINavigationController
         let feed = nav.topViewController as! FeedViewController
-        
-        XCTAssertEqual(feed.numberOfFeedImageViews, 0)
+        return feed
     }
     
     private class HTTPClientStub: HTTPClient {
@@ -93,6 +101,10 @@ final class FeedAcceptanceTests: XCTestCase {
         
         func loadCache(with url: URL, completion: @escaping FeedImageDataStore.LoadCompletion) {
             completion(.success(imageCache[url]))
+        }
+        
+        static var empty: InMemoryStoreStub {
+            InMemoryStoreStub()
         }
     }
     

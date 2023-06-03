@@ -2,11 +2,12 @@
 //  FeedViewAdaptor.swift
 //  EssentialFeediOS
 //
-//  Created by Fardan Akhter on 11/05/2023.
+//  Created by Fardan Akhter on 11/05/2023.ç
 //
 
 import UIKit
 import EssentialFeed
+import EssentialFeediOS
 
 final class FeedViewAdapter: FeedView {
     private weak var controller: FeedViewController?
@@ -18,7 +19,7 @@ final class FeedViewAdapter: FeedView {
     }
     
     func display(_ viewModel: FeedViewModel) {
-        controller?.tableModels = viewModel.feed.map {
+        controller?.setDataSource( viewModel.feed.map {
             let presentationAdaptor = FeedImageLoaderPresentationAdaptor(model: $0, loader: imageDataLoader)
             
             let controller = FeedImageCellController()
@@ -28,6 +29,6 @@ final class FeedViewAdapter: FeedView {
             presentationAdaptor.presenter = presenter
             
             return controller
-        }
+        })
     }
 }

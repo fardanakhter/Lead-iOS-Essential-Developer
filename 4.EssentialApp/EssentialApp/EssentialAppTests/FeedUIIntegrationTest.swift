@@ -9,6 +9,7 @@ import XCTest
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
+import EssentialApp
 
 final class FeedUIIntegrationTest: XCTestCase {
     
@@ -81,7 +82,7 @@ final class FeedUIIntegrationTest: XCTestCase {
         XCTAssertEqual(loader.loadedImageURLs, [imageURL])
         
         loader.completeImageLoadingSuccessfully(with: UIImage.make(withColor: .red).pngData()!, at: 0)
-        XCTAssertNotNil(view.renderedImage)
+        XCTAssertNotNil(view?.renderedImage)
     }
     
     func test_loadCompletion_doesNotChangeLoadedFeedsWhenCompletesWithError() {
@@ -135,13 +136,13 @@ final class FeedUIIntegrationTest: XCTestCase {
         loader.completeFeedLoadingSuccessfully(with: [image], at: 0)
         
         let view = sut.simulateImageViewVisible(at: 0)
-        XCTAssertEqual(view.isShowingRetryOptionView, false)
+        XCTAssertEqual(view?.isShowingRetryOptionView, false)
         
         loader.completeImageLoadingFailing(at: 0)
-        XCTAssertEqual(view.isShowingRetryOptionView, true)
+        XCTAssertEqual(view?.isShowingRetryOptionView, true)
         
         loader.completeImageLoadingSuccessfully(with: UIImage.make(withColor: .red).pngData()!, at: 0)
-        XCTAssertEqual(view.isShowingRetryOptionView, false)
+        XCTAssertEqual(view?.isShowingRetryOptionView, false)
     }
     
     func test_retryImageOption_loadsImageURL() {
@@ -154,12 +155,12 @@ final class FeedUIIntegrationTest: XCTestCase {
         
         let view = sut.simulateImageViewVisible(at: 0)
         XCTAssertEqual(loader.loadedImageURLs, [imageURL], "Expected to load image url")
-        XCTAssertEqual(view.isShowingRetryOptionView, false, "Expected to not show retry option until load completes")
+        XCTAssertEqual(view?.isShowingRetryOptionView, false, "Expected to not show retry option until load completes")
         
         loader.completeImageLoadingFailing(at: 0)
-        XCTAssertEqual(view.isShowingRetryOptionView, true, "Expected to show retry option when load completes with failure")
+        XCTAssertEqual(view?.isShowingRetryOptionView, true, "Expected to show retry option when load completes with failure")
         
-        view.simulateRetryImageLoad()
+        view?.simulateRetryImageLoad()
         XCTAssertEqual(loader.loadedImageURLs, [imageURL, imageURL], "Expected to reload image url")
     }
     
@@ -209,7 +210,7 @@ final class FeedUIIntegrationTest: XCTestCase {
         let view = sut.simulateImageViewNotVisible(at: 0)
         loader.completeImageLoadingSuccessfully(with: UIImage.make(withColor: .red).pngData()!, at: 0)
         
-        XCTAssertNil(view.renderedImage, "Expected to remove reference to view when not visible")
+        XCTAssertNil(view?.renderedImage, "Expected to remove reference to view when not visible")
     }
     
     func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
@@ -264,8 +265,8 @@ final class FeedUIIntegrationTest: XCTestCase {
     
     private func assert(that sut: FeedViewController, render image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
         let view = sut.simulateImageViewVisible(at: index)
-        XCTAssertEqual(view.imageDescription?.text, image.description, file: file, line: line)
-        XCTAssertEqual(view.isShowingLocation, image.location != nil, file: file, line: line)
-        XCTAssertEqual(view.location?.text, image.location, file: file, line: line)
+        XCTAssertEqual(view?.imageDescription?.text, image.description, file: file, line: line)
+        XCTAssertEqual(view?.isShowingLocation, image.location != nil, file: file, line: line)
+        XCTAssertEqual(view?.location?.text, image.location, file: file, line: line)
     }
 }

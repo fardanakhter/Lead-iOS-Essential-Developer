@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "9532A9A6-8050-4C1E-9666-D065D505BB33",
+      "name" : "Configuration 1",
+      "options" : {
+        "threadSanitizerEnabled" : true
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "threadSanitizerEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:EssentialApp.xcodeproj",
+        "identifier" : "77AED0942A1E47D600AA4169",
+        "name" : "EssentialAppTests"
+      }
+    }
+  ],
+  "version" : 1
+}

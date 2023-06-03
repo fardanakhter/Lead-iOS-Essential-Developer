@@ -9,16 +9,18 @@ import Foundation
 import UIKit
 import EssentialFeed
 
-protocol FeedImageCellControllerDelegate {
+public protocol FeedImageCellControllerDelegate {
     func startImageLoading()
     func cancelImageLoading()
 }
 
-final class FeedImageCellController {
-    typealias Image = UIImage
+public final class FeedImageCellController {
+    public typealias Image = UIImage
     
     private var cell: FeedImageCell?
-    var delegate: FeedImageCellControllerDelegate?
+    public var delegate: FeedImageCellControllerDelegate?
+    
+    public init() {}
     
     func view(_ tableView: UITableView) -> UITableViewCell {
         cell = tableView.dequeueReusableCell()
@@ -41,7 +43,7 @@ final class FeedImageCellController {
 }
 
 extension FeedImageCellController: FeedImageView {
-    func display(_ viewModel: FeedImageViewModel<UIImage>) {
+    public func display(_ viewModel: FeedImageViewModel<UIImage>) {
         guard let view = cell else { return }
         load(view, with: viewModel)
     }

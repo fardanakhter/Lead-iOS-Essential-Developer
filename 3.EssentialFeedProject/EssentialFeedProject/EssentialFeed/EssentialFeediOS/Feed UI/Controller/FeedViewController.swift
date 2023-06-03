@@ -46,8 +46,8 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         tableModels[indexPath.row].cancelTask()
     }
     
-    public func setDataSource(_ dataSource: [FeedImageCellController]) {
-        tableModels = dataSource
+    public func display(_ cellController: [FeedImageCellController]) {
+        tableModels = cellController
         tableView.reloadData()
     }
 }

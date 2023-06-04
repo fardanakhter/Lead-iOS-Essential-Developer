@@ -16,7 +16,7 @@ final class FeedSnapshotTests: XCTestCase {
         
         sut.display(emptyFeed())
         
-        record(sut.snapShot(), named: "Empty_Feed")
+        assert(sut.snapShot(), named: "Empty_Feed")
     }
     
     func test_feedWithContent() {
@@ -24,7 +24,7 @@ final class FeedSnapshotTests: XCTestCase {
         
         sut.display(feedWithContent())
         
-        record(sut.snapShot(), named: "Feed_With_Content")
+        assert(sut.snapShot(), named: "Feed_With_Content")
     }
     
     func test_feedWithFailedImageLoading() {
@@ -32,9 +32,11 @@ final class FeedSnapshotTests: XCTestCase {
         
         sut.display(feedWithNoImages())
         
-        record(sut.snapShot(), named: "Feed_With_No_Images")
+        assert(sut.snapShot(), named: "Feed_With_No_Images")
     }
-
+    
+    // MARK: - Helpers
+    
     private func makeSUT() -> FeedViewController {
         let bundle = Bundle(for: FeedViewController.self)
         let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
@@ -94,7 +96,29 @@ final class FeedSnapshotTests: XCTestCase {
         catch {
             XCTFail("Failed to record snapshot", file: file, line: line)
         }
+    }
+    
+    private func assert(_ snapshot: UIImage, named name: String, file: StaticString = #file, line: UInt = #line) {
+        guard let snapshotData = snapshot.pngData() else {
+            return XCTFail("Cannot record snapshot", file: file, line: line)
+        }
         
+        let snapshotURL = URL(fileURLWithPath: String(describing: file))
+            .deletingLastPathComponent()
+            .appending(path: "snapshot")
+            .appending(path: "\(name).png")
+        
+        guard let recordedSnapshotData = try? Data(contentsOf: snapshotURL) else {
+            return XCTFail("Record snapshot before asserting", file: file, line: line)
+        }
+        
+        if snapshotData != recordedSnapshotData {
+            let temporaryURL = FileManager.default.temporaryDirectory.appending(path: snapshotURL.lastPathComponent)
+            
+            try! snapshotData.write(to: temporaryURL)
+            
+            XCTAssertEqual(snapshotData, recordedSnapshotData, "snapshot at \(snapshotURL) does not match stored snapshot at \(temporaryURL)", file: file, line: line)
+        }
     }
 }
 

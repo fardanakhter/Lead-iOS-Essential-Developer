@@ -22,9 +22,17 @@ final class FeedSnapshotTests: XCTestCase {
     func test_feedWithContent() {
         let sut = makeSUT()
         
-        sut.display(sampleFeed())
+        sut.display(feedWithContent())
         
         record(sut.snapShot(), named: "Feed_With_Content")
+    }
+    
+    func test_feedWithFailedImageLoading() {
+        let sut = makeSUT()
+        
+        sut.display(feedWithNoImages())
+        
+        record(sut.snapShot(), named: "Feed_With_No_Images")
     }
 
     private func makeSUT() -> FeedViewController {
@@ -38,7 +46,7 @@ final class FeedSnapshotTests: XCTestCase {
         return []
     }
     
-    private func sampleFeed() -> [ImageStub] {
+    private func feedWithContent() -> [ImageStub] {
         [
             ImageStub(
                 description: "The East Side Gallery is an open-air gallery in Berlin. It consists of a series of murals painted directly on a 1,316 m long remnant of the Berlin Wall, located near the centre of Berlin, on Mühlenstraße in Friedrichshain-Kreuzberg. The gallery has official status as a Denkmal, or heritagg protected landmark.",
@@ -49,6 +57,22 @@ final class FeedSnapshotTests: XCTestCase {
                 description: "Garth Pier is a Grade II listed structure in Bangor, Gwynedd, North Wales.",
                 location: "Garth Pier",
                 image: UIImage.make(withColor: .green))
+        ]
+    }
+    
+    private func feedWithNoImages() -> [ImageStub] {
+        [
+            ImageStub(
+                description: "The East Side Gallery is an open-air gallery in Berlin. It consists of a series of murals painted directly on a 1,316 m long remnant of the Berlin Wall, located near the centre of Berlin, on Mühlenstraße in Friedrichshain-Kreuzberg. The gallery has official status as a Denkmal, or heritagg protected landmark.",
+                location: "some location",
+                image: nil,
+                showRetry: true),
+            
+            ImageStub(
+                description: "Garth Pier is a Grade II listed structure in Bangor, Gwynedd, North Wales.",
+                location: "Garth Pier",
+                image: nil,
+                showRetry: true)
         ]
     }
     
@@ -78,9 +102,9 @@ private class ImageStub: FeedImageCellControllerDelegate {
     private let viewModel: FeedImageViewModel<UIImage>
     weak var controller: FeedImageCellController?
     
-    init(description: String?, location: String?, image: UIImage?) {
+    init(description: String?, location: String?, image: UIImage?, showRetry: Bool = false) {
         self.viewModel = FeedImageViewModel(description: description, location: location,
-                                            image: image, shouldRetry: false)
+                                            image: image, shouldRetry: showRetry)
     }
     
     func startImageLoading() {

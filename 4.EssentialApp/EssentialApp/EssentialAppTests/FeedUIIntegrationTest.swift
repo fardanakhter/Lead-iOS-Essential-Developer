@@ -70,6 +70,20 @@ final class FeedUIIntegrationTest: XCTestCase {
         expect(sut, toRender: [image0, image1, image2, image3])
     }
     
+    func test_loadCompletion_rendersSuccessfullyEmptyFeedAfterNonEmptyFeed() {
+        let (sut, loader) = makeSUT()
+        let image0 = makeImage()
+        let image1 = makeImage()
+        
+        sut.loadViewIfNeeded()
+        loader.completeFeedLoadingSuccessfully(with: [image0, image1], at: 0)
+        expect(sut, toRender: [image0, image1])
+        
+        sut.simulateUserInitiatedFeedReload()
+        loader.completeFeedLoadingSuccessfully(with: [], at: 1)
+        expect(sut, toRender: [])
+    }
+    
     func test_feedImageView_rendersImageSuccessfully() {
         let (sut, loader) = makeSUT()
         let imageURL = URL(string: "https//:any-image-url.com")!
@@ -257,6 +271,8 @@ final class FeedUIIntegrationTest: XCTestCase {
     }
     
     private func expect(_ sut: FeedViewController, toRender images: [FeedImage], file: StaticString = #file, line: UInt = #line) {
+        sut.tableView.layoutIfNeeded()
+        RunLoop.main.run(until: Date())
         XCTAssertEqual(sut.numberOfFeedImageViews, images.count, file: file, line: line)
         images.enumerated().forEach{ (index, image) in
             assert(that: sut, render: image, at: index, file: file, line: line)

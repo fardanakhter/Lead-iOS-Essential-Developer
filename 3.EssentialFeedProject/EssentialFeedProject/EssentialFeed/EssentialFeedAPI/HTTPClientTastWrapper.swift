@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import EssentialFeed
 
 class HTTPClientTaskWrapper: FeedImageDataLoaderTask {
     private var completion: ((RemoteFeedImageDataLoader.Result) -> Void)?

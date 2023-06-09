@@ -11,8 +11,9 @@ import UIKit
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
     @IBOutlet public private(set) var refreshController: FeedRefreshViewController?
     
+    private var loadingControllers = [IndexPath : FeedImageCellController]()
     private var tableModels = [FeedImageCellController]()
-
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         refreshController?.refresh()
@@ -23,7 +24,7 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
     
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return cellController(forRowAt: indexPath).view(tableView)
+        cellController(forRowAt: indexPath).view(tableView)
     }
     
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -39,15 +40,19 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
     }
     
     private func cellController(forRowAt indexPath: IndexPath) -> FeedImageCellController {
-        return tableModels[indexPath.row]
+        let cell = tableModels[indexPath.row]
+        loadingControllers[indexPath] = cell
+        return cell
     }
     
     private func removeCellController(at indexPath: IndexPath) {
-        tableModels[indexPath.row].cancelTask()
+        loadingControllers[indexPath]?.cancelTask()
+        loadingControllers[indexPath] = nil
     }
     
-    public func setDataSource(_ dataSource: [FeedImageCellController]) {
-        tableModels = dataSource
+    public func display(_ cellController: [FeedImageCellController]) {
+        loadingControllers = [:]
+        tableModels = cellController
         tableView.reloadData()
     }
 }

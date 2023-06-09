@@ -19,7 +19,7 @@ final class FeedViewAdapter: FeedView {
     }
     
     func display(_ viewModel: FeedViewModel) {
-        controller?.setDataSource( viewModel.feed.map {
+        controller?.display( viewModel.feed.map {
             let presentationAdaptor = FeedImageLoaderPresentationAdaptor(model: $0, loader: imageDataLoader)
             
             let controller = FeedImageCellController()

@@ -22,6 +22,8 @@
 		772CA0422A21722100B714D2 /* XCTestCase+FeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772CA0412A21722100B714D2 /* XCTestCase+FeedLoader.swift */; };
 		77455F9C2A337F6600B7B954 /* EssentialFeedAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77455F9B2A337F6600B7B954 /* EssentialFeedAPI.framework */; };
 		77455F9D2A337F6600B7B954 /* EssentialFeedAPI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 77455F9B2A337F6600B7B954 /* EssentialFeedAPI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		776EA1762A35EC58009C6C25 /* EssentialFeedCache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 776EA1752A35EC58009C6C25 /* EssentialFeedCache.framework */; };
+		776EA1772A35EC58009C6C25 /* EssentialFeedCache.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 776EA1752A35EC58009C6C25 /* EssentialFeedCache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		777E8BD92A218CAD00278897 /* FeedImageDataLoaderCacheDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777E8BD82A218CAD00278897 /* FeedImageDataLoaderCacheDecoratorTests.swift */; };
 		777E8BDB2A21900800278897 /* XCTestCase+FeedImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777E8BDA2A21900800278897 /* XCTestCase+FeedImageDataLoader.swift */; };
 		777E8BDD2A21998900278897 /* FeedImageDataLoaderCacheDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777E8BDC2A21998900278897 /* FeedImageDataLoaderCacheDecorator.swift */; };
@@ -68,6 +70,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				776EA1772A35EC58009C6C25 /* EssentialFeedCache.framework in Embed Frameworks */,
 				77455F9D2A337F6600B7B954 /* EssentialFeedAPI.framework in Embed Frameworks */,
 				77A5294A2A1BEEC900672F74 /* EssentialFeed.framework in Embed Frameworks */,
 				77CEAB352A2550B700F9C975 /* EssentialFeediOS.framework in Embed Frameworks */,
@@ -95,6 +98,7 @@
 		772CA03F2A21716700B714D2 /* FeedLoaderStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderStub.swift; sourceTree = "<group>"; };
 		772CA0412A21722100B714D2 /* XCTestCase+FeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FeedLoader.swift"; sourceTree = "<group>"; };
 		77455F9B2A337F6600B7B954 /* EssentialFeedAPI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeedAPI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		776EA1752A35EC58009C6C25 /* EssentialFeedCache.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialFeedCache.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		777E8BD82A218CAD00278897 /* FeedImageDataLoaderCacheDecoratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderCacheDecoratorTests.swift; sourceTree = "<group>"; };
 		777E8BDA2A21900800278897 /* XCTestCase+FeedImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FeedImageDataLoader.swift"; sourceTree = "<group>"; };
 		777E8BDC2A21998900278897 /* FeedImageDataLoaderCacheDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoaderCacheDecorator.swift; sourceTree = "<group>"; };
@@ -130,6 +134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				776EA1762A35EC58009C6C25 /* EssentialFeedCache.framework in Frameworks */,
 				77455F9C2A337F6600B7B954 /* EssentialFeedAPI.framework in Frameworks */,
 				77A529492A1BEEC900672F74 /* EssentialFeed.framework in Frameworks */,
 				77CEAB342A2550B700F9C975 /* EssentialFeediOS.framework in Frameworks */,
@@ -192,6 +197,7 @@
 		77A529462A1BEEC900672F74 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				776EA1752A35EC58009C6C25 /* EssentialFeedCache.framework */,
 				77455F9B2A337F6600B7B954 /* EssentialFeedAPI.framework */,
 				77CEAB332A2550B700F9C975 /* EssentialFeediOS.framework */,
 				77CEAB302A25502300F9C975 /* EssentialFeediOS.framework */,

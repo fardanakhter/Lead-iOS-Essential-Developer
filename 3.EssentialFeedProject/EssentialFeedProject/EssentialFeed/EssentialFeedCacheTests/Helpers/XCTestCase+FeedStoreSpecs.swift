@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import EssentialFeed
+import EssentialFeedCache
 
 extension FeedStoreSpecs where Self: XCTestCase {
     

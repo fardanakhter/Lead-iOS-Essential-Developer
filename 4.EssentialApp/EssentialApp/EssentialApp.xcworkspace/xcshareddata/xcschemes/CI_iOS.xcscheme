@@ -119,6 +119,16 @@
                ReferencedContainer = "container:../../3.EssentialFeedProject/EssentialFeedProject/EssentialFeed/EssentialFeed.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "776EA13E2A35E331009C6C25"
+               BuildableName = "EssentialFeedCacheTests.xctest"
+               BlueprintName = "EssentialFeedCacheTests"
+               ReferencedContainer = "container:../../3.EssentialFeedProject/EssentialFeedProject/EssentialFeed/EssentialFeed.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

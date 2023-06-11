@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import EssentialFeed
 
 public protocol FeedImageView: AnyObject {
     associatedtype Image

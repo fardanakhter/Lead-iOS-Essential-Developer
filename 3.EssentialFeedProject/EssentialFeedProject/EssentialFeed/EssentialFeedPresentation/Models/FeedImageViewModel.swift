@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import EssentialFeed
 
 public struct FeedImageViewModel<Image> {
     public let description: String?

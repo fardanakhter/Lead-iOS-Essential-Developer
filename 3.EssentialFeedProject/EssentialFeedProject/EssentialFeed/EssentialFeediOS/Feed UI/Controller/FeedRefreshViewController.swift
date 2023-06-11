@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import EssentialFeed
+import EssentialFeedPresentation
 
 public protocol FeedRefreshViewControllerDelegate {
     func didStartLoadingFeed()

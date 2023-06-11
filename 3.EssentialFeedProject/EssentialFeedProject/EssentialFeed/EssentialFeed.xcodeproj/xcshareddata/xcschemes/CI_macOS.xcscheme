@@ -87,12 +87,24 @@
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "NO">
+            skipped = "NO"
+            testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "776EA13E2A35E331009C6C25"
                BuildableName = "EssentialFeedCacheTests.xctest"
                BlueprintName = "EssentialFeedCacheTests"
+               ReferencedContainer = "container:EssentialFeed.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            testExecutionOrdering = "random">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "776EA1862A35F27C009C6C25"
+               BuildableName = "EssentialFeedPresentationTests.xctest"
+               BlueprintName = "EssentialFeedPresentationTests"
                ReferencedContainer = "container:EssentialFeed.xcodeproj">
             </BuildableReference>
          </TestableReference>

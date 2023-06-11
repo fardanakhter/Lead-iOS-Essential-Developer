@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import EssentialFeed
+import EssentialFeedPresentation
 import EssentialFeediOS
 
 final class WeakRefProxyInstance<T: AnyObject>{

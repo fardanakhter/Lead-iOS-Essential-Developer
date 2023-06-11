@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import EssentialFeed
+import EssentialFeedPresentation
 
 extension FeedUIIntegrationTest {
     func localizedString(withKey key: String, file: StaticString = #file, line: UInt = #line) -> String {

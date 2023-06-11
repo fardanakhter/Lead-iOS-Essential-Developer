@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import EssentialFeed
+import EssentialFeedPresentation
 import EssentialFeediOS
 
 final class FeedSnapshotTests: XCTestCase {

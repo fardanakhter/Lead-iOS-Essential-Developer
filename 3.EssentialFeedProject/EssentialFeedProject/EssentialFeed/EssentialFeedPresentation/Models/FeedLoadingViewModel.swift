@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import EssentialFeed
 
 public struct FeedLoadingViewModel {
     public let isLoading: Bool

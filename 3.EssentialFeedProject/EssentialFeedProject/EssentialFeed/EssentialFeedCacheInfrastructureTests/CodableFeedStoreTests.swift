@@ -7,6 +7,7 @@
 
 import XCTest
 import EssentialFeedCache
+import EssentialFeedCacheInfrastructure
 
 final class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
 

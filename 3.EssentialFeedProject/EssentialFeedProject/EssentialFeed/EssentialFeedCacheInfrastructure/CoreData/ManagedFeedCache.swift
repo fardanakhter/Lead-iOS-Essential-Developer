@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import EssentialFeedCache
 
 @objc(ManagedFeedCache)
 class ManagedFeedCache: NSManagedObject {

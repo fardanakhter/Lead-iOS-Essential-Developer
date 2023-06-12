@@ -105,6 +105,7 @@
 		7797C6FB2A37C66B0093E56D /* SharedTestsHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ACEB3829DDB2ED00E9B569 /* SharedTestsHelpers.swift */; };
 		7797C6FC2A37C7290093E56D /* FeedCacheTestsHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774F7E6F29DD9C8B00609F21 /* FeedCacheTestsHelpers.swift */; };
 		7797C7012A37CF4E0093E56D /* EssentialFeedAPIInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7797C6A92A37C0630093E56D /* EssentialFeedAPIInfrastructure.framework */; };
+		7797C7042A37CFD50093E56D /* EssentialFeedCacheInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7797C6D02A37C45D0093E56D /* EssentialFeedCacheInfrastructure.framework */; };
 		779AF61C29E83F64001FD754 /* EssentialFeedCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779AF61B29E83F64001FD754 /* EssentialFeedCacheIntegrationTests.swift */; };
 		779AF61D29E83F64001FD754 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7703CF5329C6C6ED00101DCA /* EssentialFeed.framework */; };
 		779AF62329E857CE001FD754 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D3556129D243860085EBF2 /* XCTestCase+MemoryLeakTracking.swift */; };
@@ -230,6 +231,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7797C6A82A37C0630093E56D;
 			remoteInfo = EssentialFeedAPIInfrastructure;
+		};
+		7797C7052A37CFDA0093E56D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7703CF4A29C6C6ED00101DCA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7797C6CF2A37C45D0093E56D;
+			remoteInfo = EssentialFeedCacheInfrastructure;
 		};
 		779AF61E29E83F64001FD754 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -538,6 +546,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7797C7042A37CFD50093E56D /* EssentialFeedCacheInfrastructure.framework in Frameworks */,
 				776EA1782A35EDA9009C6C25 /* EssentialFeedCache.framework in Frameworks */,
 				779AF61D29E83F64001FD754 /* EssentialFeed.framework in Frameworks */,
 			);
@@ -1257,6 +1266,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				7797C7062A37CFDA0093E56D /* PBXTargetDependency */,
 				776EA17A2A35EDB2009C6C25 /* PBXTargetDependency */,
 				779AF61F29E83F64001FD754 /* PBXTargetDependency */,
 			);
@@ -1773,6 +1783,11 @@
 			isa = PBXTargetDependency;
 			target = 7797C6A82A37C0630093E56D /* EssentialFeedAPIInfrastructure */;
 			targetProxy = 7797C7022A37CF570093E56D /* PBXContainerItemProxy */;
+		};
+		7797C7062A37CFDA0093E56D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7797C6CF2A37C45D0093E56D /* EssentialFeedCacheInfrastructure */;
+			targetProxy = 7797C7052A37CFDA0093E56D /* PBXContainerItemProxy */;
 		};
 		779AF61F29E83F64001FD754 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

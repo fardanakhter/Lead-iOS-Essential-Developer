@@ -38,6 +38,41 @@
             BlueprintName = "EssentialFeed"
             ReferencedContainer = "container:EssentialFeed.xcodeproj">
          </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "77455F6C2A3377F500B7B954"
+            BuildableName = "EssentialFeedAPI.framework"
+            BlueprintName = "EssentialFeedAPI"
+            ReferencedContainer = "container:EssentialFeed.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "7797C6A82A37C0630093E56D"
+            BuildableName = "EssentialFeedAPIInfrastructure.framework"
+            BlueprintName = "EssentialFeedAPIInfrastructure"
+            ReferencedContainer = "container:EssentialFeed.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "776EA1372A35E331009C6C25"
+            BuildableName = "EssentialFeedCache.framework"
+            BlueprintName = "EssentialFeedCache"
+            ReferencedContainer = "container:EssentialFeed.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "7797C6CF2A37C45D0093E56D"
+            BuildableName = "EssentialFeedCacheInfrastructure.framework"
+            BlueprintName = "EssentialFeedCacheInfrastructure"
+            ReferencedContainer = "container:EssentialFeed.xcodeproj">
+         </BuildableReference>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "776EA17F2A35F27B009C6C25"
+            BuildableName = "EssentialFeedPresentation.framework"
+            BlueprintName = "EssentialFeedPresentation"
+            ReferencedContainer = "container:EssentialFeed.xcodeproj">
+         </BuildableReference>
       </CodeCoverageTargets>
       <Testables>
          <TestableReference

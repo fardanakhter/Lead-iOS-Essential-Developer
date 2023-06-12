@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import EssentialFeedAPI
 
 public class URLSessionHTTPClient: HTTPClient {
     private let session: URLSession

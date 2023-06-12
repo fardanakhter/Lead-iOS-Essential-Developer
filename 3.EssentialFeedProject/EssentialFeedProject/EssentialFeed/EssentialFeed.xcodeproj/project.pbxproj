@@ -104,6 +104,7 @@
 		7797C6FA2A37C66B0093E56D /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D3556129D243860085EBF2 /* XCTestCase+MemoryLeakTracking.swift */; };
 		7797C6FB2A37C66B0093E56D /* SharedTestsHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77ACEB3829DDB2ED00E9B569 /* SharedTestsHelpers.swift */; };
 		7797C6FC2A37C7290093E56D /* FeedCacheTestsHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 774F7E6F29DD9C8B00609F21 /* FeedCacheTestsHelpers.swift */; };
+		7797C7012A37CF4E0093E56D /* EssentialFeedAPIInfrastructure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7797C6A92A37C0630093E56D /* EssentialFeedAPIInfrastructure.framework */; };
 		779AF61C29E83F64001FD754 /* EssentialFeedCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 779AF61B29E83F64001FD754 /* EssentialFeedCacheIntegrationTests.swift */; };
 		779AF61D29E83F64001FD754 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7703CF5329C6C6ED00101DCA /* EssentialFeed.framework */; };
 		779AF62329E857CE001FD754 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77D3556129D243860085EBF2 /* XCTestCase+MemoryLeakTracking.swift */; };
@@ -222,6 +223,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 776EA1372A35E331009C6C25;
 			remoteInfo = EssentialFeedCache;
+		};
+		7797C7022A37CF570093E56D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7703CF4A29C6C6ED00101DCA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7797C6A82A37C0630093E56D;
+			remoteInfo = EssentialFeedAPIInfrastructure;
 		};
 		779AF61E29E83F64001FD754 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -539,6 +547,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7797C7012A37CF4E0093E56D /* EssentialFeedAPIInfrastructure.framework in Frameworks */,
 				77455FA02A3380C000B7B954 /* EssentialFeedAPI.framework in Frameworks */,
 				77D2B4F529D321D60051B467 /* EssentialFeed.framework in Frameworks */,
 			);
@@ -1267,6 +1276,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				7797C7032A37CF570093E56D /* PBXTargetDependency */,
 				77455F9F2A3380AE00B7B954 /* PBXTargetDependency */,
 				77D2B4F729D321D60051B467 /* PBXTargetDependency */,
 			);
@@ -1758,6 +1768,11 @@
 			isa = PBXTargetDependency;
 			target = 776EA1372A35E331009C6C25 /* EssentialFeedCache */;
 			targetProxy = 7797C6E72A37C4970093E56D /* PBXContainerItemProxy */;
+		};
+		7797C7032A37CF570093E56D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7797C6A82A37C0630093E56D /* EssentialFeedAPIInfrastructure */;
+			targetProxy = 7797C7022A37CF570093E56D /* PBXContainerItemProxy */;
 		};
 		779AF61F29E83F64001FD754 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

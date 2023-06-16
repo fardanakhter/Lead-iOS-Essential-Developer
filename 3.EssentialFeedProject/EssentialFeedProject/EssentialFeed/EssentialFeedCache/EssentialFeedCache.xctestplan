@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "14597426-1C8E-412B-83C1-EB4787569173",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:EssentialFeed.xcodeproj",
+        "identifier" : "776EA13E2A35E331009C6C25",
+        "name" : "EssentialFeedCacheTests"
+      }
+    }
+  ],
+  "version" : 1
+}

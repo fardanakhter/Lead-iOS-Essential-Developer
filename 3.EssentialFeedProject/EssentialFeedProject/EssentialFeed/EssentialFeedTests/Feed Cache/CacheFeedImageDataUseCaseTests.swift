@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import EssentialFeedCache
+import EssentialFeed
 
 class CacheFeedImageDataUseCaseTests: XCTestCase {
 
@@ -34,7 +34,6 @@ class CacheFeedImageDataUseCaseTests: XCTestCase {
     }
     
     func test_save_doesNotInvokeCompletionAfterSutInstanceIsDeallocated() {
-        let timeStamp = Date()
         let store = FeedImageDataStoreSpy()
         var sut: LocalFeedImageDataLoader? = LocalFeedImageDataLoader(store: store)
         

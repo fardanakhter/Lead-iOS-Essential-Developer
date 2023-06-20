@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import EssentialFeedCache
+import EssentialFeed
 
 class FeedImageDataStoreSpy: FeedImageDataStore {
     private(set) var receivedMessages = [Message]()

@@ -7,7 +7,6 @@
 
 import Foundation
 import EssentialFeed
-import EssentialFeedCache
 
 internal func uniqueImageFeeds() -> (models: [FeedImage], local: [LocalFeedImage]) {
     let feeds = [uniqueImage(), uniqueImage()]

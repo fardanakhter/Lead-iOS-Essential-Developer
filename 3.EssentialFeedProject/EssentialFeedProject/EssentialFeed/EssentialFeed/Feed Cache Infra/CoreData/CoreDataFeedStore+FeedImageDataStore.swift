@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EssentialFeedCache
 
 extension CoreDataFeedStore: FeedImageDataStore {
     public func insert(_ cache: Data, with url: URL, completion: @escaping FeedImageDataStore.InsertCompletion) {

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EssentialFeedCache
 
 public final class CodableFeedStore: FeedStore {
     

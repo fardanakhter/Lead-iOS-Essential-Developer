@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EssentialFeedCache
 
 extension CoreDataFeedStore: FeedStore {
     public func loadFeedCache(completion: @escaping FeedStore.LoadCompletion) {

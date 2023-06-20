@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EssentialFeed
 
 public final class LocalFeedImageDataLoader {
     private let store: FeedImageDataStore

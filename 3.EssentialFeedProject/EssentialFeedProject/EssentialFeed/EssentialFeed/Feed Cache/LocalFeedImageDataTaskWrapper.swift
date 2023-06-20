@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EssentialFeed
 
 final class LocalFeedImageDataTaskWrapper: FeedImageDataLoaderTask {
     private var completion: ((LocalFeedImageDataLoader.LoadResult) -> Void)?

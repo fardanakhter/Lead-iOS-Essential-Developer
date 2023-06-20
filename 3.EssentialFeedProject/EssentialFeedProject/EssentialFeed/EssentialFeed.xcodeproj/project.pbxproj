@@ -312,6 +312,8 @@
 			isa = PBXGroup;
 			children = (
 				7703CF5629C6C6ED00101DCA /* EssentialFeed.h */,
+				779455592A4183DF00E472B5 /* Shared API */,
+				7794555A2A41840000E472B5 /* Shared API Infrastructure */,
 				77DEB92E2A4003B700D026D3 /* Image Comments Feature  */,
 				770D20062A41673B00136AA6 /* Image Comments API */,
 				7703CF6F29C6C8E600101DCA /* Feed Feature */,
@@ -366,12 +368,10 @@
 		770D1FF42A415FFD00136AA6 /* Feed API */ = {
 			isa = PBXGroup;
 			children = (
-				779455342A417FB000E472B5 /* Infrastructure */,
 				773907AB2A181B84008350C6 /* Helper */,
-				77D3555A29CF10E60085EBF2 /* HTTPClient.swift */,
 				773907A92A181B0E008350C6 /* HTTPClientTastWrapper.swift */,
-				77D3555C29CF11330085EBF2 /* FeedItemMapper.swift */,
 				77B6BED629CC50B40033010B /* RemoteFeedLoader.swift */,
+				77D3555C29CF11330085EBF2 /* FeedItemMapper.swift */,
 				773907A72A181A38008350C6 /* RemoteFeedImageDataLoader.swift */,
 				7707917729D9D67A00C4BDF5 /* RemoteFeedItem.swift */,
 			);
@@ -520,14 +520,6 @@
 			path = Infrastructure;
 			sourceTree = "<group>";
 		};
-		779455342A417FB000E472B5 /* Infrastructure */ = {
-			isa = PBXGroup;
-			children = (
-				77D3556329D244320085EBF2 /* URLSessionHTTPClient.swift */,
-			);
-			path = Infrastructure;
-			sourceTree = "<group>";
-		};
 		779455352A417FCA00E472B5 /* Infrastructure */ = {
 			isa = PBXGroup;
 			children = (
@@ -559,6 +551,22 @@
 				7794554C2A4180CE00E472B5 /* EssentialFeedCacheIntegrationTests.swift */,
 			);
 			path = EssentialFeedCacheIntegrationTests;
+			sourceTree = "<group>";
+		};
+		779455592A4183DF00E472B5 /* Shared API */ = {
+			isa = PBXGroup;
+			children = (
+				77D3555A29CF10E60085EBF2 /* HTTPClient.swift */,
+			);
+			path = "Shared API";
+			sourceTree = "<group>";
+		};
+		7794555A2A41840000E472B5 /* Shared API Infrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				77D3556329D244320085EBF2 /* URLSessionHTTPClient.swift */,
+			);
+			path = "Shared API Infrastructure";
 			sourceTree = "<group>";
 		};
 		77953E2B29EF59BF0093B6A3 /* EssentialFeediOS */ = {

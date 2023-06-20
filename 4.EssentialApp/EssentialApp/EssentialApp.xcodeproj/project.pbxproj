@@ -19,8 +19,6 @@
 		772CA03E2A216F5900B714D2 /* FeedLoaderCacheDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772CA03D2A216F5900B714D2 /* FeedLoaderCacheDecoratorTests.swift */; };
 		772CA0402A21716700B714D2 /* FeedLoaderStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772CA03F2A21716700B714D2 /* FeedLoaderStub.swift */; };
 		772CA0422A21722100B714D2 /* XCTestCase+FeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772CA0412A21722100B714D2 /* XCTestCase+FeedLoader.swift */; };
-		776A81EB2A3D00FC00B2375C /* EssentialFeedPresentation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 776A81EA2A3D00FC00B2375C /* EssentialFeedPresentation.framework */; };
-		776A81EC2A3D00FD00B2375C /* EssentialFeedPresentation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 776A81EA2A3D00FC00B2375C /* EssentialFeedPresentation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		777E8BD92A218CAD00278897 /* FeedImageDataLoaderCacheDecoratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777E8BD82A218CAD00278897 /* FeedImageDataLoaderCacheDecoratorTests.swift */; };
 		777E8BDB2A21900800278897 /* XCTestCase+FeedImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777E8BDA2A21900800278897 /* XCTestCase+FeedImageDataLoader.swift */; };
 		777E8BDD2A21998900278897 /* FeedImageDataLoaderCacheDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 777E8BDC2A21998900278897 /* FeedImageDataLoaderCacheDecorator.swift */; };
@@ -67,7 +65,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				776A81EC2A3D00FD00B2375C /* EssentialFeedPresentation.framework in Embed Frameworks */,
 				77A5294A2A1BEEC900672F74 /* EssentialFeed.framework in Embed Frameworks */,
 				77CEAB352A2550B700F9C975 /* EssentialFeediOS.framework in Embed Frameworks */,
 			);
@@ -132,7 +129,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				776A81EB2A3D00FC00B2375C /* EssentialFeedPresentation.framework in Frameworks */,
 				77A529492A1BEEC900672F74 /* EssentialFeed.framework in Frameworks */,
 				77CEAB342A2550B700F9C975 /* EssentialFeediOS.framework in Frameworks */,
 			);

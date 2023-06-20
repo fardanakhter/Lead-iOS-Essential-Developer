@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import EssentialFeedPresentation
+import EssentialFeed
 
 public protocol FeedImageCellControllerDelegate {
     func startImageLoading()

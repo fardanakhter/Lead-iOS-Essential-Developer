@@ -7,7 +7,6 @@
 
 import UIKit
 import EssentialFeed
-import EssentialFeedPresentation
 import EssentialFeediOS
 
 typealias WeakFeedImageCellController = WeakRefProxyInstance<FeedImageCellController>

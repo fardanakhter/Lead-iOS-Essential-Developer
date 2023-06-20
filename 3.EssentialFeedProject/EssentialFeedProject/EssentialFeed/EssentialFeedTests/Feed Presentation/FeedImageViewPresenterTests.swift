@@ -7,7 +7,6 @@
 
 import XCTest
 import EssentialFeed
-import EssentialFeedPresentation
 
 final class FeedImageViewPresenterTests: XCTestCase {
 

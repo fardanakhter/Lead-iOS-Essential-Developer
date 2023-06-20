@@ -124,13 +124,23 @@
          </TestableReference>
          <TestableReference
             skipped = "NO"
-            parallelizable = "YES"
             testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "776EA1862A35F27C009C6C25"
-               BuildableName = "EssentialFeedPresentationTests.xctest"
-               BlueprintName = "EssentialFeedPresentationTests"
+               BlueprintIdentifier = "7794553A2A41803400E472B5"
+               BuildableName = "EssentialFeedAPIEndToEndTests.xctest"
+               BlueprintName = "EssentialFeedAPIEndToEndTests"
+               ReferencedContainer = "container:../../3.EssentialFeedProject/EssentialFeedProject/EssentialFeed/EssentialFeed.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            testExecutionOrdering = "random">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "779455492A4180CE00E472B5"
+               BuildableName = "EssentialFeedCacheIntegrationTests.xctest"
+               BlueprintName = "EssentialFeedCacheIntegrationTests"
                ReferencedContainer = "container:../../3.EssentialFeedProject/EssentialFeedProject/EssentialFeed/EssentialFeed.xcodeproj">
             </BuildableReference>
          </TestableReference>

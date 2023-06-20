@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import EssentialFeedAPI
+import EssentialFeed
 
 class HTTPClientSpy: HTTPClient {
     

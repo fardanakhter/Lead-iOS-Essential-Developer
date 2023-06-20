@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EssentialFeed
 
 public class RemoteFeedImageDataLoader: FeedImageDataLoader {
     private let client: HTTPClient

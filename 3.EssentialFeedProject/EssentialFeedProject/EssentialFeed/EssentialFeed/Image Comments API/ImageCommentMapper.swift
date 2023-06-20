@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EssentialFeed
 
 internal final class ImageCommentMapper {
 

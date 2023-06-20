@@ -8,8 +8,6 @@
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
-import EssentialFeedAPI
-import EssentialFeedAPIInfrastructure
 import EssentialFeedCache
 import EssentialFeedCacheInfrastructure
 import CoreData

@@ -7,8 +7,6 @@
 
 import XCTest
 import EssentialFeed
-import EssentialFeedAPI
-import EssentialFeedAPIInfrastructure
 
 final class EssentialFeedAPIEndToEndTests: XCTestCase {
 

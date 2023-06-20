@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import EssentialFeed
 
 public final class RemoteImageCommentLoader: ImageCommentLoader {
     private let url: URL

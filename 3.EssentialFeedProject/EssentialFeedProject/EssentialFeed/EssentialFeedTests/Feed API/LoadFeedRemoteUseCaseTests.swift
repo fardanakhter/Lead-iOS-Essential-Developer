@@ -8,7 +8,6 @@
 import Foundation
 import XCTest
 import EssentialFeed
-import EssentialFeedAPI
 
 class LoadFeedRemoteUseCaseTests: XCTestCase {
     

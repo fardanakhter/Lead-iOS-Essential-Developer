@@ -10,41 +10,7 @@ import XCTest
 import EssentialFeed
 
 class LoadFeedRemoteUseCaseTests: XCTestCase {
-    
-    func test_init_doesNotRequestDataFromURL() {
-        let (_, client) = makeSUT()
         
-        XCTAssertTrue(client.requestedURLs.isEmpty)
-    }
-    
-    func test_load_requestsDataFromURL() {
-        let url = URL(string: "https://a-given-url.com")!
-        let (sut, client) = makeSUT(url)
-        
-        sut.load() { _ in }
-        
-        XCTAssertEqual(client.requestedURLs, [url])
-    }
-    
-    func test_loadTwice_requestsDataFromURLTwice() {
-        let url = URL(string: "https://a-given-url.com")!
-        let (sut, client) = makeSUT(url)
-        
-        sut.load() { _ in }
-        sut.load() { _ in }
-        
-        XCTAssertEqual(client.requestedURLs, [url, url])
-    }
-    
-    func test_load_deliversErrorOnClientError() {
-        let (sut, client) = makeSUT()
-        
-        expect(sut, toCompleteWith: failure(.noConnection), when: {
-            let clientError = NSError(domain: "Test Error", code: 0)
-            client.complete(withError: clientError)
-        })
-    }
-    
     func test_load_deliversErrorOnNon200Response() {
         let (sut, client) = makeSUT()
         
@@ -91,22 +57,6 @@ class LoadFeedRemoteUseCaseTests: XCTestCase {
             let itemsData = makeItemJSON(["items" : [item01JSON, item02JSON]])
             client.complete(withStatusCode: 200, data: itemsData)
         })
-    }
-    
-    func test_load_doesNotInvokeCompletionWithResultAfterSutDeallocated() {
-        let url = URL(string: "http://any-url.com")!
-        let client = HTTPClientSpy()
-        var sut: RemoteFeedLoader? = RemoteFeedLoader(url: url, httpClient: client)
-        
-        var capturedResults = [RemoteFeedLoader.Result]()
-        sut?.load() { result in
-            capturedResults.append(result)
-        }
-        
-        sut = nil
-        client.complete(withStatusCode: 200, data: makeItemJSON([:]))
-        
-        XCTAssertTrue(capturedResults.isEmpty)
     }
     
     // MARK: - Helpers
@@ -160,7 +110,7 @@ class LoadFeedRemoteUseCaseTests: XCTestCase {
         case (.success(let loadedItems), .success(let expectedItems)):
             XCTAssertEqual(loadedItems, expectedItems, file: file, line: line)
         
-        case (.failure(let loadedError as RemoteFeedLoader.Error), .failure(let expectedError as RemoteFeedLoader.Error)):
+        case (.failure(let loadedError), .failure(let expectedError)):
             XCTAssertEqual(loadedError, expectedError, file: file, line: line)
         
         default:

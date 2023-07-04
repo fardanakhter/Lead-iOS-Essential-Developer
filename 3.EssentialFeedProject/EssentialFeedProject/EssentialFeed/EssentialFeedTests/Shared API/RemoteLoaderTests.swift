@@ -45,6 +45,15 @@ class RemoteLoaderTest: XCTestCase {
         })
     }
     
+    func test_load_deliversErrorOnMapperError() {
+        let (sut, client) = makeSUT()
+        
+        expect(sut, toCompleteWith: failure(.invalidData), when: {
+            let invalidData = Data("invalid json".utf8)
+            client.complete(withStatusCode: 200, data: invalidData)
+        })
+    }
+    
     func test_load_doesNotInvokeCompletionWithResultAfterSutDeallocated() {
         let url = URL(string: "http://any-url.com")!
         let client = HTTPClientSpy()

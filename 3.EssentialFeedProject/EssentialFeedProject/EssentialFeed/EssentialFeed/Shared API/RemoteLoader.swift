@@ -41,8 +41,8 @@ public final class RemoteLoader {
             let items = try ImageCommentMapper.map(from: data, and: response)
             return .success(items)
         }
-        catch(let error) {
-            return .failure(error)
+        catch {
+            return .failure(Error.invalidData)
         }
     }
 }

@@ -9,17 +9,14 @@ import Foundation
 import XCTest
 import EssentialFeed
 
-class LoadImageCommentRemoteUseCaseTests: XCTestCase {
+class ImageCommentMapperTests: XCTestCase {
     
-    func test_load_deliversErrorOnNon2xxResponse() {
-        let (sut, client) = makeSUT()
-        
+    func test_map_throwsErrorOnNon2xxResponse() throws {
         let statusCodes = [199, 150, 400, 500, 600]
-        statusCodes.enumerated().forEach { index, code in
-            
-            expect(sut, toCompleteWith: failure(.invalidData), when: {
-                client.complete(withStatusCode: code, data: makeItemJSON([:]), at: index)
-            })
+        try statusCodes.forEach { code in
+            XCTAssertThrowsError(
+                try ImageCommentMapper.map(from: makeItemJSON([:]), and: HTTPURLResponse(statusCode: code))
+            )
         }
     }
     

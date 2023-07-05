@@ -36,15 +36,12 @@ class ImageCommentMapperTests: XCTestCase {
         
         let statusCodes = [200, 210, 250, 270, 299]
         try statusCodes.forEach { code in
-        
             let result = try ImageCommentMapper.map(from: emptyJsonList, and: HTTPURLResponse(statusCode: code))
             XCTAssertEqual(result, [])
         }
     }
     
-    func test_load_deliversItemsOn2xxResponseWithJSONList() {
-        let (sut, client) = makeSUT()
-        
+    func test_map_deliversItemsOn2xxResponseWithJSONList() throws {
         let (item01, item01JSON) = makeItem(id: UUID(),
                                             message: "a message",
                                             username: "a username",
@@ -54,14 +51,12 @@ class ImageCommentMapperTests: XCTestCase {
                                             message: "another message",
                                             username: "another username",
                                             createdAt: (Date(timeIntervalSince1970: 1687152540), "2023-06-19T05:29:00+00:00"))
+        let itemsData = makeItemJSON(["items" : [item01JSON, item02JSON]])
         
         let statusCodes = [200, 210, 250, 270, 299]
-        statusCodes.enumerated().forEach { index, code in
-            
-            expect(sut, toCompleteWith: .success([item01, item02]), when: {
-                let itemsData = makeItemJSON(["items" : [item01JSON, item02JSON]])
-                client.complete(withStatusCode: code, data: itemsData, at: index)
-            })
+        try statusCodes.forEach { code in
+            let result = try ImageCommentMapper.map(from: itemsData, and: HTTPURLResponse(statusCode: code))
+            XCTAssertEqual(result, [item01, item02])
         }
     }
     

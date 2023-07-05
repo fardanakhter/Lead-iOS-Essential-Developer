@@ -55,16 +55,6 @@ class FeedItemMapperTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(_ url: URL = URL(string: "https://a-url.com")!, file: StaticString = #file, line: UInt = #line) -> (RemoteFeedLoader, HTTPClientSpy){
-        let client = HTTPClientSpy()
-        let sut = RemoteFeedLoader(url: url, httpClient: client)
-        
-        trackMemoryLeak(client)
-        trackMemoryLeak(sut)
-        
-        return (sut, client)
-    }
-    
     private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedImage, json: [String : Any]) {
         
         let item = FeedImage(id: id,
@@ -84,38 +74,6 @@ class FeedItemMapperTests: XCTestCase {
     private func makeItemJSON(_ items: [String : Any]) -> Data {
         return try! JSONSerialization.data(withJSONObject: items)
     }
-    
-    private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: RemoteFeedLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
-        
-        let expectation = expectation(description: "Waiting for load() to complete")
-        
-        sut.load() { result in
-            Self.compare(result, with: expectedResult)
-            expectation.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [expectation], timeout: 1.0)
-    }
-    
-    private static func compare(_ result: RemoteFeedLoader.Result, with expectedResult: RemoteFeedLoader.Result, file: StaticString = #file, line: UInt = #line) {
-        switch (result, expectedResult)  {
-        case (.success(let loadedItems), .success(let expectedItems)):
-            XCTAssertEqual(loadedItems, expectedItems, file: file, line: line)
-        
-        case (.failure(let loadedError as RemoteFeedLoader.Error), .failure(let expectedError as RemoteFeedLoader.Error)):
-            XCTAssertEqual(loadedError, expectedError, file: file, line: line)
-        
-        default:
-            XCTFail("Loaded Result: \(result) not as Expected: \(expectedResult)", file: file, line: line)
-        }
-    }
-    
-    private func failure(_ error: RemoteFeedLoader.Error) -> RemoteFeedLoader.Result {
-        return .failure(error)
-    }
-    
 }
 
 private extension HTTPURLResponse {

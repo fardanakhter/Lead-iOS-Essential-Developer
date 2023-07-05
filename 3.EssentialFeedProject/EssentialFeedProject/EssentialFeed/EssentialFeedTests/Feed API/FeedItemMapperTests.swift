@@ -29,14 +29,12 @@ class FeedItemMapperTests: XCTestCase {
         )
     }
     
-    func test_load_deliversNoItemOn200ResponseWithEmptyJSONList() {
-        let (sut, client) = makeSUT()
+    func test_map_deliversNoItemOn200ResponseWithEmptyJSONList() throws {
+        let emptyItemList: [[String: Any]] = []
+        let emptyJsonList = makeItemJSON(["items" : emptyItemList])
         
-        expect(sut, toCompleteWith: .success([]), when: {
-            let emptyItemList: [[String: Any]] = [] 
-            let emptyJsonList = makeItemJSON(["items" : emptyItemList])
-            client.complete(withStatusCode: 200, data: emptyJsonList)
-        })
+        let result = try FeedItemMapper.map(from: emptyJsonList, and: HTTPURLResponse(statusCode: 200))
+        XCTAssertEqual(result, [])
     }
     
     func test_load_deliversItemsOn200ResponseWithJSONList() {

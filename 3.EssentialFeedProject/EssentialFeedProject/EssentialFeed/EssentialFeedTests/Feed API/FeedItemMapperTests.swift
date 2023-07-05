@@ -37,9 +37,7 @@ class FeedItemMapperTests: XCTestCase {
         XCTAssertEqual(result, [])
     }
     
-    func test_load_deliversItemsOn200ResponseWithJSONList() {
-        let (sut, client) = makeSUT()
-        
+    func test_map_deliversItemsOn200ResponseWithJSONList() throws {
         let (item01, item01JSON) = makeItem(id: UUID(),
                                             description: "some description",
                                             location: "some location",
@@ -48,10 +46,11 @@ class FeedItemMapperTests: XCTestCase {
         let (item02, item02JSON) = makeItem(id: UUID(),
                                             imageURL: URL(string: "https://a-url.com")!)
         
-        expect(sut, toCompleteWith: .success([item01, item02]), when: {
-            let itemsData = makeItemJSON(["items" : [item01JSON, item02JSON]])
-            client.complete(withStatusCode: 200, data: itemsData)
-        })
+        let itemsData = makeItemJSON(["items" : [item01JSON, item02JSON]])
+        
+        let result = try FeedItemMapper.map(from: itemsData, and: HTTPURLResponse(statusCode: 200))
+        
+        XCTAssertEqual(result, [item01, item02])
     }
     
     // MARK: - Helpers

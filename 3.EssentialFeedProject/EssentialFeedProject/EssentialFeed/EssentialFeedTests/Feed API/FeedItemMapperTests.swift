@@ -16,12 +16,12 @@ class FeedItemMapperTests: XCTestCase {
         
         try statusCodes.forEach { code in
             XCTAssertThrowsError(
-                try FeedItemMapper.map(from: makeItemJSON([:]), and: HTTPURLResponse(url: anyURL(), statusCode: code, httpVersion: nil, headerFields: nil)!)
+                try FeedItemMapper.map(from: makeItemJSON([:]), and: HTTPURLResponse(statusCode: code))
             )
         }
     }
     
-    func test_load_deliversErrorOn200ResponseWhenInvalidJSON() {
+    func test_map_throwsErrorOn200ResponseWhenInvalidJSON() {
         let (sut, client) = makeSUT()
         
         expect(sut, toCompleteWith: failure(.invalidData), when: {
@@ -120,4 +120,10 @@ class FeedItemMapperTests: XCTestCase {
         return .failure(error)
     }
     
+}
+
+private extension HTTPURLResponse {
+    convenience init(statusCode: Int) {
+        self.init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
+    }
 }

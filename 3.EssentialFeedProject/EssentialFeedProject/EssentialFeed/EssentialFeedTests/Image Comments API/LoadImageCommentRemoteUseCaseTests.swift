@@ -120,7 +120,7 @@ class LoadImageCommentRemoteUseCaseTests: XCTestCase {
         case (.success(let loadedItems), .success(let expectedItems)):
             XCTAssertEqual(loadedItems, expectedItems, file: file, line: line)
         
-        case (.failure(let loadedError), .failure(let expectedError)):
+        case (.failure(let loadedError as RemoteImageCommentLoader.Error), .failure(let expectedError as RemoteImageCommentLoader.Error)):
             XCTAssertEqual(loadedError, expectedError, file: file, line: line)
         
         default:

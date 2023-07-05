@@ -110,7 +110,7 @@ class LoadFeedRemoteUseCaseTests: XCTestCase {
         case (.success(let loadedItems), .success(let expectedItems)):
             XCTAssertEqual(loadedItems, expectedItems, file: file, line: line)
         
-        case (.failure(let loadedError), .failure(let expectedError)):
+        case (.failure(let loadedError as RemoteFeedLoader.Error), .failure(let expectedError as RemoteFeedLoader.Error)):
             XCTAssertEqual(loadedError, expectedError, file: file, line: line)
         
         default:

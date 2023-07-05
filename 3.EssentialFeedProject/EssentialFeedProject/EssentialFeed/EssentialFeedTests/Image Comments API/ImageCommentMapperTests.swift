@@ -30,17 +30,15 @@ class ImageCommentMapperTests: XCTestCase {
         }
     }
     
-    func test_load_deliversNoItemOn2xxResponseWithEmptyJSONList() {
-        let (sut, client) = makeSUT()
+    func test_map_deliversNoItemOn2xxResponseWithEmptyJSONList() throws {
+        let emptyItemList: [[String: Any]] = []
+        let emptyJsonList = makeItemJSON(["items" : emptyItemList])
         
         let statusCodes = [200, 210, 250, 270, 299]
-        statusCodes.enumerated().forEach { index, code in
-            
-            expect(sut, toCompleteWith: .success([]), when: {
-                let emptyItemList: [[String: Any]] = []
-                let emptyJsonList = makeItemJSON(["items" : emptyItemList])
-                client.complete(withStatusCode: code, data: emptyJsonList, at: index)
-            })
+        try statusCodes.forEach { code in
+        
+            let result = try ImageCommentMapper.map(from: emptyJsonList, and: HTTPURLResponse(statusCode: code))
+            XCTAssertEqual(result, [])
         }
     }
     

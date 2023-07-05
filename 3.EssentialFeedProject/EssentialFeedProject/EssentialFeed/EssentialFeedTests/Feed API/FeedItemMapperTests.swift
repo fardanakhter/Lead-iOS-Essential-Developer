@@ -9,17 +9,15 @@ import Foundation
 import XCTest
 import EssentialFeed
 
-class LoadFeedRemoteUseCaseTests: XCTestCase {
+class FeedItemMapperTests: XCTestCase {
         
-    func test_load_deliversErrorOnNon200Response() {
-        let (sut, client) = makeSUT()
-        
+    func test_map_throwsErrorOnNon200Response() throws {
         let statusCodes = [199, 201, 400, 500, 600]
-        statusCodes.enumerated().forEach { index, code in
-            
-            expect(sut, toCompleteWith: failure(.invalidData), when: {
-                client.complete(withStatusCode: code, data: makeItemJSON([:]), at: index)
-            })
+        
+        try statusCodes.forEach { code in
+            XCTAssertThrowsError(
+                try FeedItemMapper.map(from: makeItemJSON([:]), and: HTTPURLResponse(url: anyURL(), statusCode: code, httpVersion: nil, headerFields: nil)!)
+            )
         }
     }
     

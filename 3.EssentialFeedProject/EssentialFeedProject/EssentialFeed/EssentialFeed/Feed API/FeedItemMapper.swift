@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class FeedItemMapper {
+public final class FeedItemMapper {
     
     private struct Root: Decodable {
         private let items: [Item]
@@ -30,7 +30,7 @@ final class FeedItemMapper {
         case invalidData
     }
     
-    static func map(from data: Data, and response: HTTPURLResponse) throws -> [FeedImage] {
+    public static func map(from data: Data, and response: HTTPURLResponse) throws -> [FeedImage] {
         guard response.statusCode == OK_200, let root = try? JSONDecoder().decode(Root.self, from: data)
         else {
             throw Error.invalidData

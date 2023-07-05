@@ -62,16 +62,6 @@ class ImageCommentMapperTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT(_ url: URL = URL(string: "https://a-url.com")!, file: StaticString = #file, line: UInt = #line) -> (RemoteImageCommentLoader, HTTPClientSpy){
-        let client = HTTPClientSpy()
-        let sut = RemoteImageCommentLoader(url: url, httpClient: client)
-        
-        trackMemoryLeak(client)
-        trackMemoryLeak(sut)
-        
-        return (sut, client)
-    }
-    
     private func makeItem(id: UUID, message: String, username: String, createdAt: (data: Date, iso8601String: String)) -> (model: ImageComment, json: [String : Any]) {
         
         let item = ImageComment(id: id, message: message, createdAt: createdAt.data, username: username)
@@ -87,36 +77,4 @@ class ImageCommentMapperTests: XCTestCase {
     private func makeItemJSON(_ items: [String : Any]) -> Data {
         return try! JSONSerialization.data(withJSONObject: items)
     }
-    
-    private func expect(_ sut: RemoteImageCommentLoader, toCompleteWith expectedResult: RemoteImageCommentLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
-        
-        let expectation = expectation(description: "Waiting for load() to complete")
-        
-        sut.load() { result in
-            Self.compare(result, with: expectedResult, file: file, line: line)
-            expectation.fulfill()
-        }
-        
-        action()
-        
-        wait(for: [expectation], timeout: 1.0)
-    }
-    
-    private static func compare(_ result: RemoteImageCommentLoader.Result, with expectedResult: RemoteImageCommentLoader.Result, file: StaticString = #file, line: UInt = #line) {
-        switch (result, expectedResult)  {
-        case (.success(let loadedItems), .success(let expectedItems)):
-            XCTAssertEqual(loadedItems, expectedItems, file: file, line: line)
-        
-        case (.failure(let loadedError as RemoteImageCommentLoader.Error), .failure(let expectedError as RemoteImageCommentLoader.Error)):
-            XCTAssertEqual(loadedError, expectedError, file: file, line: line)
-        
-        default:
-            XCTFail("Loaded Result: \(result) not as Expected: \(expectedResult)", file: file, line: line)
-        }
-    }
-    
-    private func failure(_ error: RemoteImageCommentLoader.Error) -> RemoteImageCommentLoader.Result {
-        return .failure(error)
-    }
-    
 }

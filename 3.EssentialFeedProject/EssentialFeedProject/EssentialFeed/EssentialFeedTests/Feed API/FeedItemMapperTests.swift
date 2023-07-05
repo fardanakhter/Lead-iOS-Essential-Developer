@@ -21,13 +21,12 @@ class FeedItemMapperTests: XCTestCase {
         }
     }
     
-    func test_map_throwsErrorOn200ResponseWhenInvalidJSON() {
-        let (sut, client) = makeSUT()
+    func test_map_throwsErrorOn200ResponseWhenInvalidJSON() throws {
+        let invalidData = "Invalid Json".data(using: .utf8)!
         
-        expect(sut, toCompleteWith: failure(.invalidData), when: {
-            let invalidJsonData = "Invalid Json".data(using: .utf8)!
-            client.complete(withStatusCode: 200, data: invalidJsonData)
-        })
+        XCTAssertThrowsError(
+            try FeedItemMapper.map(from: invalidData, and: HTTPURLResponse(statusCode: 200))
+        )
     }
     
     func test_load_deliversNoItemOn200ResponseWithEmptyJSONList() {

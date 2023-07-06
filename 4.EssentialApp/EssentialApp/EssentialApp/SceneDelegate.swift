@@ -43,7 +43,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func configureWindow() {
         let url = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5d1c78f21e661a0001ce7cfd/1562147059075/feed-case-study-v1-api-feed.json")!
         
-        let remoteFeedLoader = RemoteFeedLoader(url: url, httpClient: httpClient)
+        let remoteFeedLoader = RemoteLoader(url: url, httpClient: httpClient, mapper: FeedItemMapper.map)
         let remoteImageLoader = RemoteFeedImageDataLoader(httpClient)
         
         let localImageLoader = LocalFeedImageDataLoader(store: store)

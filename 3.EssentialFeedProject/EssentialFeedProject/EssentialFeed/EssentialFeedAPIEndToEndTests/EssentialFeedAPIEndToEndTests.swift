@@ -7,8 +7,6 @@
 
 import XCTest
 import EssentialFeed
-import EssentialFeedAPI
-import EssentialFeedAPIInfrastructure
 
 final class EssentialFeedAPIEndToEndTests: XCTestCase {
 
@@ -34,17 +32,17 @@ final class EssentialFeedAPIEndToEndTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> RemoteFeedLoader.Result? {
+    private func getFeedResult(file: StaticString = #file, line: UInt = #line) -> RemoteLoader<[FeedImage]>.Result? {
         let url = URL(string: "https://essentialdeveloper.com/feed-case-study/test-api/feed")!
         let session = URLSession(configuration: .ephemeral)
         let client = URLSessionHTTPClient(session: session)
-        let loader = RemoteFeedLoader(url: url, httpClient: client)
+        let loader = RemoteLoader<[FeedImage]>(url: url, httpClient: client, mapper: FeedItemMapper.map)
         trackMemoryLeak(client, file: file, line: line)
         trackMemoryLeak(loader, file: file, line: line)
         
         let exp = expectation(description: "Waits for completion!")
         
-        var receivedResult: RemoteFeedLoader.Result?
+        var receivedResult: RemoteLoader<[FeedImage]>.Result?
         loader.load { result in
             receivedResult = result
             exp.fulfill()

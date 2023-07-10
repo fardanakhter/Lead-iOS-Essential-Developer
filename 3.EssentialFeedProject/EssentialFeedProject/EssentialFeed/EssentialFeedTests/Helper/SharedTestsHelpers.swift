@@ -23,3 +23,9 @@ internal func uniqueImage() -> FeedImage {
 internal func anyData() -> Data {
     return "any data".data(using: .utf8)!
 }
+
+extension HTTPURLResponse {
+    convenience init(statusCode: Int) {
+        self.init(url: anyURL(), statusCode: statusCode, httpVersion: nil, headerFields: nil)!
+    }
+}

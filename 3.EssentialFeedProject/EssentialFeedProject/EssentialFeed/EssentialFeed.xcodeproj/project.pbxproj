@@ -25,6 +25,9 @@
 		770D20072A41675700136AA6 /* ImageCommentMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DEB9292A3FF8FE00D026D3 /* ImageCommentMapper.swift */; };
 		7712458D2A5FF7C3009D3AE7 /* LoadResourcePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7712458C2A5FF7C3009D3AE7 /* LoadResourcePresenterTests.swift */; };
 		7712458F2A5FF86D009D3AE7 /* LoadResourcePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7712458E2A5FF86D009D3AE7 /* LoadResourcePresenter.swift */; };
+		771245912A602071009D3AE7 /* ResourceLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771245902A602071009D3AE7 /* ResourceLoadingView.swift */; };
+		771245932A60208C009D3AE7 /* ResourceLoadingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771245922A60208C009D3AE7 /* ResourceLoadingViewModel.swift */; };
+		771245952A6020A3009D3AE7 /* ResourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771245942A6020A3009D3AE7 /* ResourceView.swift */; };
 		7720EF5329FBEE05007FA574 /* FeedRefreshViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7720EF5229FBEE05007FA574 /* FeedRefreshViewController.swift */; };
 		7720EF5529FBFF85007FA574 /* FeedImageCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7720EF5429FBFF85007FA574 /* FeedImageCellController.swift */; };
 		772ECC4E2A54437E004CAEA6 /* RemoteLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772ECC4D2A54437E004CAEA6 /* RemoteLoader.swift */; };
@@ -165,6 +168,9 @@
 		7707918129DAF93900C4BDF5 /* FeedStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStoreSpy.swift; sourceTree = "<group>"; };
 		7712458C2A5FF7C3009D3AE7 /* LoadResourcePresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadResourcePresenterTests.swift; sourceTree = "<group>"; };
 		7712458E2A5FF86D009D3AE7 /* LoadResourcePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadResourcePresenter.swift; sourceTree = "<group>"; };
+		771245902A602071009D3AE7 /* ResourceLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceLoadingView.swift; sourceTree = "<group>"; };
+		771245922A60208C009D3AE7 /* ResourceLoadingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceLoadingViewModel.swift; sourceTree = "<group>"; };
+		771245942A6020A3009D3AE7 /* ResourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceView.swift; sourceTree = "<group>"; };
 		7720EF4829FAF560007FA574 /* FeedImageDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageDataLoader.swift; sourceTree = "<group>"; };
 		7720EF5229FBEE05007FA574 /* FeedRefreshViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedRefreshViewController.swift; sourceTree = "<group>"; };
 		7720EF5429FBFF85007FA574 /* FeedImageCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCellController.swift; sourceTree = "<group>"; };
@@ -404,6 +410,9 @@
 			isa = PBXGroup;
 			children = (
 				7712458E2A5FF86D009D3AE7 /* LoadResourcePresenter.swift */,
+				771245942A6020A3009D3AE7 /* ResourceView.swift */,
+				771245902A602071009D3AE7 /* ResourceLoadingView.swift */,
+				771245922A60208C009D3AE7 /* ResourceLoadingViewModel.swift */,
 			);
 			path = "Shared  Presentation";
 			sourceTree = "<group>";
@@ -937,6 +946,8 @@
 				777E8BDF2A2199B700278897 /* FeedImageDataCache.swift in Sources */,
 				770D1FF72A41603300136AA6 /* HTTPClientTastWrapper.swift in Sources */,
 				7794551B2A41774900E472B5 /* FeedViewModel.swift in Sources */,
+				771245932A60208C009D3AE7 /* ResourceLoadingViewModel.swift in Sources */,
+				771245952A6020A3009D3AE7 /* ResourceView.swift in Sources */,
 				7794551A2A41774900E472B5 /* FeedLoadingViewModel.swift in Sources */,
 				7703CF6C29C6C76600101DCA /* FeedImage.swift in Sources */,
 				770D1FFB2A41603300136AA6 /* FeedItemMapper.swift in Sources */,
@@ -966,6 +977,7 @@
 				773524E62A41720E00EE7B06 /* ManagedFeedImage.swift in Sources */,
 				770D20072A41675700136AA6 /* ImageCommentMapper.swift in Sources */,
 				77DEB92D2A4001A300D026D3 /* ImageComment.swift in Sources */,
+				771245912A602071009D3AE7 /* ResourceLoadingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

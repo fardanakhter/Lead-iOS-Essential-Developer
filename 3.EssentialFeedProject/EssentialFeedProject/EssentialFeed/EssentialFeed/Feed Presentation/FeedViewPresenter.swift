@@ -11,15 +11,11 @@ public protocol FeedView {
     func display(_ viewModel: FeedViewModel)
 }
 
-public protocol FeedLoadingView {
-    func display(_ viewModel: FeedLoadingViewModel)
-}
-
 public final class FeedViewPresenter {
     private let feedView: FeedView
-    private let loadingView: FeedLoadingView
+    private let loadingView: ResourceLoadingView
     
-    public init(feedView: FeedView, loadingView: FeedLoadingView) {
+    public init(feedView: FeedView, loadingView: ResourceLoadingView) {
         self.feedView = feedView
         self.loadingView = loadingView
     }
@@ -32,15 +28,15 @@ public final class FeedViewPresenter {
     }
     
     public func didStartLoadingFeed() {
-        loadingView.display(FeedLoadingViewModel(isLoading: true))
+        loadingView.display(ResourceLoadingViewModel(isLoading: true))
     }
     
     public func didCompleteLoadingFeed(with feed: [FeedImage]) {
-        loadingView.display(FeedLoadingViewModel(isLoading: false))
+        loadingView.display(ResourceLoadingViewModel(isLoading: false))
         feedView.display(FeedViewModel(feed: feed))
     }
     
     public func didCompleteLoadingFeed(with error: Error) {
-        loadingView.display(FeedLoadingViewModel(isLoading: false))
+        loadingView.display(ResourceLoadingViewModel(isLoading: false))
     }
 }

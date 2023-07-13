@@ -8,14 +8,12 @@
 import Foundation
 
 // Load Resource
-
 public protocol ResourceView {
-    func display(_ viewModel: String)
+    associatedtype ResourceViewModel
+    func display(_ viewModel: ResourceViewModel)
 }
 
-
 // Loading
-
 public protocol ResourceLoadingView {
     func display(_ viewModel: ResourceLoadingViewModel)
 }
@@ -24,17 +22,15 @@ public struct ResourceLoadingViewModel {
     public let isLoading: Bool
 }
 
-
 // Generic Presenter
-
-public final class LoadResourcePresenter {
-    private let view: ResourceView
+public final class LoadResourcePresenter<Resource, View: ResourceView>  {
+    public typealias Mapper = (Resource) -> View.ResourceViewModel
+    
+    private let view: View
     private let loadingView: ResourceLoadingView
     private let mapper: Mapper
     
-    public typealias Mapper = (String) -> String
-    
-    public init(view: ResourceView, loadingView: ResourceLoadingView, mapper: @escaping Mapper) {
+    public init(view: View, loadingView: ResourceLoadingView, mapper: @escaping Mapper) {
         self.view = view
         self.loadingView = loadingView
         self.mapper = mapper
@@ -44,7 +40,7 @@ public final class LoadResourcePresenter {
         loadingView.display(ResourceLoadingViewModel(isLoading: true))
     }
     
-    public func didCompleteLoading(with resource: String) {
+    public func didCompleteLoading(with resource: Resource) {
         view.display(mapper(resource))
         loadingView.display(ResourceLoadingViewModel(isLoading: false))
     }

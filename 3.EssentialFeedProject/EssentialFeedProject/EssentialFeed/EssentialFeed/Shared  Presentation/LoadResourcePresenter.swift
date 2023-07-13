@@ -7,32 +7,50 @@
 
 import Foundation
 
+// Load Resource
+
+public protocol ResourceView {
+    func display(_ viewModel: String)
+}
+
+
+// Loading
+
+public protocol ResourceLoadingView {
+    func display(_ viewModel: ResourceLoadingViewModel)
+}
+
+public struct ResourceLoadingViewModel {
+    public let isLoading: Bool
+}
+
+
+// Generic Presenter
+
 public final class LoadResourcePresenter {
-    private let feedView: FeedView
-    private let loadingView: FeedLoadingView
+    private let view: ResourceView
+    private let loadingView: ResourceLoadingView
+    private let mapper: Mapper
     
-    public init(feedView: FeedView, loadingView: FeedLoadingView) {
-        self.feedView = feedView
+    public typealias Mapper = (String) -> String
+    
+    public init(view: ResourceView, loadingView: ResourceLoadingView, mapper: @escaping Mapper) {
+        self.view = view
         self.loadingView = loadingView
+        self.mapper = mapper
     }
     
-   public static var feedViewTitle: String {
-        NSLocalizedString("FEED_VIEW_TITLE",
-                          tableName: "Feed",
-                          bundle: Bundle(for: FeedViewPresenter.self),
-                          comment: "Title for Feed View")
+    public func didStartLoadingResource() {
+        loadingView.display(ResourceLoadingViewModel(isLoading: true))
     }
     
-    public func didStartLoadingFeed() {
-        loadingView.display(FeedLoadingViewModel(isLoading: true))
+    public func didCompleteLoading(with resource: String) {
+        view.display(mapper(resource))
+        loadingView.display(ResourceLoadingViewModel(isLoading: false))
     }
     
-    public func didCompleteLoadingFeed(with feed: [FeedImage]) {
-        loadingView.display(FeedLoadingViewModel(isLoading: false))
-        feedView.display(FeedViewModel(feed: feed))
-    }
-    
-    public func didCompleteLoadingFeed(with error: Error) {
-        loadingView.display(FeedLoadingViewModel(isLoading: false))
+    public func didCompleteLoadingResource(with error: Error) {
+        loadingView.display(ResourceLoadingViewModel(isLoading: false))
     }
 }
+

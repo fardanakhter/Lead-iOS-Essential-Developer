@@ -16,54 +16,57 @@ final class LoadResourcePresenterTests: XCTestCase {
         XCTAssertEqual(view.messages, [], "Expected no event on init")
     }
     
-    func test_didStartLoadingFeed_startsDisplayingFeedLoading() {
+    func test_didStartLoading_startsDisplayingLoading() {
         let (sut, view) = makeSUT()
         
-        sut.didStartLoadingFeed()
+        sut.didStartLoadingResource()
         
         XCTAssertEqual(view.messages, [.display(isLoading: true)], "Expected display loading event")
     }
     
-    func test_didCompleteLoadingFeedWithFeed_displaysFeedAndStopsDisplayingFeedLoading() {
-        let (sut, view) = makeSUT()
-        let feed = [uniqueImage()]
+    func test_didCompleteLoading_displaysResourceAndStopsDisplayingLoading() {
+        let (sut, view) = makeSUT(mapper: { resource in
+            resource + " view model"
+        })
         
-        sut.didCompleteLoadingFeed(with: feed)
+        let resource = "resource"
         
-        XCTAssertEqual(view.messages, [.display(feed: feed), .display(isLoading: false)], "Expected display feed and display loading events")
+        sut.didCompleteLoading(with: resource)
+        
+        XCTAssertEqual(view.messages, [.display(resourceViewModel: "resource view model"), .display(isLoading: false)], "Expected display resource and loading events")
     }
     
-    func test_didCompleteLoadingFeedWithError_stopsDisplayingFeedLoading() {
+    func test_didCompleteLoadingWithError_stopsDisplayingLoading() {
         let (sut, view) = makeSUT()
         
-        sut.didCompleteLoadingFeed(with: anyError())
+        sut.didCompleteLoadingResource(with: anyError())
         
         XCTAssertEqual(view.messages, [.display(isLoading: false)], "Expected display loading event")
     }
     
     // MARK: - Helper
     
-    private func makeSUT() -> (sut: LoadResourcePresenter, view: FeedViewSpy) {
-        let view = FeedViewSpy()
-        let sut = LoadResourcePresenter(feedView: view, loadingView: view)
-        trackMemoryLeak(view)
-        trackMemoryLeak(sut)
+    private func makeSUT(mapper: @escaping LoadResourcePresenter.Mapper = {_ in "any"}, file: StaticString = #file, line: UInt = #line) -> (sut: LoadResourcePresenter, view: ResourceViewSpy) {
+        let view = ResourceViewSpy()
+        let sut = LoadResourcePresenter(view: view, loadingView: view, mapper: mapper)
+        trackMemoryLeak(view, file: file, line: line)
+        trackMemoryLeak(sut, file: file, line: line)
         return (sut, view)
     }
     
-    private class FeedViewSpy: FeedView, FeedLoadingView{
+    private class ResourceViewSpy: ResourceView, ResourceLoadingView {
         private(set) var messages = Set<Message>()
         
         enum Message: Hashable {
             case display(isLoading: Bool)
-            case display(feed: [FeedImage])
+            case display(resourceViewModel: String)
         }
         
-        func display(_ viewModel: FeedViewModel) {
-            messages.insert(.display(feed: viewModel.feed))
+        func display(_ viewModel: String) {
+            messages.insert(.display(resourceViewModel: viewModel))
         }
         
-        func display(_ viewModel: FeedLoadingViewModel) {
+        func display(_ viewModel: ResourceLoadingViewModel) {
             messages.insert(.display(isLoading: viewModel.isLoading))
         }
     }

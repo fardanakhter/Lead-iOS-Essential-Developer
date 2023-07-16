@@ -10,6 +10,14 @@ import EssentialFeed
 
 final class FeedViewPresenterTests: XCTestCase {
 
+    func test_map_createsViewModel() {
+        let feed = [uniqueImage()]
+        
+        let viewModel = FeedViewPresenter.map(feed)
+        
+        XCTAssertEqual(viewModel.feed, feed, "Expected to map feed data into view model")
+    }
+    
     func test_title_isLocalized() {
         let localizedTitle = localizedString(withKey: "FEED_VIEW_TITLE")
         

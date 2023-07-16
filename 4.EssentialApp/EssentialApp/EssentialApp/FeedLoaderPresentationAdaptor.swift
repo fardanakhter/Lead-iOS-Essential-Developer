@@ -10,20 +10,20 @@ import EssentialFeediOS
 
 final class FeedLoaderPresentationAdaptor: FeedRefreshViewControllerDelegate {
     private let loader: FeedLoader
-    var presenter: FeedViewPresenter?
+    var presenter: LoadResourcePresenter<[FeedImage], FeedViewAdapter>?
     
     init(loader: FeedLoader) {
         self.loader = loader
     }
     
     func didStartLoadingFeed() {
-        presenter?.didStartLoadingFeed()
+        presenter?.didStartLoadingResource()
         loader.load { [weak self] result in
             switch result {
             case .success(let feed):
-                self?.presenter?.didCompleteLoadingFeed(with: feed)
+                self?.presenter?.didCompleteLoading(with: feed)
             case .failure(let error):
-                self?.presenter?.didCompleteLoadingFeed(with: error)
+                self?.presenter?.didCompleteLoadingResource(with: error)
             }
         }
     }

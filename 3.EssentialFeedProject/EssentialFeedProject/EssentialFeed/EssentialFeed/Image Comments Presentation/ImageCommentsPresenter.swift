@@ -24,10 +24,10 @@ public struct ImageCommentViewModel: Equatable {
 }
 
 public final class ImageCommentsPresenter {
-   public static var feedViewTitle: String {
-        NSLocalizedString("FEED_VIEW_TITLE",
-                          tableName: "Feed",
-                          bundle: Bundle(for: FeedViewPresenter.self),
+   public static var imageCommentsViewTitle: String {
+        NSLocalizedString("IMAGE_COMMENTS_VIEW_TITLE",
+                          tableName: "ImageComments",
+                          bundle: Bundle(for: Self.self),
                           comment: "Title for Feed View")
     }
     

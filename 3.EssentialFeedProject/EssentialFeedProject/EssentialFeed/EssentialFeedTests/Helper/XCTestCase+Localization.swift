@@ -16,4 +16,13 @@ extension XCTestCase {
         }
         return value
     }
+    
+    public func allLocalizedStringKeys(in bundle: Bundle, from table: String) -> [String] {
+        let defaultLocalization = Locale.current.language.languageCode?.identifier ?? ""
+        if let path = bundle.url(forResource: table, withExtension: "strings", subdirectory: nil, localization: defaultLocalization),
+           let dictionary = NSDictionary(contentsOf: path) as? [String: String]{
+            return dictionary.keys.map{ $0 }
+        }
+        return []
+    }
 }

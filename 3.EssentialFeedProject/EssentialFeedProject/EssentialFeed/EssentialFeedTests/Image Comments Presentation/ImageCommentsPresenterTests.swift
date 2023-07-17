@@ -32,4 +32,10 @@ final class ImageCommentsPresenterTests: XCTestCase {
                        "Expected to map image comments data into view model")
     }
     
+    func test_title_isLocalized() {
+        let localizedTitle = localizedString(in: Bundle(for: ImageCommentsPresenter.self), table: "ImageComments", withKey: "IMAGE_COMMENTS_VIEW_TITLE")
+        
+        XCTAssertEqual(ImageCommentsPresenter.imageCommentsViewTitle, localizedTitle, "Expected title string to match \(localizedTitle), found \(ImageCommentsPresenter.imageCommentsViewTitle) instead")
+    }
+    
 }

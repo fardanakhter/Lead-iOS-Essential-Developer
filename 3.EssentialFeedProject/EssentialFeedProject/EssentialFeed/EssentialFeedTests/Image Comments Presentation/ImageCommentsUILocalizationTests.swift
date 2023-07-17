@@ -1,18 +1,18 @@
 //
-//  FeedUILocalizationTests.swift
-//  EssentialFeediOSTests
+//  ImageCommentsUILocalizationTests.swift
+//  EssentialFeedTests
 //
-//  Created by Fardan Akhter on 08/05/2023.
+//  Created by Fardan Akhter on 17/07/2023.
 //
 
 import XCTest
 import EssentialFeed
 
-final class FeedUILocalizationTests: XCTestCase {
+final class ImageCommentsUILocalizationTests: XCTestCase {
     
     func test_localizedStrings_haveKeysAndValuesForInAllLocalizations() {
-        let table = "Feed"
-        let presentationBundle = Bundle(for: FeedViewPresenter.self)
+        let table = "ImageComments"
+        let presentationBundle = Bundle(for: ImageCommentsPresenter.self)
         let alllocalizations = presentationBundle.localizations
         let localizedStringKeys = allLocalizedStringKeys(in: presentationBundle, from: table)
         

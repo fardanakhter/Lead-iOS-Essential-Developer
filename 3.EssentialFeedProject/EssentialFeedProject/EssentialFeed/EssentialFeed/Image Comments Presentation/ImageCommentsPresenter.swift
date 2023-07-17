@@ -12,7 +12,7 @@ public final class ImageCommentsPresenter {
         NSLocalizedString("IMAGE_COMMENTS_VIEW_TITLE",
                           tableName: "ImageComments",
                           bundle: Bundle(for: Self.self),
-                          comment: "Title for Feed View")
+                          comment: "Title for Image Comments View")
     }
     
     static public func map(_ comments: [ImageComment]) -> ImageCommentsViewModel {

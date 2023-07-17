@@ -10,6 +10,19 @@ import EssentialFeed
 
 final class FeedImageViewPresenterTests: XCTestCase {
 
+    func test_map_createsViewModel() {
+        let feed = uniqueImage()
+        let image = PresenterImage()
+        let retryFlag = true
+        
+        let viewModel = FeedImageViewPresenter<SpyView, PresenterImage>.map(feed, image, retryFlag)
+        
+        XCTAssertEqual(viewModel.description, feed.description, "Expected to map feed data into view model")
+        XCTAssertEqual(viewModel.location, feed.location, "Expected to map feed data into view model")
+        XCTAssertEqual(viewModel.image, image, "Expected to map feed data into view model")
+        XCTAssertEqual(viewModel.shouldRetry, retryFlag, "Expected to map feed data into view model")
+    }
+    
     func test_init_doesNotRequestViewEvent() {
         let (_, view) = makeSUT()
         

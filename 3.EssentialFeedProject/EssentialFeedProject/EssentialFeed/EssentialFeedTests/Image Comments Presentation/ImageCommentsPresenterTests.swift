@@ -1,19 +1,19 @@
 //
-//  FeedViewPresenterTests.swift
+//  ImageCommentsPresenterTests.swift
 //  EssentialFeedTests
 //
-//  Created by Fardan Akhter on 12/05/2023.
+//  Created by Fardan Akhter on 17/07/2023.
 //
 
 import XCTest
 import EssentialFeed
 
-final class FeedViewPresenterTests: XCTestCase {
-
+final class ImageCommentsPresenterTests: XCTestCase {
+    
     func test_map_createsViewModel() {
         let feed = [uniqueImage()]
         
-        let viewModel = FeedViewPresenter.map(feed)
+        let viewModel = ImageCommentsPresenter.map(feed)
         
         XCTAssertEqual(viewModel.feed, feed, "Expected to map feed data into view model")
     }
@@ -23,4 +23,5 @@ final class FeedViewPresenterTests: XCTestCase {
         
         XCTAssertEqual(FeedViewPresenter.feedViewTitle, localizedTitle, "Expected title string to match \(localizedTitle), found \(FeedViewPresenter.feedViewTitle) instead")
     }
+    
 }

@@ -15,7 +15,7 @@ public protocol CellController {
 }
 
 public final class ListViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    @IBOutlet public private(set) var refreshController: FeedRefreshViewController?
+    @IBOutlet public private(set) var refreshController: ListRefreshViewController?
     
     private var loadingControllers = [IndexPath : CellController]()
     private var tableModels = [CellController]()

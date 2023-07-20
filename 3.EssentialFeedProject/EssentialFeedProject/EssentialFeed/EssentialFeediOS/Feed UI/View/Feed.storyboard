@@ -151,7 +151,7 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f5B-qB-pC5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <customObject id="GSa-XO-3Xj" customClass="FeedRefreshViewController" customModule="EssentialFeediOS" customModuleProvider="target">
+                <customObject id="GSa-XO-3Xj" customClass="ListRefreshViewController" customModule="EssentialFeediOS" customModuleProvider="target">
                     <connections>
                         <outlet property="view" destination="YAf-ds-Eim" id="Ytu-lX-fxg"/>
                     </connections>

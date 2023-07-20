@@ -9,19 +9,19 @@ import Foundation
 import UIKit
 import EssentialFeed
 
-public protocol FeedRefreshViewControllerDelegate {
-    func didStartLoadingFeed()
+public protocol ListRefreshViewControllerDelegate {
+    func didStartLoadingList()
 }
 
-public final class FeedRefreshViewController: NSObject, ResourceLoadingView {
+public final class ListRefreshViewController: NSObject, ResourceLoadingView {
     @IBOutlet private var view: UIRefreshControl?
     
-    public var delegate: FeedRefreshViewControllerDelegate?
+    public var delegate: ListRefreshViewControllerDelegate?
     
     override init() {}
     
     @IBAction func refresh() {
-        delegate?.didStartLoadingFeed()
+        delegate?.didStartLoadingList()
     }
 
     public func display(_ viewModel: ResourceLoadingViewModel) {

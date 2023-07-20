@@ -460,8 +460,6 @@
 		7720EF4C29FAF746007FA574 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				7795DFC629F11B04008C31E1 /* ListViewController.swift */,
-				7720EF5229FBEE05007FA574 /* ListRefreshViewController.swift */,
 				7720EF5429FBFF85007FA574 /* FeedImageCellController.swift */,
 			);
 			path = Controller;
@@ -522,6 +520,40 @@
 				773907A52A1818DC008350C6 /* HTTPURLResponse+StatusCode.swift */,
 			);
 			path = Helper;
+			sourceTree = "<group>";
+		};
+		774092382A69762900BE318E /* Shared UI */ = {
+			isa = PBXGroup;
+			children = (
+				774092392A69763500BE318E /* Controller */,
+				7740923A2A69764F00BE318E /* View */,
+			);
+			path = "Shared UI";
+			sourceTree = "<group>";
+		};
+		774092392A69763500BE318E /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				7795DFC629F11B04008C31E1 /* ListViewController.swift */,
+				7720EF5229FBEE05007FA574 /* ListRefreshViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		7740923A2A69764F00BE318E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				7740923B2A69765E00BE318E /* Extensions */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		7740923B2A69765E00BE318E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				77E74E3E2A04E6460089D0F0 /* UITableView+DequeueReusableCell.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		7745D9B329F1080100244D70 /* Frameworks */ = {
@@ -648,6 +680,7 @@
 			isa = PBXGroup;
 			children = (
 				772CA0362A1EC9FF00B714D2 /* EssentialFeediOSTests.xctestplan */,
+				774092382A69762900BE318E /* Shared UI */,
 				7720EF4F29FAF771007FA574 /* Feed UI */,
 			);
 			path = EssentialFeediOS;
@@ -725,7 +758,6 @@
 		77E74E422A04E9070089D0F0 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				77E74E3E2A04E6460089D0F0 /* UITableView+DequeueReusableCell.swift */,
 				77E74E402A04E8EF0089D0F0 /* UIImageView+Animation.swift */,
 			);
 			path = Extensions;

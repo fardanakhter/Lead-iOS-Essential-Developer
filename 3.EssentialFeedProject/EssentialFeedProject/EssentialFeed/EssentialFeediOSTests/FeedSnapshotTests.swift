@@ -44,7 +44,7 @@ final class FeedSnapshotTests: XCTestCase {
         return feedView
     }
     
-    private func emptyFeed() -> [FeedImageCellController] {
+    private func emptyFeed() -> [CellController] {
         return []
     }
     

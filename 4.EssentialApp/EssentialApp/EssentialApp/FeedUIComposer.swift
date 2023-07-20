@@ -13,7 +13,7 @@ import EssentialFeediOS
 public class FeedUIComposer {
     private init() {}
     
-    public static func feedUIComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
+    public static func feedUIComposedWith(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> ListViewController {
         
         let presentationAdaptor = FeedLoaderPresentationAdaptor(loader: MainQueueDispatchDecorator(decoratee: feedLoader))
         
@@ -30,10 +30,10 @@ public class FeedUIComposer {
         return feedViewController
     }
     
-    private static func makeFeedView() -> FeedViewController {
-        let bundle = Bundle(for: FeedViewController.self)
+    private static func makeFeedView() -> ListViewController {
+        let bundle = Bundle(for: ListViewController.self)
         let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
-        let feedViewController = storyboard.instantiateInitialViewController() as! FeedViewController
+        let feedViewController = storyboard.instantiateInitialViewController() as! ListViewController
         return feedViewController
     }
 }

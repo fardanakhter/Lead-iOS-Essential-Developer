@@ -10,10 +10,10 @@ import EssentialFeed
 import EssentialFeediOS
 
 final class FeedViewAdapter: ResourceView {
-    private weak var controller: FeedViewController?
+    private weak var controller: ListViewController?
     private let imageDataLoader: FeedImageDataLoader
     
-    init(controller: FeedViewController, imageDataLoader: FeedImageDataLoader) {
+    init(controller: ListViewController, imageDataLoader: FeedImageDataLoader) {
         self.controller = controller
         self.imageDataLoader = imageDataLoader
     }

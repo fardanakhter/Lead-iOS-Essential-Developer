@@ -258,7 +258,7 @@ final class FeedUIIntegrationTest: XCTestCase {
     
     // MARK: - Helper
 
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (FeedViewController, LoaderSpy) {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (ListViewController, LoaderSpy) {
         let loader = LoaderSpy()
         let sut = FeedUIComposer.feedUIComposedWith(feedLoader: loader, imageLoader: loader)
         trackMemoryLeak(loader, file: file, line: line)
@@ -270,7 +270,7 @@ final class FeedUIIntegrationTest: XCTestCase {
         return FeedImage(id: UUID(), description: description, location: location, url: url)
     }
     
-    private func expect(_ sut: FeedViewController, toRender images: [FeedImage], file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: ListViewController, toRender images: [FeedImage], file: StaticString = #file, line: UInt = #line) {
         sut.tableView.layoutIfNeeded()
         RunLoop.main.run(until: Date())
         XCTAssertEqual(sut.numberOfFeedImageViews, images.count, file: file, line: line)
@@ -279,7 +279,7 @@ final class FeedUIIntegrationTest: XCTestCase {
         }
     }
     
-    private func assert(that sut: FeedViewController, render image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
+    private func assert(that sut: ListViewController, render image: FeedImage, at index: Int, file: StaticString = #file, line: UInt = #line) {
         let view = sut.simulateImageViewVisible(at: index)
         XCTAssertEqual(view?.imageDescription?.text, image.description, file: file, line: line)
         XCTAssertEqual(view?.isShowingLocation, image.location != nil, file: file, line: line)

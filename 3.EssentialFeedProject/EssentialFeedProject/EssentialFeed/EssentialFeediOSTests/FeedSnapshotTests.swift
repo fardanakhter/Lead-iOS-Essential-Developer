@@ -37,10 +37,10 @@ final class FeedSnapshotTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private func makeSUT() -> FeedViewController {
-        let bundle = Bundle(for: FeedViewController.self)
+    private func makeSUT() -> ListViewController {
+        let bundle = Bundle(for: ListViewController.self)
         let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
-        let feedView = storyboard.instantiateViewController(withIdentifier: "FeedViewController") as! FeedViewController
+        let feedView = storyboard.instantiateViewController(withIdentifier: "FeedViewController") as! ListViewController
         return feedView
     }
     
@@ -139,7 +139,7 @@ private class ImageStub: FeedImageCellControllerDelegate {
     func cancelImageLoading() {}
 }
 
-private extension FeedViewController {
+private extension ListViewController {
     func display(_ stubs: [ImageStub]) {
         display(stubs.map {
             let cellController = FeedImageCellController()

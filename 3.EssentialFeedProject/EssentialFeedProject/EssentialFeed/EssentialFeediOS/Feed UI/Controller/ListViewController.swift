@@ -14,7 +14,7 @@ public protocol CellController {
     func cancelTask()
 }
 
-public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
+public final class ListViewController: UITableViewController, UITableViewDataSourcePrefetching {
     @IBOutlet public private(set) var refreshController: FeedRefreshViewController?
     
     private var loadingControllers = [IndexPath : CellController]()

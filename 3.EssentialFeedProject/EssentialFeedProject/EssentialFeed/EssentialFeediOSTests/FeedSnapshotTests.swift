@@ -40,7 +40,7 @@ final class FeedSnapshotTests: XCTestCase {
     private func makeSUT() -> ListViewController {
         let bundle = Bundle(for: ListViewController.self)
         let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
-        let feedView = storyboard.instantiateViewController(withIdentifier: "FeedViewController") as! ListViewController
+        let feedView = storyboard.instantiateViewController(withIdentifier: "ListViewController") as! ListViewController
         return feedView
     }
     

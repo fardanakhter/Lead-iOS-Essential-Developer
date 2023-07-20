@@ -21,6 +21,10 @@ public final class FeedImageViewPresenter<View: FeedImageView, Image> where View
     }
     
     public func displayView(with model: FeedImage, image: Image?, shouldRetry: Bool) {
-        view.display(FeedImageViewModel(description: model.description, location: model.location, image: image, shouldRetry: shouldRetry))
+        view.display(Self.map(model, image, shouldRetry))
+    }
+    
+    static public func map(_ model: FeedImage, _ image: Image?, _ shouldRetry: Bool) -> FeedImageViewModel<Image> {
+        return FeedImageViewModel(description: model.description, location: model.location, image: image, shouldRetry: shouldRetry)
     }
 }

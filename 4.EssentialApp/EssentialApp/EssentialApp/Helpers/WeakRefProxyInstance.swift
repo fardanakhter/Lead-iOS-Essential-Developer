@@ -17,8 +17,8 @@ final class WeakRefProxyInstance<T: AnyObject>{
     }
 }
 
-extension WeakRefProxyInstance: FeedLoadingView where T: FeedLoadingView {
-    func display(_ viewModel: FeedLoadingViewModel) {
+extension WeakRefProxyInstance: ResourceLoadingView where T: ResourceLoadingView {
+    func display(_ viewModel: ResourceLoadingViewModel) {
         instance?.display(viewModel)
     }
 }

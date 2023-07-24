@@ -11,24 +11,24 @@ import EssentialFeediOS
 
 final class ImageCommentsSnapshotTests: XCTestCase {
 
-    func test_feedWithContent() {
+    func test_listWithComments() {
         let sut = makeSUT()
         
-        sut.display(feedWithContent())
+        sut.display(listWithComments())
         
-        record(sut.snapShot(), named: "Image_Comments_With_Content")
+        assert(sut.snapShot(), named: "Image_Comments_With_Content")
     }
     
     // MARK: - Helpers
     
     private func makeSUT() -> ListViewController {
         let bundle = Bundle(for: ListViewController.self)
-        let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
+        let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
         let feedView = storyboard.instantiateViewController(withIdentifier: "ListViewController") as! ListViewController
         return feedView
     }
     
-    private func feedWithContent() -> [CellController] {
+    private func listWithComments() -> [CellController] {
         [
             ImageCommentViewController (
                 model:

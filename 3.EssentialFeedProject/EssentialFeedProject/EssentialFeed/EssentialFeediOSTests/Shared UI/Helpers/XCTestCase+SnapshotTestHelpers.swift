@@ -16,6 +16,8 @@ extension XCTestCase {
         do {
             try FileManager.default.createDirectory(at: snapshotURL.deletingLastPathComponent(), withIntermediateDirectories: true)
             try snapshotData?.write(to: snapshotURL)
+            
+            XCTFail("Record Successful - use 'assert' to compare the captured snapshot with recorded snapshot", file: file, line: line)
         }
         catch {
             XCTFail("Failed to record snapshot with error: \(error)", file: file, line: line)
@@ -23,18 +25,18 @@ extension XCTestCase {
     }
 
     func assert(_ snapshot: UIImage, named name: String, file: StaticString = #file, line: UInt = #line) {
-        let snapshotURL = makeSnapshotURL(named: name, file: file, line: line)
-        let snapshotData = makeSnapshotData(snapshot, file: file, line: line)
+        let recordedSnapshotURL = makeSnapshotURL(named: name, file: file, line: line)
+        let newSnapshotData = makeSnapshotData(snapshot, file: file, line: line)
         
-        guard let recordedSnapshotData = try? Data(contentsOf: snapshotURL) else {
-            return XCTFail("Failed to load the recorded snapshot at \(snapshotURL). Use 'record' method before asserting", file: file, line: line)
+        guard let recordedSnapshotData = try? Data(contentsOf: recordedSnapshotURL) else {
+            return XCTFail("Failed to load the recorded snapshot at \(recordedSnapshotURL). Use 'record' method before asserting", file: file, line: line)
         }
         
-        if snapshotData != recordedSnapshotData {
-            let temporaryURL = FileManager.default.temporaryDirectory.appending(path: snapshotURL.lastPathComponent)
-            try! snapshotData?.write(to: temporaryURL)
+        if newSnapshotData != recordedSnapshotData {
+            let temporaryURL = FileManager.default.temporaryDirectory.appending(path: recordedSnapshotURL.lastPathComponent)
+            try! newSnapshotData?.write(to: temporaryURL)
             
-            XCTAssertEqual(snapshotData, recordedSnapshotData, "New Snapshot does not match recorded snapshot. New Snapshot URL: \(snapshotURL), Recorded Snapshot URL: \(temporaryURL)", file: file, line: line)
+            XCTAssertEqual(newSnapshotData, recordedSnapshotData, "New Snapshot does not match recorded snapshot. New Snapshot URL: \(temporaryURL), Recorded Snapshot URL: \(recordedSnapshotURL)", file: file, line: line)
         }
     }
 

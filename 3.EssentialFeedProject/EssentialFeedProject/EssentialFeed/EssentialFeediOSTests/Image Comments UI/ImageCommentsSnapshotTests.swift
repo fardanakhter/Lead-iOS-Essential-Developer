@@ -16,14 +16,14 @@ final class ImageCommentsSnapshotTests: XCTestCase {
         
         sut.display(feedWithContent())
         
-        record(sut.snapShot(), named: "Image_Comments_With_Content")
+        assert(sut.snapShot(), named: "Image_Comments_With_Content")
     }
     
     // MARK: - Helpers
     
     private func makeSUT() -> ListViewController {
         let bundle = Bundle(for: ListViewController.self)
-        let storyboard = UIStoryboard(name: "Feed", bundle: bundle)
+        let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
         let feedView = storyboard.instantiateViewController(withIdentifier: "ListViewController") as! ListViewController
         return feedView
     }

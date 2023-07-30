@@ -18,8 +18,7 @@ class FeedUIIntegrationTest: XCTestCase {
         
         sut.loadViewIfNeeded()
         
-        let localizedString = localizedString(withKey: "FEED_VIEW_TITLE")
-        XCTAssertEqual(sut.title, localizedString, "Feed View title mismatched!")
+        XCTAssertEqual(sut.title, feedTitle, "Feed View title mismatched!")
     }
     
     func test_loadFeedActions_loadsFeed() {

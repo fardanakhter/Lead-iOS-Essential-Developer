@@ -22,3 +22,12 @@ func anyData() -> Data {
 func uniqueFeed() -> [FeedImage] {
     [FeedImage(id: UUID(), description: "some-description", location: "some-location", url: anyURL())]
 }
+
+var commentsTitle: String {
+    ImageCommentsPresenter.imageCommentsViewTitle
+}
+
+var feedTitle: String {
+    FeedViewPresenter.feedViewTitle
+}
+

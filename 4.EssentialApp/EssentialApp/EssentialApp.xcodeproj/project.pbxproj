@@ -45,7 +45,7 @@
 		77FB19412A27F0C200F8BA78 /* UIControl+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB193B2A27F0C200F8BA78 /* UIControl+TestHelpers.swift */; };
 		77FB19422A27F0C200F8BA78 /* FeedUIIntegrationTest+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB193A2A27F0C200F8BA78 /* FeedUIIntegrationTest+Localization.swift */; };
 		77FB19432A27F0C200F8BA78 /* FeedUIIntegrationTest+LoaderSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB193D2A27F0C200F8BA78 /* FeedUIIntegrationTest+LoaderSpy.swift */; };
-		77FB19442A27F0C200F8BA78 /* FeedViewController+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB19382A27F0C100F8BA78 /* FeedViewController+TestHelpers.swift */; };
+		77FB19442A27F0C200F8BA78 /* ListViewController+TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB19382A27F0C100F8BA78 /* ListViewController+TestHelpers.swift */; };
 		77FB19462A27F11700F8BA78 /* FeedUIIntegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB19452A27F11700F8BA78 /* FeedUIIntegrationTest.swift */; };
 		77FB194A2A27F5C200F8BA78 /* FeedAcceptanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FB19492A27F5C200F8BA78 /* FeedAcceptanceTests.swift */; };
 /* End PBXBuildFile section */
@@ -118,7 +118,7 @@
 		77FB192F2A27EBEE00F8BA78 /* FeedLoaderPresentationAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderPresentationAdaptor.swift; sourceTree = "<group>"; };
 		77FB19302A27EBEE00F8BA78 /* FeedImageLoaderPresentationAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageLoaderPresentationAdaptor.swift; sourceTree = "<group>"; };
 		77FB19372A27F0C100F8BA78 /* UIImage+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+TestHelpers.swift"; sourceTree = "<group>"; };
-		77FB19382A27F0C100F8BA78 /* FeedViewController+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedViewController+TestHelpers.swift"; sourceTree = "<group>"; };
+		77FB19382A27F0C100F8BA78 /* ListViewController+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ListViewController+TestHelpers.swift"; sourceTree = "<group>"; };
 		77FB19392A27F0C200F8BA78 /* FeedImageCell+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedImageCell+TestHelpers.swift"; sourceTree = "<group>"; };
 		77FB193A2A27F0C200F8BA78 /* FeedUIIntegrationTest+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedUIIntegrationTest+Localization.swift"; sourceTree = "<group>"; };
 		77FB193B2A27F0C200F8BA78 /* UIControl+TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIControl+TestHelpers.swift"; sourceTree = "<group>"; };
@@ -227,7 +227,7 @@
 		77AED0A12A1E669100AA4169 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
-				77FB19382A27F0C100F8BA78 /* FeedViewController+TestHelpers.swift */,
+				77FB19382A27F0C100F8BA78 /* ListViewController+TestHelpers.swift */,
 				77FB19392A27F0C200F8BA78 /* FeedImageCell+TestHelpers.swift */,
 				77FB193A2A27F0C200F8BA78 /* FeedUIIntegrationTest+Localization.swift */,
 				77FB193D2A27F0C200F8BA78 /* FeedUIIntegrationTest+LoaderSpy.swift */,
@@ -379,7 +379,7 @@
 				77FB194A2A27F5C200F8BA78 /* FeedAcceptanceTests.swift in Sources */,
 				77AED0A32A1E66B100AA4169 /* XCTextCase+MemoryLeakTracking.swift in Sources */,
 				772CA0342A1EC58900B714D2 /* FeedImageDataLoaderSpy.swift in Sources */,
-				77FB19442A27F0C200F8BA78 /* FeedViewController+TestHelpers.swift in Sources */,
+				77FB19442A27F0C200F8BA78 /* ListViewController+TestHelpers.swift in Sources */,
 				77FB19412A27F0C200F8BA78 /* UIControl+TestHelpers.swift in Sources */,
 				777E8BDB2A21900800278897 /* XCTestCase+FeedImageDataLoader.swift in Sources */,
 				776507F22A76B858004BAF8E /* CommentsUIIntegrationTests.swift in Sources */,

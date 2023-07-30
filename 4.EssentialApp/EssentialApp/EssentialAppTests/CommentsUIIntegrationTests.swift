@@ -18,7 +18,7 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTest {
         
         sut.loadViewIfNeeded()
         
-        XCTAssertEqual(sut.title, ImageCommentsPresenter.imageCommentsViewTitle, "Comments View title mismatched!")
+        XCTAssertEqual(sut.title, commentsTitle, "Comments View title mismatched!")
     }
     
     func test_loadCommentsActions_loadComments() {

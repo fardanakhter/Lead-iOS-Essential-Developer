@@ -11,7 +11,7 @@ import EssentialFeed
 import EssentialFeediOS
 import EssentialApp
 
-final class FeedUIIntegrationTest: XCTestCase {
+class FeedUIIntegrationTest: XCTestCase {
     
     func test_feedViewController_hasNavigationTitle() {
         let (sut, _) = makeSUT()

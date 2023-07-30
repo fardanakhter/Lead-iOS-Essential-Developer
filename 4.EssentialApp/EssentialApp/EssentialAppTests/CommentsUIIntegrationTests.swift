@@ -11,7 +11,7 @@ import EssentialFeed
 import EssentialFeediOS
 import EssentialApp
 
-final class CommentsUIIntegrationTests: FeedUIIntegrationTest {
+final class CommentsUIIntegrationTests: XCTestCase {
     
     func test_commentsViewController_hasNavigationTitle() {
         let (sut, _) = makeSUT()

@@ -13,13 +13,12 @@ import EssentialApp
 
 final class CommentsUIIntegrationTests: FeedUIIntegrationTest {
     
-    override func test_feedViewController_hasNavigationTitle() {
+    func test_commentsViewController_hasNavigationTitle() {
         let (sut, _) = makeSUT()
         
         sut.loadViewIfNeeded()
         
-        let localizedString = localizedString(withKey: "FEED_VIEW_TITLE")
-        XCTAssertEqual(sut.title, localizedString, "Feed View title mismatched!")
+        XCTAssertEqual(sut.title, ImageCommentsPresenter.imageCommentsViewTitle, "Comments View title mismatched!")
     }
     
     override func test_loadFeedActions_loadsFeed() {

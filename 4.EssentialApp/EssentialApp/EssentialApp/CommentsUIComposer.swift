@@ -18,7 +18,7 @@ public class CommentsUIComposer {
         let presentationAdaptor = FeedLoaderPresentationAdaptor(loader: MainQueueDispatchDecorator(decoratee: commentsLoader))
         
         let commentsViewController = makeCommentsView()
-        commentsViewController.title = FeedViewPresenter.feedViewTitle
+        commentsViewController.title = ImageCommentsPresenter.imageCommentsViewTitle
         
         let refreshController = commentsViewController.refreshController!
         refreshController.delegate = presentationAdaptor

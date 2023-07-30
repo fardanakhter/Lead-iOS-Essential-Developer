@@ -35,20 +35,20 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTest {
         XCTAssertEqual(loader.loadCallCount, 3, "Expected to load comments on user's multiple manual reloads")
     }
     
-    override func test_loadsFeedActions_showsLoadingIndicator() {
+    func test_loadsCommentsActions_showsLoadingIndicator() {
         let (sut, loader) = makeSUT()
         
         sut.loadViewIfNeeded()
         XCTAssertEqual(sut.isShowingLoadingIndicator, true, "Expected to show loading indicator when view is loaded")
         
-        loader.completeFeedLoadingSuccessfully(at: 0)
-        XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected to hide loading indicator when load feed is completed")
+        loader.completeCommentsLoadingSuccessfully(at: 0)
+        XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected to hide loading indicator when load comments is completed")
         
         sut.simulateUserInitiatedReload()
         XCTAssertEqual(sut.isShowingLoadingIndicator, true, "Expected to show loading indicator when user reloads")
         
-        loader.completeFeedLoadingFailing(at: 1)
-        XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected to hide loading indicator when load feed initiated by user is completed")
+        loader.completeCommentsLoadingFailing(at: 1)
+        XCTAssertEqual(sut.isShowingLoadingIndicator, false, "Expected to hide loading indicator when load comments initiated by user is completed")
     }
     
     override func test_loadCompletion_rendersSuccessfullyLoadedFeeds() {
@@ -61,11 +61,11 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTest {
         sut.loadViewIfNeeded()
         expect(sut, toRender: [])
         
-        loader.completeFeedLoadingSuccessfully(with: [image0, image1], at: 0)
+        loader.completeCommentsLoadingSuccessfully(with: [image0, image1], at: 0)
         expect(sut, toRender: [image0, image1])
         
         sut.simulateUserInitiatedReload()
-        loader.completeFeedLoadingSuccessfully(with: [image0, image1, image2, image3], at: 1)
+        loader.completeCommentsLoadingSuccessfully(with: [image0, image1, image2, image3], at: 1)
         expect(sut, toRender: [image0, image1, image2, image3])
     }
     
@@ -75,11 +75,11 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTest {
         let image1 = makeImage()
         
         sut.loadViewIfNeeded()
-        loader.completeFeedLoadingSuccessfully(with: [image0, image1], at: 0)
+        loader.completeCommentsLoadingSuccessfully(with: [image0, image1], at: 0)
         expect(sut, toRender: [image0, image1])
         
         sut.simulateUserInitiatedReload()
-        loader.completeFeedLoadingSuccessfully(with: [], at: 1)
+        loader.completeCommentsLoadingSuccessfully(with: [], at: 1)
         expect(sut, toRender: [])
     }
     
@@ -91,11 +91,11 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTest {
         sut.loadViewIfNeeded()
         expect(sut, toRender: [])
         
-        loader.completeFeedLoadingSuccessfully(with: [image0, image1], at: 0)
+        loader.completeCommentsLoadingSuccessfully(with: [image0, image1], at: 0)
         expect(sut, toRender: [image0, image1])
         
         sut.simulateUserInitiatedReload()
-        loader.completeFeedLoadingFailing(with: anyError())
+        loader.completeCommentsLoadingFailing(with: anyError())
         expect(sut, toRender: [image0, image1])
     }
     
@@ -106,7 +106,7 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTest {
         let exp = expectation(description: "Waiting for load feed completion")
         DispatchQueue.global().async { [weak self] in
             guard let self else { return }
-            loader.completeFeedLoadingSuccessfully(with: [self.makeImage()], at: 0)
+            loader.completeCommentsLoadingSuccessfully(with: [self.makeImage()], at: 0)
             exp.fulfill()
         }
         
@@ -143,7 +143,7 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTest {
         XCTAssertEqual(view?.location?.text, image.location, file: file, line: line)
     }
     
-    class LoaderSpy: FeedLoader {
+    class LoaderSpy: FeedLoader, ImageCommentLoader{
         private var requestCompletions = [(FeedLoader.Result) -> Void]()
         
         var loadCallCount: Int {
@@ -154,16 +154,15 @@ final class CommentsUIIntegrationTests: FeedUIIntegrationTest {
             requestCompletions.append(completion)
         }
         
-        func completeFeedLoadingSuccessfully(with images: [FeedImage] = [], at index: Int = 0) {
+        func load(completion: @escaping (ImageCommentLoader.Result) -> Void) {
+        }
+        
+        func completeCommentsLoadingSuccessfully(with images: [FeedImage] = [], at index: Int = 0) {
             requestCompletions[index](.success(images))
         }
         
-        func completeFeedLoadingFailing(with error: Error = anyError(), at index: Int = 0) {
+        func completeCommentsLoadingFailing(with error: Error = anyError(), at index: Int = 0) {
             requestCompletions[index](.failure(error))
-        }
-        
-        func load(completion: @escaping (Result<[ImageComment], Error>) -> Void) {
-            
         }
     }
 }

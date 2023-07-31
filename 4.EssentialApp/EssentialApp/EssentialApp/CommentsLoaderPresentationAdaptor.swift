@@ -11,25 +11,13 @@ import EssentialFeediOS
 
 final class CommentsLoaderPresentationAdaptor: ListRefreshViewControllerDelegate {
     
-    private struct ImageCommentLoaderDecorator {
-        private let decoratee: ImageCommentLoader
-        
-        init(decoratee: ImageCommentLoader) {
-            self.decoratee = decoratee
-        }
-        
-        func loadPublisher() -> AnyPublisher<[ImageComment], Swift.Error> {
-            Future(decoratee.load).eraseToAnyPublisher()
-        }
-    }
-    
-    private var cancellable: Set<AnyCancellable> = .init()
-    private var loader: ImageCommentLoaderDecorator
+    private var cancellable = Set<AnyCancellable>()
+    private var loader: ImageCommentLoader
     
     var presenter: LoadResourcePresenter<[ImageComment], CommentsViewAdapter>?
     
     init(loader: ImageCommentLoader) {
-        self.loader = ImageCommentLoaderDecorator(decoratee: loader)
+        self.loader = loader
     }
     
     func didStartLoadingList() {

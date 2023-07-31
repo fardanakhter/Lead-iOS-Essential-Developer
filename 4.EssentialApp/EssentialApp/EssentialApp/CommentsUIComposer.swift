@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 import UIKit
 import EssentialFeed
 import EssentialFeediOS
@@ -34,5 +35,13 @@ public class CommentsUIComposer {
         let storyboard = UIStoryboard(name: "ImageComments", bundle: bundle)
         let commentsViewController = storyboard.instantiateInitialViewController() as! ListViewController
         return commentsViewController
+    }
+}
+
+public extension ImageCommentLoader {
+    typealias Publisher = AnyPublisher<[ImageComment], Swift.Error>
+    
+    func loadPublisher() -> Publisher {
+        Future(load).eraseToAnyPublisher()
     }
 }

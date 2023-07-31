@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		771BECD32A77F6CE0077D8D3 /* CommentsLoaderPresentationAdaptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771BECD22A77F6CE0077D8D3 /* CommentsLoaderPresentationAdaptor.swift */; };
+		771BECD52A77F6F70077D8D3 /* CommentsViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771BECD42A77F6F70077D8D3 /* CommentsViewAdapter.swift */; };
 		772BE5582A1BEBDA00EEF1B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772BE5572A1BEBDA00EEF1B7 /* AppDelegate.swift */; };
 		772BE55A2A1BEBDA00EEF1B7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772BE5592A1BEBDA00EEF1B7 /* SceneDelegate.swift */; };
 		772BE5612A1BEBDB00EEF1B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 772BE5602A1BEBDB00EEF1B7 /* Assets.xcassets */; };
@@ -76,6 +78,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		771BECD22A77F6CE0077D8D3 /* CommentsLoaderPresentationAdaptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsLoaderPresentationAdaptor.swift; sourceTree = "<group>"; };
+		771BECD42A77F6F70077D8D3 /* CommentsViewAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewAdapter.swift; sourceTree = "<group>"; };
 		772BE5542A1BEBDA00EEF1B7 /* EssentialApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EssentialApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		772BE5572A1BEBDA00EEF1B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		772BE5592A1BEBDA00EEF1B7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -173,6 +177,8 @@
 			children = (
 				77FB192C2A27EBED00F8BA78 /* Helpers */,
 				77AF6FEC2A76BC42008909FB /* CommentsUIComposer.swift */,
+				771BECD22A77F6CE0077D8D3 /* CommentsLoaderPresentationAdaptor.swift */,
+				771BECD42A77F6F70077D8D3 /* CommentsViewAdapter.swift */,
 				77FB192D2A27EBEE00F8BA78 /* FeedUIComposer.swift */,
 				77FB192E2A27EBEE00F8BA78 /* FeedViewAdaptor.swift */,
 				77FB192F2A27EBEE00F8BA78 /* FeedLoaderPresentationAdaptor.swift */,
@@ -362,6 +368,8 @@
 				77FB19352A27ED4200F8BA78 /* MainQueueDispatchDecorator.swift in Sources */,
 				77FB19342A27EBEE00F8BA78 /* FeedLoaderPresentationAdaptor.swift in Sources */,
 				772C9FE82A1E83CB00B714D2 /* FeedLoaderWithFallbackComposite.swift in Sources */,
+				771BECD32A77F6CE0077D8D3 /* CommentsLoaderPresentationAdaptor.swift in Sources */,
+				771BECD52A77F6F70077D8D3 /* CommentsViewAdapter.swift in Sources */,
 				77FB19362A27ED4400F8BA78 /* WeakRefProxyInstance.swift in Sources */,
 				77A8FE8A2A21898F00DE2FC2 /* FeedLoaderCacheDecorator.swift in Sources */,
 				772BE55A2A1BEBDA00EEF1B7 /* SceneDelegate.swift in Sources */,

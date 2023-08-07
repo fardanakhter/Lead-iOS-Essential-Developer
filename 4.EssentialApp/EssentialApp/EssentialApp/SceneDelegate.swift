@@ -41,6 +41,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func configureWindow() {
+        
+        func makeCommentListViewController() -> ListViewController {
+            let url = URL(string: "https://api.jsonbin.io/v3/qs/64d140638e4aa6225ecc4715")!
+            let loader = RemoteLoader(url: url, httpClient: httpClient, mapper: ImageCommentMapper.map)
+            let commentListViewController = CommentsUIComposer.commentsUIComposedWith(commentsLoader: loader)
+            return commentListViewController
+        }
+        
         let url = URL(string: "https://static1.squarespace.com/static/5891c5b8d1758ec68ef5dbc2/t/5d1c78f21e661a0001ce7cfd/1562147059075/feed-case-study-v1-api-feed.json")!
         
         let remoteFeedLoader = RemoteLoader(url: url, httpClient: httpClient, mapper: FeedItemMapper.map)
@@ -51,17 +59,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let feedFallbackLoader = FeedLoaderWithFallbackComposite(primary: FeedLoaderCacheDecorator(decoratee: remoteFeedLoader, cache: localFeedLoader), fallback: localFeedLoader)
         let feedImageFallbackLoader = FeedImageDataLoaderWithFallbackComposite(primary: localImageLoader, fallback: FeedImageDataLoaderCacheDecorator(decoratee: remoteImageLoader, cache: localImageLoader))
         
-        let navigationController = UINavigationController(rootViewController: FeedUIComposer.feedUIComposedWith(feedLoader: feedFallbackLoader, imageLoader: feedImageFallbackLoader))
+        let feedListViewController = FeedUIComposer.feedUIComposedWith(feedLoader: feedFallbackLoader, imageLoader: feedImageFallbackLoader)
+        let navigationController = UINavigationController(rootViewController: feedListViewController)
+        
+        feedListViewController.didSelectRowAt = { indexPath in
+            navigationController.pushViewController(makeCommentListViewController(), animated: true)
+        }
         
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-    
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
         localFeedLoader.validateCache()
     }
-
 }
 
 

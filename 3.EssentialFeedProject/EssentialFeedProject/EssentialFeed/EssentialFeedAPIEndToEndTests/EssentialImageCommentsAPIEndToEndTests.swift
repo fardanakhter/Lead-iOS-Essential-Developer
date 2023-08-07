@@ -18,7 +18,7 @@ final class EssentialImageCommentsAPIEndToEndTests: XCTestCase {
             
         case let .failure(error):
             XCTFail("Expected success with comments, found \(error) instead.")
-            
+
         default:
             XCTFail("Expected success with comments, found nil instead.")
         }

@@ -32,7 +32,7 @@ class ImageCommentMapperTests: XCTestCase {
     
     func test_map_deliversNoItemOn2xxResponseWithEmptyJSONList() throws {
         let emptyItemList: [[String: Any]] = []
-        let emptyJsonList = makeItemJSON(["items" : emptyItemList])
+        let emptyJsonList = makeItemJSON(["record" : emptyItemList])
         
         let statusCodes = [200, 210, 250, 270, 299]
         try statusCodes.forEach { code in
@@ -45,13 +45,13 @@ class ImageCommentMapperTests: XCTestCase {
         let (item01, item01JSON) = makeItem(id: UUID(),
                                             message: "a message",
                                             username: "a username",
-                                            createdAt: (Date(timeIntervalSince1970: 1687152540), "2023-06-19T05:29:00+00:00"))
+                                            createdAt: (Date(timeIntervalSince1970: 1687152540), "2023-06-19T05:29:00.000Z"))
         
         let (item02, item02JSON) = makeItem(id: UUID(),
                                             message: "another message",
                                             username: "another username",
-                                            createdAt: (Date(timeIntervalSince1970: 1687152540), "2023-06-19T05:29:00+00:00"))
-        let itemsData = makeItemJSON(["items" : [item01JSON, item02JSON]])
+                                            createdAt: (Date(timeIntervalSince1970: 1687152540), "2023-06-19T05:29:00.000Z"))
+        let itemsData = makeItemJSON(["record" : [item01JSON, item02JSON]])
         
         let statusCodes = [200, 210, 250, 270, 299]
         try statusCodes.forEach { code in

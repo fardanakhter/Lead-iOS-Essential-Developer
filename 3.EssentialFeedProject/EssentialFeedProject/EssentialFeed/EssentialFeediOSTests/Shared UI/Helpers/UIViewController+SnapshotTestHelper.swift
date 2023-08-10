@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIViewController {
-    func snapShot(for configuration: SnapshotConfiguration = .iPhone8(style: .light)) -> UIImage {
+    func snapShot(for configuration: SnapshotConfiguration = .iPhone12(style: .light)) -> UIImage {
         return SnapshotWindow(configuration: configuration, root: self).snapshot()
     }
 }
@@ -28,6 +28,24 @@ struct SnapshotConfiguration {
                 .init(forceTouchCapability: .available),
                 .init(layoutDirection: .leftToRight),
                 .init(preferredContentSizeCategory: .medium),
+                .init(userInterfaceIdiom: .phone),
+                .init(horizontalSizeClass: .compact),
+                .init(verticalSizeClass: .regular),
+                .init(displayScale: 2),
+                .init(displayGamut: .P3),
+                .init(userInterfaceStyle: style)
+            ]))
+    }
+    
+    static func iPhone12(style: UIUserInterfaceStyle, contentSize: UIContentSizeCategory = .medium) -> SnapshotConfiguration {
+        return SnapshotConfiguration(
+            size: CGSize(width: 390, height: 844),
+            safeAreaInsets: UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0),
+            layoutMargins: UIEdgeInsets(top: 20, left: 16, bottom: 0, right: 16),
+            traitCollection: UITraitCollection(traitsFrom: [
+                .init(forceTouchCapability: .available),
+                .init(layoutDirection: .leftToRight),
+                .init(preferredContentSizeCategory: contentSize),
                 .init(userInterfaceIdiom: .phone),
                 .init(horizontalSizeClass: .compact),
                 .init(verticalSizeClass: .regular),

@@ -79,7 +79,9 @@ final class FeedSnapshotTests: XCTestCase {
         let feedController = FeedImageCellController()
         feedController.delegate = feedStub
         feedStub.controller = feedController
-        return [feedController, LoadMoreFeedCellController()]
+        let loadMoreFeedController = LoadMoreFeedCellController()
+        loadMoreFeedController.display(ResourceLoadingViewModel(isLoading: true))
+        return [feedController, loadMoreFeedController]
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  FeedViewController+TestHelpers.swift
+//  ListViewController+TestHelpers.swift
 //  EssentialFeediOSTests
 //
 //  Created by Fardan Akhter on 08/05/2023.
@@ -8,9 +8,48 @@
 import UIKit
 import EssentialFeediOS
 
+// MARK: - ListViewController + Shared
+
 extension ListViewController {
-    func simulateUserInitiatedFeedReload() {
+    func simulateUserInitiatedReload() {
         refreshControl?.simulatePullToRefresh()
+    }
+    
+    var isShowingLoadingIndicator: Bool {
+        return refreshControl?.isRefreshing == true
+    }
+}
+
+// MARK: - ListViewController + Comments
+
+extension ListViewController {
+    var numberOfCommentViews: Int {
+        return tableView.numberOfRows(inSection: commentViewsSection)
+    }
+    
+    private var commentViewsSection: Int {
+        return 0
+    }
+    
+    func commentView(at index: Int) -> ImageCommentCell? {
+        guard index < numberOfCommentViews else {
+            return nil
+        }
+        let indexpath = IndexPath(row: index, section: commentViewsSection)
+        let ds = tableView.dataSource!
+        return ds.tableView(tableView, cellForRowAt: indexpath) as? ImageCommentCell
+    }
+}
+
+// MARK: - ListViewController + Feed
+
+extension ListViewController {
+    var numberOfFeedImageViews: Int {
+        return tableView.numberOfRows(inSection: feedImageViewsSection)
+    }
+    
+    private var feedImageViewsSection: Int {
+        return 0
     }
     
     @discardableResult
@@ -40,18 +79,6 @@ extension ListViewController {
         let ds = tableView.prefetchDataSource
         let indexpath = IndexPath(row: index, section: feedImageViewsSection)
         ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [indexpath])
-    }
-    
-    var isShowingLoadingIndicator: Bool {
-        return refreshControl?.isRefreshing == true
-    }
-    
-    var numberOfFeedImageViews: Int {
-        return tableView.numberOfRows(inSection: feedImageViewsSection)
-    }
-    
-    private var feedImageViewsSection: Int {
-        return 0
     }
     
     private func feedImageView(at index: Int) -> FeedImageCell? {

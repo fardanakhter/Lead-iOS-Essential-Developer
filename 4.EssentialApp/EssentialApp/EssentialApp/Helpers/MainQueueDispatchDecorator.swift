@@ -38,3 +38,11 @@ extension MainQueueDispatchDecorator: FeedImageDataLoader where T == FeedImageDa
         }
     }
 }
+
+extension MainQueueDispatchDecorator: ImageCommentLoader where T == ImageCommentLoader {
+    func load(completion: @escaping (Result<[ImageComment], Error>) -> Void) {
+        decoratee.load { [weak self] result in
+            self?.dispatch { completion(result) }
+        }
+    }
+}

@@ -10,7 +10,7 @@ import Foundation
 public final class ImageCommentMapper {
 
     private struct Root: Decodable {
-        private let items: [Item]
+        private let record: [Item]
 
         private struct Item: Decodable {
             let id: UUID
@@ -24,7 +24,7 @@ public final class ImageCommentMapper {
         }
         
         var comments: [ImageComment] {
-            items.map{ ImageComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, username: $0.author.username) }
+            record.map{ ImageComment(id: $0.id, message: $0.message, createdAt: $0.createdAt, username: $0.author.username) }
         }
     }
     
@@ -35,7 +35,9 @@ public final class ImageCommentMapper {
     public static func map(from data: Data, and response: HTTPURLResponse) throws -> [ImageComment] {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        decoder.dateDecodingStrategy = .formatted(formatter)
         
         guard isOK(response), let root = try? decoder.decode(Root.self, from: data)
         else {

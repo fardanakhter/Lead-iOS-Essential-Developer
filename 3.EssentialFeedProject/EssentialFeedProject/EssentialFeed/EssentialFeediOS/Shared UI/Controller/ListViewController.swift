@@ -20,6 +20,8 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     private var loadingControllers = [IndexPath : CellController]()
     private var tableModels = [CellController]()
     
+    public var didSelectRowAt: ((IndexPath) -> Void)?
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         refreshController?.refresh()
@@ -31,6 +33,10 @@ public final class ListViewController: UITableViewController, UITableViewDataSou
     
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         cellController(forRowAt: indexPath).view(tableView)
+    }
+    
+    public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        didSelectRowAt?(indexPath)
     }
     
     public override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {

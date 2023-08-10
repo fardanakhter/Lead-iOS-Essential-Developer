@@ -27,6 +27,14 @@ final class FeedSnapshotTests: XCTestCase {
         assert(sut.snapShot(), named: "Feed_With_No_Images")
     }
     
+    func test_feedWithLoadMoreIndicator() {
+        let sut = makeSUT()
+        
+        sut.display(feedWithLoadMoreIndicator())
+        
+        assert(sut.snapShot(), named: "Feed_With_Load_More_Indicator")
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT() -> ListViewController {
@@ -64,6 +72,14 @@ final class FeedSnapshotTests: XCTestCase {
                 image: nil,
                 showRetry: true)
         ]
+    }
+    
+    private func feedWithLoadMoreIndicator() -> [CellController] {
+        let feedStub = feedWithContent()[1]
+        let feedController = FeedImageCellController()
+        feedController.delegate = feedStub
+        feedStub.controller = feedController
+        return [feedController, LoadMoreFeedCellController()]
     }
 }
 
